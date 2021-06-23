@@ -1,10 +1,22 @@
 import React from "react";
 import { View, Image, Alert, TouchableHighlight } from "react-native";
-import { Button, Portal, Subheading, Modal, IconButton } from "react-native-paper";
-import * as Permissions from "expo-permissions";
+import {
+  Button,
+  Portal,
+  Subheading,
+  Modal,
+  IconButton,
+} from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
-const ImageUpload = ({ source, onUploadImage, onClearImage, label, disabled }) => {
+const ImageUpload = ({
+  source,
+  onUploadImage,
+  onClearImage,
+  label,
+  disabled,
+  imageStyle,
+}) => {
   const [modal, setModal] = React.useState(false);
   const [viewImage, setViewImage] = React.useState(source);
 
@@ -61,7 +73,7 @@ const ImageUpload = ({ source, onUploadImage, onClearImage, label, disabled }) =
   };
 
   return (
-    <>
+    <View>
       <Portal>
         <Modal
           visible={modal}
@@ -93,7 +105,32 @@ const ImageUpload = ({ source, onUploadImage, onClearImage, label, disabled }) =
         </Modal>
       </Portal>
       <Subheading>{label}</Subheading>
-      <View style={{ flexDirection: "row", justifyContent: "space-around", marginBottom: 10 }}>
+
+      <TouchableHighlight
+        style={{ width: "100%" }}
+        onPress={() => setModal(true)}
+      >
+        <Image
+          source={viewImage}
+          style={[
+            {
+              height: 120,
+              width: "100%",
+              borderRadius: 5,
+              borderColor: "#555",
+              borderWidth: 1,
+            },
+            imageStyle,
+          ]}
+        />
+      </TouchableHighlight>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          marginTop: 10,
+        }}
+      >
         <Button
           disabled={disabled}
           mode="contained"
@@ -115,19 +152,7 @@ const ImageUpload = ({ source, onUploadImage, onClearImage, label, disabled }) =
           Clear
         </Button>
       </View>
-      <TouchableHighlight style={{ width: "100%" }} onPress={() => setModal(true)}>
-        <Image
-          source={viewImage}
-          style={{
-            width: "100%",
-            height: "80%",
-            borderRadius: 5,
-            borderColor: "#555",
-            borderWidth: 1,
-          }}
-        />
-      </TouchableHighlight>
-    </>
+    </View>
   );
 };
 
