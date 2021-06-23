@@ -2,7 +2,10 @@ import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme } from "react-native-paper";
+import {
+  Provider as PaperProvider,
+  DefaultTheme as PaperDefaultTheme,
+} from "react-native-paper";
 import AppLoading from "expo-app-loading";
 import * as SecureStore from "expo-secure-store";
 
@@ -59,19 +62,27 @@ export default function App() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState
+  );
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async ({ userName, userToken, branchId }) => {
+      signIn: async ({ userToken, userName, branchId }) => {
         try {
           await SecureStore.setItemAsync("userToken", userToken);
           await SecureStore.setItemAsync("userName", userName);
-          await SecureStore.setItemAsync("branchId", branchId);
+          await SecureStore.setItemAsync("branchId", String(branchId));
         } catch (e) {
           console.log(e);
         }
-        dispatch({ type: "LOGIN", user_name: userName, token: userToken, branch_id: branchId });
+        dispatch({
+          type: "LOGIN",
+          user_name: userName,
+          token: userToken,
+          branch_id: branchId,
+        });
       },
       signOut: async () => {
         try {

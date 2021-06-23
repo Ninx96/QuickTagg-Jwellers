@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Image, ImageBackground, SafeAreaView, View } from "react-native";
+import {
+  Alert,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  View,
+} from "react-native";
 import { Button, Card, TextInput } from "react-native-paper";
 import { AuthContext } from "../../Components/Context";
 import { authRequest } from "../../Services/RequestServices";
@@ -18,68 +25,30 @@ const Login = () => {
   });
 
   return (
-    <ImageBackground style={{ flex: 1 }} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <SafeAreaView style={[MyStyles.container, { justifyContent: "center" }]}>
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/logo.png")}
             style={{ width: 350, resizeMode: "contain", marginBottom: 40 }}
           />
-          <Card
-            style={{
-              width: 350,
-              borderWidth: 1,
-              borderColor: "#555",
-              backgroundColor: "rgba(255,255,255,0.3)",
-            }}
-          >
-            <Card.Content>
-              <TextInput
-                mode="flat"
-                label="Mobile"
-                maxLength={10}
-                keyboardType="number-pad"
-                disabled={loading}
-                style={{ backgroundColor: "rgba(255,255,255,0)" }}
-                left={
-                  <TextInput.Icon color="#555" size={25} style={{ marginBottom: 0 }} name="phone" />
-                }
-                value={param.user_name}
-                onChangeText={(text) => setParam({ ...param, user_name: text })}
-              />
-              {!otp ? (
+          <KeyboardAvoidingView>
+            <Card
+              style={{
+                width: 350,
+                borderWidth: 1,
+                borderColor: "#555",
+                backgroundColor: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <Card.Content>
                 <TextInput
                   mode="flat"
-                  label="Password"
-                  secureTextEntry={secureText}
-                  disabled={loading}
-                  style={{ backgroundColor: "rgba(255,255,255,0)" }}
-                  left={
-                    <TextInput.Icon
-                      color="#555"
-                      size={25}
-                      style={{ marginBottom: 0 }}
-                      name="lock"
-                    />
-                  }
-                  right={
-                    <TextInput.Icon
-                      color="#aaa"
-                      size={25}
-                      style={{ marginBottom: 0 }}
-                      name={secureText ? "eye" : "eye-off"}
-                      onPress={() => setSecureText(!secureText)}
-                      forceTextInputFocus={false}
-                    />
-                  }
-                  value={param.password}
-                  onChangeText={(text) => setParam({ ...param, password: text })}
-                />
-              ) : (
-                <TextInput
-                  mode="flat"
-                  label="Otp"
-                  maxLength={6}
+                  label="Mobile"
+                  maxLength={10}
                   keyboardType="number-pad"
                   disabled={loading}
                   style={{ backgroundColor: "rgba(255,255,255,0)" }}
@@ -88,62 +57,120 @@ const Login = () => {
                       color="#555"
                       size={25}
                       style={{ marginBottom: 0 }}
-                      name="lock"
+                      name="phone"
                     />
                   }
-                  value={param.otp}
-                  onChangeText={(text) => setParam({ ...param, otp: text })}
+                  value={param.user_name}
+                  onChangeText={(text) =>
+                    setParam({ ...param, user_name: text })
+                  }
                 />
-              )}
-              <View style={[MyStyles.row, { justifyContent: "center", marginTop: 40 }]}>
-                <Button
-                  color="#ffba3c"
-                  mode="contained"
-                  uppercase={false}
-                  loading={loading}
-                  disabled={loading}
-                  onPress={() => {
-                    setLoading(true);
-                    if (otp) {
-                      authRequest("branch/token", param).then((resp) => {
-                        if (resp.status == 200) {
-                          signIn({
-                            userToken: resp.data.access_token,
-                            userName: resp.data.company_name,
-                            branchId: resp.data.branch_id,
-                          });
-                        } else {
-                          Alert.alert(
-                            "Error !",
-                            "Oops! \nSeems like we run into some Server Error"
-                          );
-                        }
-                        setLoading(false);
-                      });
-                    } else {
-                      authRequest("branch/login", param).then((resp) => {
-                        if (resp.status == 200) {
-                          if (resp.data[0].valid) {
-                            setOtp(true);
-                          } else {
-                            Alert.alert("Error !", resp.error);
-                          }
-                        } else {
-                          Alert.alert(
-                            "Error !",
-                            "Oops! \nSeems like we run into some Server Error"
-                          );
-                        }
-                        setLoading(false);
-                      });
+                {!otp ? (
+                  <TextInput
+                    mode="flat"
+                    label="Password"
+                    secureTextEntry={secureText}
+                    disabled={loading}
+                    style={{ backgroundColor: "rgba(255,255,255,0)" }}
+                    left={
+                      <TextInput.Icon
+                        color="#555"
+                        size={25}
+                        style={{ marginBottom: 0 }}
+                        name="lock"
+                      />
                     }
-                  }}
+                    right={
+                      <TextInput.Icon
+                        color="#aaa"
+                        size={25}
+                        style={{ marginBottom: 0 }}
+                        name={secureText ? "eye" : "eye-off"}
+                        onPress={() => setSecureText(!secureText)}
+                        forceTextInputFocus={false}
+                      />
+                    }
+                    value={param.password}
+                    onChangeText={(text) =>
+                      setParam({ ...param, password: text })
+                    }
+                  />
+                ) : (
+                  <TextInput
+                    mode="flat"
+                    label="Otp"
+                    maxLength={6}
+                    keyboardType="name-phone-pad"
+                    disabled={loading}
+                    secureTextEntry={false}
+                    style={{ backgroundColor: "rgba(255,255,255,0)" }}
+                    left={
+                      <TextInput.Icon
+                        color="#555"
+                        size={25}
+                        style={{ marginBottom: 0 }}
+                        name="lock"
+                      />
+                    }
+                    value={param.otp}
+                    onChangeText={(text) => setParam({ ...param, otp: text })}
+                  />
+                )}
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginTop: 40 },
+                  ]}
                 >
-                  {!otp ? "Login" : "Submit"}
-                </Button>
-              </View>
-            </Card.Content>
-          </Card>
+                  <Button
+                    color="#ffba3c"
+                    mode="contained"
+                    uppercase={false}
+                    loading={loading}
+                    disabled={loading}
+                    onPress={() => {
+                      setLoading(true);
+                      if (otp) {
+                        authRequest("branch/token", param).then((resp) => {
+                          if (resp.status == 200) {
+                            signIn({
+                              userToken: resp.data.access_token,
+                              userName: resp.data.company_name,
+                              branchId: resp.data.branch_id,
+                            });
+                          } else {
+                            Alert.alert(
+                              "Error !",
+                              "Oops! \nSeems like we run into some Server Error"
+                            );
+                          }
+                          setLoading(false);
+                        });
+                      } else {
+                        authRequest("branch/login", param).then((resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              setOtp(true);
+                            } else {
+                              Alert.alert("Error !", resp.error);
+                            }
+                          } else {
+                            Alert.alert(
+                              "Error !",
+                              "Oops! \nSeems like we run into some Server Error"
+                            );
+                          }
+                          setLoading(false);
+                        });
+                      }
+                    }}
+                  >
+                    {!otp ? "Login" : "Submit"}
+                  </Button>
+                </View>
+              </Card.Content>
+            </Card>
+          </KeyboardAvoidingView>
         </View>
       </SafeAreaView>
     </ImageBackground>
