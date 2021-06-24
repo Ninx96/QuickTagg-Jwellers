@@ -92,6 +92,14 @@ export default function App() {
         }
         dispatch({ type: "LOGOUT" });
       },
+      userToken: async () => {
+        try {
+          const userToken = await SecureStore.getItemAsync("userToken");
+          return userToken;
+        } catch (e) {
+          console.log(e);
+        }
+      },
     }),
     []
   );
