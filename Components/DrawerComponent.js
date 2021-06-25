@@ -15,6 +15,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
+import Profile from "../Screens/Profile";
 
 const DrawerComponent = () => {
   const Drawer = createDrawerNavigator();
@@ -36,6 +37,7 @@ const DrawerComponent = () => {
       <Drawer.Screen component={CustomerForm} name="CustomerForm" />
       <Drawer.Screen component={VoucherList} name="VoucherList" />
       <Drawer.Screen component={VoucherForm} name="VoucherForm" />
+      <Drawer.Screen component={Profile} name="Profile" />
     </Drawer.Navigator>
   );
 };
@@ -72,6 +74,13 @@ const DrawerContent = (props) => {
             label="Voucher"
             onPress={() => {
               props.navigation.navigate("VoucherForm");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="Profile"
+            onPress={() => {
+              props.navigation.navigate("Profile");
             }}
           />
         </Drawer.Section>
