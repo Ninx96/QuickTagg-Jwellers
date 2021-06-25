@@ -132,7 +132,11 @@ export default function App() {
         <AuthContext.Provider value={authContext}>
           <StatusBar hidden={false} style="light" barStyle={"default"} />
           <NavigationContainer>
-            {loginState.userToken !== null ? <DrawerComponent /> : <Login />}
+            {loginState.userToken !== null ? (
+              <DrawerComponent userDetails={loginState} />
+            ) : (
+              <Login />
+            )}
           </NavigationContainer>
         </AuthContext.Provider>
       </PaperProvider>

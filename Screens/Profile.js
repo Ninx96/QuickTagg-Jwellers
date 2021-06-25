@@ -17,8 +17,13 @@ import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 
+const ProfileList = (props) => {
+  return <View></View>;
+};
+
 const Profile = (props) => {
   const Tab = createMaterialTopTabNavigator();
+  const { userToken } = props.route.params;
   return (
     <View style={MyStyles.container}>
       <CustomHeader {...props} />
@@ -87,6 +92,7 @@ const Profile = (props) => {
           options={{
             tabBarIcon: () => <Icon name="heart" size={20} />,
           }}
+          initialParams={{ userToken: userToken }}
         />
         <Tab.Screen
           name="Wishlist"
@@ -122,6 +128,7 @@ const Profile = (props) => {
 };
 
 const Uploaded = () => {
+  const { userToken } = props.route.params;
   return (
     <View style={MyStyles.container}>
       <FlatList
@@ -284,4 +291,4 @@ const Notification = () => {
   );
 };
 
-export default Profile;
+export { Profile, ProfileList };
