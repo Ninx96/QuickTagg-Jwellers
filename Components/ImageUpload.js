@@ -41,6 +41,7 @@ const ImageUpload = ({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           quality: 0.2,
           base64: true,
+          allowsMultipleSelection: true,
         };
         Alert.alert("Select Upload Option", "Choose an Option To Continue", [
           {

@@ -18,7 +18,36 @@ import MyStyles from "../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 
 const ProfileList = (props) => {
-  return <View></View>;
+  return (
+    <View style={MyStyles.container}>
+      <CustomHeader {...props} />
+      <FlatList
+        data={[{}]}
+        renderItem={({ item, index }) => (
+          <List.Item
+            key={index}
+            style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
+            title="Rahul"
+            titleStyle={{ fontWeight: "bold" }}
+            description="971612244"
+            left={(props) => (
+              <List.Icon
+                {...props}
+                icon="account"
+                onPress={() => props.navigation.navigate("CustomerForm")}
+              />
+            )}
+            right={() => {
+              return <List.Icon {...props} icon="chevron-right" />;
+            }}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* Bhai isme lists mai Flatlist lagao direct loop ka hisab mat bithao */}
+    </View>
+  );
 };
 
 const Profile = (props) => {
@@ -128,7 +157,7 @@ const Profile = (props) => {
 };
 
 const Uploaded = () => {
-  const { userToken } = props.route.params;
+  //const { userToken } = props.route.params;
   return (
     <View style={MyStyles.container}>
       <FlatList

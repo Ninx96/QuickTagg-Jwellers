@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { ImageBackground, ScrollView, View } from "react-native";
-import { Button, Checkbox, FAB, TextInput } from "react-native-paper";
+import { ImageBackground, ScrollView, View, FlatList } from "react-native";
+import {
+  Button,
+  Checkbox,
+  FAB,
+  Text,
+  TextInput,
+  Card,
+  IconButton,
+} from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
@@ -12,6 +20,48 @@ const VoucherList = (props) => {
   return (
     <View style={MyStyles.container}>
       <CustomHeader {...props} />
+      <FlatList
+        data={[{}]}
+        renderItem={({ item, index }) => (
+          <Card
+            style={{
+              marginHorizontal: 20,
+              padding: 0,
+              borderRadius: 10,
+              marginVertical: 5,
+            }}
+          >
+            <Card.Title
+              style={{
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}
+              title="Birthday Voucher"
+              titleStyle={{
+                textAlign: "center",
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            />
+            <Card.Content>
+              <View style={MyStyles.row}>
+                <View>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    Flat Rs. 750 Off
+                  </Text>
+                  <Text style={{ marginBottom: 20 }}>Value => $750</Text>
+                  <Text>Red. End Date => 18-02-2021</Text>
+                </View>
+                <View>
+                  <IconButton icon="pencil" />
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
       <FAB
         style={{
           position: "absolute",

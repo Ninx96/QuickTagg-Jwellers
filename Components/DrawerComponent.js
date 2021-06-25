@@ -16,6 +16,7 @@ import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile, ProfileList } from "../Screens/Profile";
+import { Products, ProductsList } from "../Screens/Products/Products";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -42,6 +43,8 @@ const DrawerComponent = ({ userDetails }) => {
         name="Profile"
         initialParams={userDetails}
       />
+      <Drawer.Screen component={Products} name="Products" />
+      <Drawer.Screen component={ProductsList} name="ProductsList" />
     </Drawer.Navigator>
   );
 };
@@ -77,7 +80,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="Voucher"
             onPress={() => {
-              props.navigation.navigate("VoucherForm");
+              props.navigation.navigate("VoucherList");
             }}
           />
           <Drawer.Item
@@ -85,6 +88,13 @@ const DrawerContent = (props) => {
             label="Profile"
             onPress={() => {
               props.navigation.navigate("Profile");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="Products"
+            onPress={() => {
+              props.navigation.navigate("ProductsList");
             }}
           />
         </Drawer.Section>
