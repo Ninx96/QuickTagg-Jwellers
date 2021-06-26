@@ -1,5 +1,4 @@
-import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   ScrollView,
@@ -10,23 +9,18 @@ import {
 import {
   Button,
   Text,
-  List,
   FAB,
   TextInput,
-  TouchableRipple,
   Checkbox,
   Card,
-  IconButton,
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
-import CustomHeader from "../../Components/CustomHeader";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 
 const ProductsList = (props) => {
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={[{}]}
         renderItem={({ item, index }) => (
@@ -52,8 +46,8 @@ const ProductsList = (props) => {
       <FAB
         style={{
           position: "absolute",
-          bottom: 5,
-          right: 5,
+          bottom: 20,
+          right: 20,
         }}
         icon="plus"
         onPress={() => props.navigation.navigate("Products")}
@@ -69,7 +63,6 @@ const Products = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput

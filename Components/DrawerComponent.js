@@ -17,6 +17,9 @@ import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile, ProfileList } from "../Screens/Profile";
 import { Products, ProductsList } from "../Screens/Products/Products";
+import { Category, CategoryList } from "../Screens/Products/Category";
+import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
+import ProductTabs from "../Screens/ProductTabs";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -43,8 +46,11 @@ const DrawerComponent = ({ userDetails }) => {
         name="Profile"
         initialParams={userDetails}
       />
+      {/* --------------------- Products------------------- */}
+      <Drawer.Screen component={ProductTabs} name="ProductTabs" />
       <Drawer.Screen component={Products} name="Products" />
-      <Drawer.Screen component={ProductsList} name="ProductsList" />
+      <Drawer.Screen component={Category} name="Category" />
+      <Drawer.Screen component={SubCategory} name="SubCategory" />
     </Drawer.Navigator>
   );
 };
@@ -94,7 +100,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="Products"
             onPress={() => {
-              props.navigation.navigate("ProductsList");
+              props.navigation.navigate("ProductTabs");
             }}
           />
         </Drawer.Section>

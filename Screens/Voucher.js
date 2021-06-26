@@ -65,8 +65,8 @@ const VoucherList = (props) => {
       <FAB
         style={{
           position: "absolute",
-          bottom: 5,
-          right: 5,
+          bottom: 20,
+          right: 20,
         }}
         icon="plus"
         onPress={() => props.navigation.navigate("VoucherForm")}

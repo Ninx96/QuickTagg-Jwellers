@@ -1,15 +1,6 @@
-import React, { useState, useEffect } from "react";
-import moment from "moment";
-import { Image, ImageBackground, ScrollView, View } from "react-native";
-import {
-  Button,
-  Text,
-  List,
-  FAB,
-  TextInput,
-  Avatar,
-  Card,
-} from "react-native-paper";
+import React from "react";
+import { Image, ScrollView, View } from "react-native";
+import { Button, Text, List, Avatar, Card } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
 
