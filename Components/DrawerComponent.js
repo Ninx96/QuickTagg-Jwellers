@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Image } from "react-native";
-import {
-  Drawer,
-  Text,
-  Divider,
-  Subheading,
-  useTheme,
-} from "react-native-paper";
+import { Drawer, Text, Divider, Subheading, useTheme } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -20,6 +14,7 @@ import { Products, ProductsList } from "../Screens/Products/Products";
 import { Category, CategoryList } from "../Screens/Products/Category";
 import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
+import { GeneralCatalog } from "../Screens/Catalogs/GeneralCatalog";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -51,6 +46,9 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen component={Products} name="Products" />
       <Drawer.Screen component={Category} name="Category" />
       <Drawer.Screen component={SubCategory} name="SubCategory" />
+
+      {/* --------------------- Catalogs------------------- */}
+      <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" />
     </Drawer.Navigator>
   );
 };
@@ -101,6 +99,13 @@ const DrawerContent = (props) => {
             label="Products"
             onPress={() => {
               props.navigation.navigate("ProductTabs");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="General Catalogs"
+            onPress={() => {
+              props.navigation.navigate("GeneralCatalog");
             }}
           />
         </Drawer.Section>

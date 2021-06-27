@@ -1,14 +1,7 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { ImageBackground, ScrollView, View, Alert } from "react-native";
-import {
-  Button,
-  Text,
-  List,
-  FAB,
-  TextInput,
-  TouchableRipple,
-} from "react-native-paper";
+import { Button, Text, List, FAB, TextInput, TouchableRipple } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
@@ -21,41 +14,60 @@ const CustomerList = (props) => {
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
-
-    let param = {}
+    let param = {};
     postRequest("masters/customer/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
-
   }, []);
 
   return (
     <View style={MyStyles.container}>
       <CustomHeader {...props} />
       <ScrollView>
-
-        {griddata.length > 0 ? griddata.map((item, index) => {
-          return (
-            <List.Item
-              key={item.customer_id}
-              style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
-              title={item.full_name}
-              titleStyle={{ fontWeight: "bold" }}
-              description={item.mobile}
-              left={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("Profile", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="account" /></TouchableRipple>) }}
-              right={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("CustomerForm", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="chevron-right" /></TouchableRipple>) }}
-            />
-          )
-        }) : null}
-
+        {griddata.length > 0
+          ? griddata.map((item, index) => {
+              return (
+                <List.Item
+                  key={item.customer_id}
+                  style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
+                  title={item.full_name}
+                  titleStyle={{ fontWeight: "bold" }}
+                  description={item.mobile}
+                  left={() => {
+                    return (
+                      <TouchableRipple
+                        style={{ zIndex: 0 }}
+                        onPress={() => {
+                          props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                        }}
+                      >
+                        <List.Icon {...props} icon="account" />
+                      </TouchableRipple>
+                    );
+                  }}
+                  right={() => {
+                    return (
+                      <TouchableRipple
+                        style={{ zIndex: 0 }}
+                        onPress={() => {
+                          props.navigation.navigate("CustomerForm", {
+                            customer_id: item.customer_id,
+                          });
+                        }}
+                      >
+                        <List.Icon {...props} icon="chevron-right" />
+                      </TouchableRipple>
+                    );
+                  }}
+                />
+              );
+            })
+          : null}
       </ScrollView>
       <FAB
         style={{
@@ -65,9 +77,7 @@ const CustomerList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("CustomerForm", { customer_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("CustomerForm", { customer_id: 0 })}
       />
     </View>
   );
@@ -84,8 +94,6 @@ const CustomerForm = (props) => {
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
   ]);
-
-
 
   const [param, setparam] = useState({
     customer_id: "0",
@@ -104,27 +112,18 @@ const CustomerForm = (props) => {
   });
 
   React.useEffect(() => {
-
-
     postRequest("masters/customer/category/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
-
         setcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     postRequest("masters/staff/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setstafflist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -132,18 +131,14 @@ const CustomerForm = (props) => {
       if (resp.status == 200) {
         setarealist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
-
     if (customer_id != 0) {
       let param = {
-        customer_id: customer_id
-      }
+        customer_id: customer_id,
+      };
       postRequest("masters/customer/preview", param, userToken).then((resp) => {
         if (resp.status == 200) {
           param.customer_id = resp.data.customer_id;
@@ -161,25 +156,15 @@ const CustomerForm = (props) => {
           param.staff_id = resp.data.staff_id;
           setparam({ ...param });
         } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
       });
     }
     setLoading(false);
-
-
-
-
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../assets/login-bg.jpg")}>
       <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -303,12 +288,7 @@ const CustomerForm = (props) => {
               setparam({ ...param, address: text });
             }}
           />
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
+          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
             <Button
               mode="contained"
               la
@@ -320,11 +300,10 @@ const CustomerForm = (props) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
                       props.navigation.navigate("CustomerList");
-
                     }
                     setLoading(false);
                   }
-                );
+                });
               }}
             >
               Submit
