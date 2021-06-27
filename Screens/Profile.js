@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Image, ImageBackground, ScrollView, View } from "react-native";
 import { Button, Text, List, FAB, TextInput, Avatar, Card, } from "react-native-paper";
+
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
 import CustomHeader from "../Components/CustomHeader";
@@ -10,7 +12,36 @@ import { FlatList } from "react-native-gesture-handler";
 import { postRequest } from "../Services/RequestServices";
 
 const ProfileList = (props) => {
-  return <View></View>;
+  return (
+    <View style={MyStyles.container}>
+      <CustomHeader {...props} />
+      <FlatList
+        data={[{}]}
+        renderItem={({ item, index }) => (
+          <List.Item
+            key={index}
+            style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
+            title="Rahul"
+            titleStyle={{ fontWeight: "bold" }}
+            description="971612244"
+            left={(props) => (
+              <List.Icon
+                {...props}
+                icon="account"
+                onPress={() => props.navigation.navigate("CustomerForm")}
+              />
+            )}
+            right={() => {
+              return <List.Icon {...props} icon="chevron-right" />;
+            }}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* Bhai isme lists mai Flatlist lagao direct loop ka hisab mat bithao */}
+    </View>
+  );
 };
 
 const Profile = (props) => {
@@ -185,6 +216,7 @@ const Profile = (props) => {
   );
 };
 
+
 const Wishlist = (props) => {
   const { userToken, customer_id } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -208,6 +240,7 @@ const Wishlist = (props) => {
     });
     setLoading(false);
   }, []);
+
 
   return (
     <View style={MyStyles.container}>
