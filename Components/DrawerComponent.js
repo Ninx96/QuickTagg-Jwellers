@@ -37,14 +37,14 @@ const DrawerComponent = ({ userDetails }) => {
       drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen component={Dashboard} name="Dashboard" />
-      <Drawer.Screen component={CustomerList} name="CustomerList" />
-      <Drawer.Screen component={CustomerForm} name="CustomerForm" />
+      <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
+      <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
       <Drawer.Screen component={VoucherList} name="VoucherList" />
       <Drawer.Screen component={VoucherForm} name="VoucherForm" />
       <Drawer.Screen
         component={Profile}
         name="Profile"
-        initialParams={userDetails}
+        initialParams={userDetails} // aise krke bhejna hai ok
       />
       {/* --------------------- Products------------------- */}
       <Drawer.Screen component={ProductTabs} name="ProductTabs" />
