@@ -6,32 +6,26 @@ import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
 import MyStyles from "../Styles/MyStyles";
-import { AuthContext } from "../Components/Context";
 import { postRequest } from "../Services/RequestServices";
 
 const CustomerList = (props) => {
-  const { userToken } = React.useContext(AuthContext);
+  const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
-
-    userToken().then((item) => {
-      let param = {}
-      postRequest("masters/customer/browse", param, item).then((resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-      });
-      setLoading(false);
-
+    let param = {}
+    postRequest("masters/customer/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
     });
-
+    setLoading(false);
   }, []);
 
   return (
@@ -46,7 +40,7 @@ const CustomerList = (props) => {
               title={item.full_name}
               titleStyle={{ fontWeight: "bold" }}
               description={item.mobile}
-              left={(props) => <List.Icon {...props} icon="account" onPress={() => props.navigation.navigate("CustomerForm")} />}
+              left={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("Profile", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="account" /></TouchableRipple>) }}
               right={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("CustomerForm", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="chevron-right" /></TouchableRipple>) }}
             />
           )
@@ -68,7 +62,7 @@ const CustomerList = (props) => {
 
 const CustomerForm = (props) => {
   const { customer_id } = props.route.params;
-  const { userToken } = React.useContext(AuthContext);
+  const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [categorylist, setcategorylist] = useState([]);
   const [stafflist, setstafflist] = useState([]);
@@ -77,7 +71,7 @@ const CustomerForm = (props) => {
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' }
   ]);
-  const [token, settoken] = useState('');
+
   const [param, setparam] = useState({
     customer_id: '0',
     address: '',
@@ -95,71 +89,70 @@ const CustomerForm = (props) => {
   });
 
   React.useEffect(() => {
-    userToken().then((item) => {
-      settoken(item);
-      postRequest("masters/customer/category/browse", param, item).then((resp) => {
-        if (resp.status == 200) {
 
-          setcategorylist(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-      });
-      postRequest("masters/staff/browse", param, item).then((resp) => {
-        if (resp.status == 200) {
-          setstafflist(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-      });
+    postRequest("masters/customer/category/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
 
-      postRequest("masters/area/browse", param, item).then((resp) => {
-        if (resp.status == 200) {
-          setarealist(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-      });
-
-      if (customer_id != 0) {
-        let param = {
-          customer_id: customer_id
-        }
-        postRequest("masters/customer/preview", param, item).then((resp) => {
-          if (resp.status == 200) {           
-            param.customer_id = resp.data.customer_id;
-            param.address = resp.data.address;
-            param.email = resp.data.email;
-            param.full_name = resp.data.full_name;
-            param.gender = resp.data.gender;
-            param.mobile = resp.data.mobile;
-            param.area_id = resp.data.area_id;
-            param.category_id = resp.data.category_id;
-            param.doa = resp.data.doa;
-            param.dob = resp.data.dob;
-            param.profession = resp.data.profession;
-            param.ref_id = resp.data.ref_id;
-            param.staff_id = resp.data.staff_id;
-            setparam({ ...param });
-          } else {
-            Alert.alert(
-              "Error !",
-              "Oops! \nSeems like we run into some Server Error"
-            );
-          }
-        });
+        setcategorylist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
-      setLoading(false);
     });
+    postRequest("masters/staff/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setstafflist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
+    postRequest("masters/area/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setarealist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
+    if (customer_id != 0) {
+      let param = {
+        customer_id: customer_id
+      }
+      postRequest("masters/customer/preview", param, userToken).then((resp) => {
+        if (resp.status == 200) {
+          param.customer_id = resp.data.customer_id;
+          param.address = resp.data.address;
+          param.email = resp.data.email;
+          param.full_name = resp.data.full_name;
+          param.gender = resp.data.gender;
+          param.mobile = resp.data.mobile;
+          param.area_id = resp.data.area_id;
+          param.category_id = resp.data.category_id;
+          param.doa = resp.data.doa;
+          param.dob = resp.data.dob;
+          param.profession = resp.data.profession;
+          param.ref_id = resp.data.ref_id;
+          param.staff_id = resp.data.staff_id;
+          setparam({ ...param });
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
+      });
+    }
+    setLoading(false);
+
 
   }, []);
 
@@ -248,7 +241,7 @@ const CustomerForm = (props) => {
             <Button mode="contained" la uppercase={false}
               onPress={() => {
                 setLoading(true);
-                postRequest("masters/customer/insert", param, token).then((resp) => {
+                postRequest("masters/customer/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
                       props.navigation.navigate("CustomerList");
