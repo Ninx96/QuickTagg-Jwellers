@@ -65,6 +65,18 @@ const MyStyles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
+  squarefixedRatio: {   
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    aspectRatio: 1,
+    width:'8%',
+    borderColor:'grey',
+    borderWidth:1,
+    borderRadius:3,
+    alignSelf:'center',
+  }
 });
 
 export default MyStyles;

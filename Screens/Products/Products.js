@@ -1,28 +1,35 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  Alert,
-  FlatList,
-} from "react-native";
-import {
-  Button,
-  Text,
-  FAB,
-  TextInput,
-  Checkbox,
-  Card,
-} from "react-native-paper";
+import { ImageBackground, ScrollView, View, Alert, FlatList, } from "react-native";
+import { Button, Text, FAB, TextInput, Checkbox, Card, } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
-
+import { postRequest } from "../../Services/RequestServices";
 const ProductsList = (props) => {
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [griddata, setgriddata] = useState([]);
+
+  React.useEffect(() => {   
+    let param = {}
+    postRequest("masters/product/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+  }, []);
+
   return (
     <View style={MyStyles.container}>
       <FlatList
-        data={[{}]}
+        data={griddata}
+        numColumns={3}
         renderItem={({ item, index }) => (
           <Card
             style={{
@@ -33,11 +40,11 @@ const ProductsList = (props) => {
             }}
           >
             <Card.Cover
-              source={require("../../assets/upload.png")}
+              source={{ uri: item.url_image + '' + item.image_path }}
               style={{ width: 120, height: 110 }}
             />
             <View style={{ padding: 5 }}>
-              <Text>Alocasia Leaf Drop 10011</Text>
+              <Text>{item.product_name} {item.product_code}</Text>
             </View>
           </Card>
         )}
@@ -197,11 +204,11 @@ const Products = (props) => {
               setparam({ ...param, address: text });
             }}
           />
-          <Checkbox.Item label="Exhibition" onPress={() => {}} />
-          <Checkbox.Item label="Business" onPress={() => {}} />
-          <Checkbox.Item label="Trial at Home" onPress={() => {}} />
-          <Checkbox.Item label="Disable" onPress={() => {}} />
-          <MultipleImages data={[]} onSelect={(fileArray) => {}} />
+          <Checkbox.Item label="Exhibition" onPress={() => { }} />
+          <Checkbox.Item label="Business" onPress={() => { }} />
+          <Checkbox.Item label="Trial at Home" onPress={() => { }} />
+          <Checkbox.Item label="Disable" onPress={() => { }} />
+          <MultipleImages data={[]} onSelect={(fileArray) => { }} />
           <Button
             mode="contained"
             la

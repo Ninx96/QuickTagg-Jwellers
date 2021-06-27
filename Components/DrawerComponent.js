@@ -39,16 +39,16 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen component={Dashboard} name="Dashboard" />
       <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
       <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
-      <Drawer.Screen component={VoucherList} name="VoucherList" />
-      <Drawer.Screen component={VoucherForm} name="VoucherForm" />
+      <Drawer.Screen component={VoucherList} name="VoucherList" initialParams={userDetails} />
+      <Drawer.Screen component={VoucherForm} name="VoucherForm" initialParams={userDetails} />
       <Drawer.Screen
         component={Profile}
         name="Profile"
         initialParams={userDetails} // aise krke bhejna hai ok
       />
       {/* --------------------- Products------------------- */}
-      <Drawer.Screen component={ProductTabs} name="ProductTabs" />
-      <Drawer.Screen component={Products} name="Products" />
+      <Drawer.Screen component={ProductTabs} name="ProductTabs" initialParams={userDetails} />
+      <Drawer.Screen component={Products} name="Products"/>
       <Drawer.Screen component={Category} name="Category" />
       <Drawer.Screen component={SubCategory} name="SubCategory" />
     </Drawer.Navigator>
