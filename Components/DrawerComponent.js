@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Image } from "react-native";
-import { Drawer, Text, Divider, Subheading, useTheme } from "react-native-paper";
+import {
+  Drawer,
+  Text,
+  Divider,
+  Subheading,
+  useTheme,
+} from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -15,6 +21,14 @@ import { Category, CategoryList } from "../Screens/Products/Category";
 import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
 import { GeneralCatalog } from "../Screens/Catalogs/GeneralCatalog";
+import SettingsMenu from "../Screens/SettingsMenu";
+import {
+  CustomerCategory,
+  CustomerCategoryList,
+} from "../Screens/Settings/CustomerCategory";
+import { BranchArea, BranchAreaList } from "../Screens/Settings/BranchArea";
+import { BranchStaff, BranchStaffList } from "../Screens/Settings/BranchStaff";
+import TabToScan from "../Screens/Settings/TabToScan";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -32,8 +46,16 @@ const DrawerComponent = ({ userDetails }) => {
       drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen component={Dashboard} name="Dashboard" />
-      <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
-      <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
+      <Drawer.Screen
+        component={CustomerList}
+        name="CustomerList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={CustomerForm}
+        name="CustomerForm"
+        initialParams={userDetails}
+      />
       <Drawer.Screen component={VoucherList} name="VoucherList" />
       <Drawer.Screen component={VoucherForm} name="VoucherForm" />
       <Drawer.Screen
@@ -49,6 +71,19 @@ const DrawerComponent = ({ userDetails }) => {
 
       {/* --------------------- Catalogs------------------- */}
       <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" />
+
+      {/* --------------------- Settings------------------- */}
+      <Drawer.Screen component={SettingsMenu} name="SettingsMenu" />
+      <Drawer.Screen
+        component={CustomerCategoryList}
+        name="CustomerCategoryList"
+      />
+      <Drawer.Screen component={CustomerCategory} name="CustomerCategory" />
+      <Drawer.Screen component={BranchArea} name="BranchArea" />
+      <Drawer.Screen component={BranchAreaList} name="BranchAreaList" />
+      <Drawer.Screen component={BranchStaff} name="BranchStaff" />
+      <Drawer.Screen component={BranchStaffList} name="BranchStaffList" />
+      <Drawer.Screen component={TabToScan} name="TabToScan" />
     </Drawer.Navigator>
   );
 };
@@ -99,6 +134,13 @@ const DrawerContent = (props) => {
             label="Products"
             onPress={() => {
               props.navigation.navigate("ProductTabs");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="Settings"
+            onPress={() => {
+              props.navigation.navigate("SettingsMenu");
             }}
           />
           <Drawer.Item
