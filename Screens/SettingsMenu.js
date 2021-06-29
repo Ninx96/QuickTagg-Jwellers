@@ -10,24 +10,21 @@ const SettingsMenu = (props) => {
       <CustomHeader {...props} />
       <ScrollView>
         <List.Item
-          onPress={() => props.navigation.navigate("CustomerCatagory")}
-          key={index}
+          onPress={() => props.navigation.navigate("CustomerCategoryList")}
           style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
           title="Customer Catagory"
           titleStyle={{ fontWeight: "bold" }}
           right={() => <List.Icon {...props} icon="chevron-right" />}
         />
         <List.Item
-          onPress={() => props.navigation.navigate("BranchArea")}
-          key={index}
+          onPress={() => props.navigation.navigate("BranchAreaList")}
           style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
           title="Branch Area"
           titleStyle={{ fontWeight: "bold" }}
           right={() => <List.Icon {...props} icon="chevron-right" />}
         />
         <List.Item
-          onPress={() => props.navigation.navigate("BranchStaff")}
-          key={index}
+          onPress={() => props.navigation.navigate("BranchStaffList")}
           style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
           title="Branch Staff"
           titleStyle={{ fontWeight: "bold" }}
@@ -35,7 +32,6 @@ const SettingsMenu = (props) => {
         />
         <List.Item
           onPress={() => props.navigation.navigate("TabToScan")}
-          key={index}
           style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
           title="Tab To Scan"
           titleStyle={{ fontWeight: "bold" }}

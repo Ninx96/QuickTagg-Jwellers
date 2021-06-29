@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, ImageBackground, ScrollView } from "react-native";
-import { Text } from "react-native-paper";
+import { Button, Subheading, Text } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import MultipleImages from "../../Components/MultipleImages";
@@ -16,13 +16,17 @@ const TabToScan = (props) => {
       <ScrollView>
         <View style={MyStyles.cover}>
           <ImageUpload
+            imageStyle={{ alignSelf: "center", width: "60%" }}
             source={require("../../assets/upload.png")}
             onClearImage={() => {}}
             onUploadImage={() => {}}
-            label="Choose Logo"
+            label="Choose Logo :"
           />
-          <Text>Choose Cover Images :</Text>
-          <MultipleImages onSelect={(files) => {}} />
+
+          <Subheading style={{ marginTop: 40 }}>
+            Choose Cover Images :
+          </Subheading>
+          <MultipleImages onSelect={(files) => {}} data={[]} />
 
           <View
             style={[

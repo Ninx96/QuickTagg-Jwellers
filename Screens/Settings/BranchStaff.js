@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, ImageBackground, ScrollView, FlatList } from "react-native";
-import { List } from "react-native-paper";
+import { Button, FAB, List, TextInput } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 
@@ -21,6 +21,18 @@ const BranchStaffList = (props) => {
           />
         )}
         keyExtractor={(item, index) => index.toString()}
+      />
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 15,
+          right: 15,
+          zIndex: 100,
+        }}
+        icon="plus"
+        onPress={() =>
+          props.navigation.navigate("BranchStaff", { customer_id: 0 })
+        }
       />
     </View>
   );
@@ -56,6 +68,9 @@ const BranchStaff = (props) => {
               setparam({ ...param, full_name: text });
             }}
           />
+          <Button mode="contained" uppercase={false}>
+            Submit
+          </Button>
         </View>
       </ScrollView>
     </ImageBackground>
