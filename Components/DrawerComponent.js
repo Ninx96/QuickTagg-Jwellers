@@ -48,9 +48,9 @@ const DrawerComponent = ({ userDetails }) => {
       />
       {/* --------------------- Products------------------- */}
       <Drawer.Screen component={ProductTabs} name="ProductTabs" initialParams={userDetails} />
-      <Drawer.Screen component={Products} name="Products"/>
-      <Drawer.Screen component={Category} name="Category" />
-      <Drawer.Screen component={SubCategory} name="SubCategory" />
+      <Drawer.Screen component={Products} name="Products" initialParams={userDetails} />
+      <Drawer.Screen component={Category} name="Category" initialParams={userDetails} />
+      <Drawer.Screen component={SubCategory} name="SubCategory" initialParams={userDetails} />
     </Drawer.Navigator>
   );
 };
