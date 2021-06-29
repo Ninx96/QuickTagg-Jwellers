@@ -5,6 +5,7 @@ import {
   View,
   Alert,
   FlatList,
+  Image,
 } from "react-native";
 import {
   Button,
@@ -13,7 +14,10 @@ import {
   TextInput,
   Checkbox,
   Card,
+  IconButton,
 } from "react-native-paper";
+import Swiper from "react-native-swiper";
+
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
@@ -52,6 +56,99 @@ const ProductsList = (props) => {
         icon="plus"
         onPress={() => props.navigation.navigate("Products")}
       />
+    </View>
+  );
+};
+
+const ProductsPreview = (props) => {
+  const [productImages, setProductImages] = useState([{}, {}, {}]);
+  return (
+    <View style={MyStyles.container}>
+      <ScrollView>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <IconButton
+            icon="chevron-left"
+            size={30}
+            color="black"
+            onPress={() => props.navigation.goBack()}
+          />
+        </View>
+        <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
+          <Text style={{ fontWeight: "bold", fontSize: 22 }}>
+            Aloxasia Leaf Drop Earring
+          </Text>
+          <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: 10012</Text>
+          <Text style={{ fontSize: 18 }}>
+            Price: <Text style={{ fontWeight: "bold" }}>50</Text> {"      "}
+            <Text
+              style={{
+                color: "red",
+                textDecorationLine: "line-through",
+              }}
+            >
+              200
+            </Text>
+          </Text>
+        </View>
+
+        <View style={{ height: 300, marginTop: 20 }}>
+          <Swiper>
+            {productImages.map((item, index) => {
+              return (
+                <Image
+                  key={index}
+                  source={require("../../assets/upload.png")}
+                  style={[{ height: 250, width: "100%" }]}
+                />
+              );
+            })}
+          </Swiper>
+        </View>
+        <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Availablity :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Metal :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Material :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Disable :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Exhibition :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Weight :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Size/Length :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Gender :</Text>
+            <Text>null</Text>
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Description :</Text>
+            <Text>null</Text>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -235,4 +332,4 @@ const Products = (props) => {
   );
 };
 
-export { Products, ProductsList };
+export { Products, ProductsPreview, ProductsList };

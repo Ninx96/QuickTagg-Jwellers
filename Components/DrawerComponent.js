@@ -16,7 +16,11 @@ import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile, ProfileList } from "../Screens/Profile";
-import { Products, ProductsList } from "../Screens/Products/Products";
+import {
+  Products,
+  ProductsList,
+  ProductsPreview,
+} from "../Screens/Products/Products";
 import { Category, CategoryList } from "../Screens/Products/Category";
 import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
@@ -68,6 +72,7 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen component={Products} name="Products" />
       <Drawer.Screen component={Category} name="Category" />
       <Drawer.Screen component={SubCategory} name="SubCategory" />
+      <Drawer.Screen component={ProductsPreview} name="ProductsPreview" />
 
       {/* --------------------- Catalogs------------------- */}
       <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" />
@@ -148,6 +153,13 @@ const DrawerContent = (props) => {
             label="General Catalogs"
             onPress={() => {
               props.navigation.navigate("GeneralCatalog");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="Products Preview"
+            onPress={() => {
+              props.navigation.navigate("ProductsPreview");
             }}
           />
         </Drawer.Section>
