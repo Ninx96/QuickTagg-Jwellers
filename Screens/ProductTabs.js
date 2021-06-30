@@ -18,9 +18,9 @@ const ProductTabs = (props) => {
           style: { backgroundColor: "#ffba3c" },
         }}
       >
-        <Tab.Screen name="Products" component={ProductsList} />
-        <Tab.Screen name="Category" component={CategoryList} />
-        <Tab.Screen name="SubCategory" component={SubCategoryList} />
+        <Tab.Screen name="Products" component={ProductsList} initialParams={props.route.params} />
+        <Tab.Screen name="Category" component={CategoryList} initialParams={props.route.params} />
+        <Tab.Screen name="SubCategory" component={SubCategoryList} initialParams={props.route.params} />
       </Tab.Navigator>
     </View>
   );
