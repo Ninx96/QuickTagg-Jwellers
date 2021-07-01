@@ -1,28 +1,33 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  FlatList,
-  Image,
-} from "react-native";
-import {
-  Button,
-  Text,
-  FAB,
-  TextInput,
-  Card,
-  IconButton,
-} from "react-native-paper";
+import { ImageBackground, ScrollView, View, FlatList, Image, } from "react-native";
+import { Button, Text, FAB, TextInput, Card, IconButton, } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
-
+import { postRequest } from "../../Services/RequestServices";
 const CategoryList = (props) => {
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [griddata, setgriddata] = useState([]);
+
+  React.useEffect(() => {
+    let param = {}
+    postRequest("masters/product/subcategory/getCategory", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+  }, []);
   return (
     <View style={MyStyles.container}>
       <FlatList
-        data={[{}]}
+        data={griddata}
         renderItem={({ item, index }) => (
           <Card
             style={{
@@ -38,7 +43,7 @@ const CategoryList = (props) => {
             />
             <Card.Content>
               <View style={MyStyles.row}>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Rings</Text>
+                <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.category_name}</Text>
                 <Image
                   source={require("../../assets/upload.png")}
                   style={{ height: 80, width: 150 }}
@@ -59,7 +64,11 @@ const CategoryList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("Category")}
+        onPress={() => {
+          props.navigation.navigate("SubCategory", {
+            category_id: 0,
+          });
+        }}
       />
     </View>
   );
@@ -88,14 +97,14 @@ const Category = (props) => {
             <ImageUpload
               label="Choose Image :"
               source={require("../../assets/upload.png")}
-              onClearImage={() => {}}
-              onUploadImage={() => {}}
+              onClearImage={() => { }}
+              onUploadImage={() => { }}
             />
             <ImageUpload
               label="Choose Banner :"
               source={require("../../assets/upload.png")}
-              onClearImage={() => {}}
-              onUploadImage={() => {}}
+              onClearImage={() => { }}
+              onUploadImage={() => { }}
             />
           </View>
           <View

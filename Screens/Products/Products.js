@@ -21,12 +21,32 @@ import Swiper from "react-native-swiper";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
-
+import { postRequest } from "../../Services/RequestServices";
 const ProductsList = (props) => {
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [griddata, setgriddata] = useState([]);
+
+  React.useEffect(() => {
+    let param = {}
+    postRequest("masters/product/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+  }, []);
+
   return (
     <View style={MyStyles.container}>
       <FlatList
-        data={[{}]}
+        data={griddata}
+        numColumns={3}
         renderItem={({ item, index }) => (
           <Card
             style={{
@@ -35,13 +55,14 @@ const ProductsList = (props) => {
               width: 120,
               alignItems: "center",
             }}
+            onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}
           >
             <Card.Cover
-              source={require("../../assets/upload.png")}
+              source={{ uri: item.url_image + '' + item.image_path }}
               style={{ width: 120, height: 110 }}
             />
             <View style={{ padding: 5 }}>
-              <Text>Alocasia Leaf Drop 10011</Text>
+              <Text>{item.product_name} {item.product_code}</Text>
             </View>
           </Card>
         )}
@@ -61,7 +82,68 @@ const ProductsList = (props) => {
 };
 
 const ProductsPreview = (props) => {
+  const { userToken } = props.route.params;
+  const { product_id } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [param, setparam] = useState({
+    product_id: '',
+    product_code: '',
+    product_name: '',
+    remarks: '',
+    price: '',
+    disable: '',
+    exhibition: '',
+    businesses: '',
+    trial: '',
+    discounted_price: '',
+    weight: '',
+    size_length: '',
+    gender: '',
+    Metal: '',
+    material: '',
+    on_demand: '',
+    available: '',
+    qty: '',
+  });
+
   const [productImages, setProductImages] = useState([{}, {}, {}]);
+  React.useEffect(() => {
+    let data = { product_id: product_id }
+    postRequest("masters/product/preview", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        param.product_id = resp.data[0].product_id;
+        param.product_code = resp.data[0].product_code;
+        param.product_name = resp.data[0].product_name;
+        param.remarks = resp.data[0].remarks;
+        param.price = resp.data[0].price;
+        param.disable = resp.data[0].disable;
+        param.exhibition = resp.data[0].exhibition;
+        param.businesses = resp.data[0].businesses;
+        param.trial = resp.data[0].trial;
+        param.discounted_price = resp.data[0].discounted_price;
+        param.weight = resp.data[0].weight;
+        param.size_length = resp.data[0].size_length;
+        param.gender = resp.data[0].gender;
+        param.Metal = resp.data[0].Metal;
+        param.material = resp.data[0].material;
+        param.on_demand = resp.data[0].on_demand;
+        param.available = resp.data[0].available;
+        param.qty = resp.data[0].qty;
+        setparam({ ...param });
+
+        let ImagesList = [];
+        ImagesList = resp.data[0].images;
+        setProductImages(param);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+  }, []);
+
   return (
     <View style={MyStyles.container}>
       <ScrollView>
@@ -81,71 +163,75 @@ const ProductsPreview = (props) => {
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
           <Text style={{ fontWeight: "bold", fontSize: 22 }}>
-            Aloxasia Leaf Drop Earring
+            {param.product_name}
           </Text>
-          <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: 10012</Text>
+          <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: {param.product_code}</Text>
           <Text style={{ fontSize: 18 }}>
-            Price: <Text style={{ fontWeight: "bold" }}>50</Text> {"      "}
+            Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text> {"      "}
             <Text
               style={{
                 color: "red",
                 textDecorationLine: "line-through",
               }}
             >
-              200
+              {param.price}
             </Text>
           </Text>
         </View>
 
         <View style={{ height: 300, marginTop: 20 }}>
           <Swiper>
-            {productImages.map((item, index) => {
+            {productImages.length > 0 ? productImages.map((resp, index) => {
               return (
                 <Image
-                  key={index}
-                  source={require("../../assets/upload.png")}
+                  key={resp.image_id}
+                  source={{ uri: resp.url + '' + resp.image_path }}
                   style={[{ height: 250, width: "100%" }]}
                 />
               );
-            })}
+            }) :
+              <Image
+                source={require("../../assets/upload.png")}
+                style={[{ height: 250, width: "100%" }]}
+              />}
           </Swiper>
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Availablity :</Text>
-            <Text>null</Text>
+            <Text>{param.available}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Metal :</Text>
-            <Text>null</Text>
+            <Text>{param.Metal}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Material :</Text>
-            <Text>null</Text>
+            <Text>{param.material}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Disable :</Text>
-            <Text>null</Text>
+            <Text>{param.disable}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Exhibition :</Text>
-            <Text>null</Text>
+            <Text>{param.exhibition}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Weight :</Text>
-            <Text>null</Text>
+            <Text>{param.weight}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Size/Length :</Text>
-            <Text>null</Text>
+            <Text>{param.size_length}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Gender :</Text>
-            <Text>null</Text>
+            <Text>{param.gender}</Text>
           </View>
           <View style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>Description :</Text>
-            <Text>null</Text>
+            <Text>{param.product_code}</Text>
           </View>
         </View>
       </ScrollView>
@@ -294,11 +380,11 @@ const Products = (props) => {
               setparam({ ...param, address: text });
             }}
           />
-          <Checkbox.Item label="Exhibition" onPress={() => {}} />
-          <Checkbox.Item label="Business" onPress={() => {}} />
-          <Checkbox.Item label="Trial at Home" onPress={() => {}} />
-          <Checkbox.Item label="Disable" onPress={() => {}} />
-          <MultipleImages data={[]} onSelect={(fileArray) => {}} />
+          <Checkbox.Item label="Exhibition" onPress={() => { }} />
+          <Checkbox.Item label="Business" onPress={() => { }} />
+          <Checkbox.Item label="Trial at Home" onPress={() => { }} />
+          <Checkbox.Item label="Disable" onPress={() => { }} />
+          <MultipleImages data={[]} onSelect={(fileArray) => { }} />
           <Button
             mode="contained"
             la
