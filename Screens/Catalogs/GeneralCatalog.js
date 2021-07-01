@@ -23,6 +23,10 @@ import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import CustomHeader from "../../Components/CustomHeader";
 import SelectMultiple from "../../Components/SelectMultiple";
+import SelectCustomersMultiple from "../../Components/SelectCustomersMultiple";
+import DatePicker from "../../Components/DatePicker";
+import moment from "moment";
+import Loading from "../../Components/Loading";
 
 const GeneralCatalogList = (props) => {
   return <View style={MyStyles.container}></View>;
@@ -30,14 +34,19 @@ const GeneralCatalogList = (props) => {
 
 const GeneralCatalog = (props) => {
   const [param, setParam] = useState({});
-  const [modal, setModal] = useState(false);
+  const [product, setProduct] = useState(false);
+  const [contact, setContact] = useState(false);
+  const [remarks, setRemarks] = useState(false);
   const [productList, setProductList] = useState([{}, {}, {}, {}, {}]);
+  const [customerList, setCustomerList] = useState([{}, {}, {}, {}, {}]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedContacts, setSelectedContacts] = useState([]);
   return (
     <ImageBackground
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+      <Loading isloading={false} />
       <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -84,11 +93,15 @@ const GeneralCatalog = (props) => {
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setModal(true)}
+                onPress={() => setProduct(true)}
               >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -122,7 +135,7 @@ const GeneralCatalog = (props) => {
       {/* ImagePath change direct Component se kr lena */}
 
       <SelectMultiple
-        visible={modal}
+        visible={product}
         data={productList}
         onDone={(items) => {
           selectedProducts.push({
@@ -131,8 +144,65 @@ const GeneralCatalog = (props) => {
           });
           setSelectedProducts([...selectedProducts]);
         }}
-        onClose={() => setModal(false)}
+        onClose={() => setProduct(false)}
       />
+      <SelectCustomersMultiple
+        visible={contact}
+        data={productList}
+        onDone={(items) => {
+          setSelectedContacts(items);
+          setRemarks(true);
+        }}
+        onClose={() => setContact(false)}
+      />
+      <Portal>
+        <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
+            <View style={{ flex: 1 }}>
+              <View style={MyStyles.row}>
+                <IconButton
+                  icon="chevron-left"
+                  size={30}
+                  color="black"
+                  onPress={() => {
+                    setProduct(true);
+                    setRemarks(false);
+                  }}
+                />
+              </View>
+              <View style={MyStyles.cover}>
+                <DatePicker
+                  label="Start Date"
+                  inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  value={moment()}
+                  onValueChange={(date) => {}}
+                />
+                <TextInput
+                  mode="flat"
+                  label="Remarks"
+                  placeholder="Remarks"
+                  multiline
+                  numberOfLines={3}
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                />
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
+                  <Button mode="contained" uppercase={false}>
+                    Submit
+                  </Button>
+                </View>
+              </View>
+            </View>
+          </ImageBackground>
+        </Modal>
+      </Portal>
     </ImageBackground>
   );
 };

@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Image } from "react-native";
-import { Portal, Modal, IconButton, Button, Text } from "react-native-paper";
+import {
+  Portal,
+  Modal,
+  IconButton,
+  Button,
+  Text,
+  List,
+  Checkbox,
+  Avatar,
+} from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
-const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
+const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
   useEffect(() => {
     setListData(data);
@@ -24,7 +33,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
               onPress={onClose}
             />
             <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
-              Select Products
+              Select Customers
             </Text>
             <Button
               mode="text"
@@ -42,28 +51,22 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             </Button>
           </View>
           <FlatList
-            style={{ alignSelf: "center" }}
             data={listData}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
+              <List.Item
                 onPress={() => {
                   item.selected = !item.selected;
                   setListData([...listData]);
                 }}
-              >
-                <Image
-                  source={require("../assets/upload.png")}
-                  style={{
-                    height: 120,
-                    width: 120,
-                    margin: 5,
-                    borderColor: "black",
-                    borderWidth: item.selected ? 1 : 0,
-                  }}
-                />
-              </TouchableOpacity>
+                title="Rahul"
+                titleStyle={{ fontWeight: "bold" }}
+                description="9716612244"
+                left={(props) => <Avatar.Icon icon="account" />} //iski jagah Avatar.Image use krna jab photu lagani ho
+                right={() => (
+                  <Checkbox status={item.selected ? "checked" : "unchecked"} />
+                )}
+              />
             )}
-            numColumns={3}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
@@ -72,4 +75,4 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
   );
 };
 
-export default SelectMultiple;
+export default SelectCustomersMultiple;
