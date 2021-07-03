@@ -21,11 +21,11 @@ import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
 
-const GeneralCatalogList = (props) => {
+const TryAndBuyCatalogList = (props) => {
   return <View style={MyStyles.container}></View>;
 };
 
-const GeneralCatalog = (props) => {
+const TryAndBuyCatalog = (props) => {
   const [param, setParam] = useState({});
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -174,4 +174,4 @@ const GeneralCatalog = (props) => {
   );
 };
 
-export { GeneralCatalog, GeneralCatalogList };
+export { TryAndBuyCatalog, TryAndBuyCatalogList };

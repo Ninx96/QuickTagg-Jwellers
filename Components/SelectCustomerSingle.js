@@ -12,11 +12,14 @@ import {
 } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
-const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
+const SelectCustomerSingle = ({ visible, multiple = true, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
+  const [selected, setSelected] = useState(null);
+
   useEffect(() => {
     setListData(data);
   }, [data]);
+
   return (
     <Portal>
       <Modal
@@ -35,8 +38,8 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
               color="blue"
               style={{ marginRight: 5 }}
               onPress={() => {
-                const selected = listData.filter((item) => item.selected);
-                onDone(selected);
+                const selectedCustomer = listData.filter((item, index) => index == selected);
+                onDone(selectedCustomer);
                 onClose();
               }}
             >
@@ -48,14 +51,17 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
             renderItem={({ item, index }) => (
               <List.Item
                 onPress={() => {
-                  item.selected = !item.selected;
-                  setListData([...listData]);
+                  if (selected == index) {
+                    setSelected(null);
+                  } else {
+                    setSelected(index);
+                  }
                 }}
                 title="Rahul"
                 titleStyle={{ fontWeight: "bold" }}
                 description="9716612244"
                 left={(props) => <Avatar.Icon icon="account" />} //iski jagah Avatar.Image use krna jab photu lagani ho
-                right={() => <Checkbox status={item.selected ? "checked" : "unchecked"} />}
+                right={() => <Checkbox status={selected == index ? "checked" : "unchecked"} />}
               />
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -66,4 +72,4 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
   );
 };
 
-export default SelectCustomersMultiple;
+export default SelectCustomerSingle;

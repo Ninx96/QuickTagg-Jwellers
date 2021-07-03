@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Image } from "react-native";
-import {
-  Drawer,
-  Text,
-  Divider,
-  Subheading,
-  useTheme,
-} from "react-native-paper";
+import { Drawer, Text, Divider, Subheading, useTheme } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -16,20 +10,19 @@ import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile, ProfileList } from "../Screens/Profile";
-import {
-  Products,
-  ProductsList,
-  ProductsPreview,
-} from "../Screens/Products/Products";
+import { Products, ProductsList, ProductsPreview } from "../Screens/Products/Products";
 import { Category, CategoryList } from "../Screens/Products/Category";
 import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
 import { GeneralCatalog, GeneralCatalogList } from "../Screens/Catalogs/GeneralCatalog";
 import SettingsMenu from "../Screens/SettingsMenu";
 import { CustomerCategory, CustomerCategoryList } from "../Screens/Settings/CustomerCategory";
-import { BranchStaff, BranchStaffList, } from "../Screens/Settings/BranchStaff";
+import { BranchStaff, BranchStaffList } from "../Screens/Settings/BranchStaff";
 import { BranchArea, BranchAreaList } from "../Screens/Settings/BranchArea";
 import TabToScan from "../Screens/Settings/TabToScan";
+import { ExhibitionCatalog } from "../Screens/Catalogs/ExhibitionCatalog";
+import { CustomerCatalog } from "../Screens/Catalogs/CustomerCatalog";
+import { TryAndBuyCatalog } from "../Screens/Catalogs/TryAndBuyCatalog";
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
 
@@ -60,19 +53,38 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen component={Products} name="Products" initialParams={userDetails} />
       <Drawer.Screen component={Category} name="Category" initialParams={userDetails} />
       <Drawer.Screen component={SubCategory} name="SubCategory" initialParams={userDetails} />
-      <Drawer.Screen component={ProductsPreview} name="ProductsPreview" initialParams={userDetails} />
+      <Drawer.Screen
+        component={ProductsPreview}
+        name="ProductsPreview"
+        initialParams={userDetails}
+      />
 
       {/* --------------------- Catalogs------------------- */}
       <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" />
+      <Drawer.Screen component={ExhibitionCatalog} name="ExhibitionCatalog" />
+      <Drawer.Screen component={CustomerCatalog} name="CustomerCatalog" />
+      <Drawer.Screen component={TryAndBuyCatalog} name="TryAndBuyCatalog" />
 
       {/* --------------------- Settings------------------- */}
       <Drawer.Screen component={SettingsMenu} name="SettingsMenu" />
-      <Drawer.Screen component={CustomerCategoryList} name="CustomerCategoryList" initialParams={userDetails} />
-      <Drawer.Screen component={CustomerCategory} name="CustomerCategory" initialParams={userDetails} />
+      <Drawer.Screen
+        component={CustomerCategoryList}
+        name="CustomerCategoryList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={CustomerCategory}
+        name="CustomerCategory"
+        initialParams={userDetails}
+      />
       <Drawer.Screen component={BranchArea} name="BranchArea" initialParams={userDetails} />
       <Drawer.Screen component={BranchAreaList} name="BranchAreaList" initialParams={userDetails} />
       <Drawer.Screen component={BranchStaff} name="BranchStaff" initialParams={userDetails} />
-      <Drawer.Screen component={BranchStaffList} name="BranchStaffList" initialParams={userDetails} />
+      <Drawer.Screen
+        component={BranchStaffList}
+        name="BranchStaffList"
+        initialParams={userDetails}
+      />
       <Drawer.Screen component={TabToScan} name="TabToScan" />
     </Drawer.Navigator>
   );
@@ -111,7 +123,7 @@ const DrawerContent = (props) => {
             onPress={() => {
               props.navigation.navigate("VoucherList");
             }}
-          />         
+          />
           <Drawer.Item
             icon="home"
             label="Products"
@@ -133,7 +145,27 @@ const DrawerContent = (props) => {
               props.navigation.navigate("GeneralCatalog");
             }}
           />
-         
+          <Drawer.Item
+            icon="home"
+            label="ExhibitionCatalog"
+            onPress={() => {
+              props.navigation.navigate("ExhibitionCatalog");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="CustomerCatalog"
+            onPress={() => {
+              props.navigation.navigate("CustomerCatalog");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="TryAndBuyCatalog"
+            onPress={() => {
+              props.navigation.navigate("TryAndBuyCatalog");
+            }}
+          />
         </Drawer.Section>
       </DrawerContentScrollView>
       <Drawer.Section title="Quicktagg (1.0.0)">
