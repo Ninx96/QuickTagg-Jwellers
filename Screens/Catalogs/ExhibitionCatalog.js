@@ -16,7 +16,7 @@ import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import CustomHeader from "../../Components/CustomHeader";
 import SelectMultiple from "../../Components/SelectMultiple";
-import SelectCustomersMultiple from "../../Components/SelectCustomersMultiple";
+import SelectCustomer from "../../Components/SelectCustomer";
 import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
@@ -121,7 +121,7 @@ const ExhibitionCatalog = (props) => {
         }}
         onClose={() => setProduct(false)}
       />
-      <SelectCustomersMultiple
+      <SelectCustomer
         visible={contact}
         data={productList}
         onDone={(items) => {

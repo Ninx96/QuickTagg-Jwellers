@@ -16,10 +16,10 @@ import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import CustomHeader from "../../Components/CustomHeader";
 import SelectMultiple from "../../Components/SelectMultiple";
-import SelectCustomersMultiple from "../../Components/SelectCustomersMultiple";
 import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
+import SelectCustomer from "../../Components/SelectCustomer";
 
 const GeneralCatalogList = (props) => {
   return <View style={MyStyles.container}></View>;
@@ -121,7 +121,7 @@ const GeneralCatalog = (props) => {
         }}
         onClose={() => setProduct(false)}
       />
-      <SelectCustomersMultiple
+      <SelectCustomer
         visible={contact}
         data={productList}
         onDone={(items) => {

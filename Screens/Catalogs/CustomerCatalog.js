@@ -16,7 +16,7 @@ import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import CustomHeader from "../../Components/CustomHeader";
 import SelectMultiple from "../../Components/SelectMultiple";
-import SelectCustomerSingle from "../../Components/SelectCustomerSingle";
+import SelectCustomer from "../../Components/SelectCustomer";
 import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
@@ -121,9 +121,10 @@ const CustomerCatalog = (props) => {
         }}
         onClose={() => setProduct(false)}
       />
-      <SelectCustomerSingle
+      <SelectCustomer
         visible={contact}
         data={productList}
+        multiple={false}
         onDone={(items) => {
           setSelectedContacts(items);
           setRemarks(true);

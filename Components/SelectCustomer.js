@@ -12,11 +12,14 @@ import {
 } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
-const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
+const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
+  const [selectedIndex, setselectedIndex] = useState(null);
+
   useEffect(() => {
     setListData(data);
   }, [data]);
+
   return (
     <Portal>
       <Modal
@@ -34,11 +37,21 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
               uppercase={false}
               color="blue"
               style={{ marginRight: 5 }}
-              onPress={() => {
-                const selected = listData.filter((item) => item.selected);
-                onDone(selected);
-                onClose();
-              }}
+              onPress={
+                multiple
+                  ? () => {
+                      const selectedCustomers = listData.filter((item) => item.selected);
+                      onDone(selectedCustomers);
+                      onClose();
+                    }
+                  : () => {
+                      const selectedCustomer = listData.filter(
+                        (item, index) => index == selectedIndex
+                      );
+                      onDone(selectedCustomer);
+                      onClose();
+                    }
+              }
             >
               Done
             </Button>
@@ -47,15 +60,31 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
             data={listData}
             renderItem={({ item, index }) => (
               <List.Item
-                onPress={() => {
-                  item.selected = !item.selected;
-                  setListData([...listData]);
-                }}
+                onPress={
+                  multiple
+                    ? () => {
+                        item.selected = !item.selected;
+                        setListData([...listData]);
+                      }
+                    : () => {
+                        if (selectedIndex == index) {
+                          setselectedIndex(null);
+                        } else {
+                          setselectedIndex(index);
+                        }
+                      }
+                }
                 title="Rahul"
                 titleStyle={{ fontWeight: "bold" }}
                 description="9716612244"
                 left={(props) => <Avatar.Icon icon="account" />} //iski jagah Avatar.Image use krna jab photu lagani ho
-                right={() => <Checkbox status={item.selected ? "checked" : "unchecked"} />}
+                right={() =>
+                  multiple ? (
+                    <Checkbox status={item.selected ? "checked" : "unchecked"} />
+                  ) : (
+                    <Checkbox status={selectedIndex == index ? "checked" : "unchecked"} />
+                  )
+                }
               />
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -66,4 +95,4 @@ const SelectCustomersMultiple = ({ visible, data = [], onDone, onClose }) => {
   );
 };
 
-export default SelectCustomersMultiple;
+export default SelectCustomer;
