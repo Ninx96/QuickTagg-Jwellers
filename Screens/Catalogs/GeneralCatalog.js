@@ -20,20 +20,79 @@ import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
 import SelectCustomer from "../../Components/SelectCustomer";
+import { postRequest } from "../../Services/RequestServices";
 
 const GeneralCatalogList = (props) => {
   return <View style={MyStyles.container}></View>;
 };
 
 const GeneralCatalog = (props) => {
-  const [param, setParam] = useState({});
+  const { userToken, branchId } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [param, setparam] = useState({
+    subcategory_id: '',
+    min_amount: '',
+    max_amount: '',
+    title: '',
+    entry_no: '',
+    remarks: '',
+    customer_session_products: []
+  });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
   const [remarks, setRemarks] = useState(false);
-  const [productList, setProductList] = useState([{}, {}, {}, {}, {}]);
-  const [customerList, setCustomerList] = useState([{}, {}, {}, {}, {}]);
+  const [productList, setProductList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const [subcategorylist, setsubcategorylist] = useState([]);
+  React.useEffect(() => {
+    let data = { branch_id: branchId }
+    postRequest("transactions/customer/session/getSubcategory", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setsubcategorylist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
+    postRequest("transactions/customer/customerListMob", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setCustomerList(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+
+  }, []);
+
+  const ProductList = () => {
+    let data = {
+      subcategory_id: param.subcategory_id,
+      min_amount: param.min_amount,
+      max_amount: param.max_amount
+    }
+    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setProductList(resp.data);
+
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    setLoading(false);
+  }
+
   return (
     <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <Loading isloading={false} />
@@ -42,15 +101,13 @@ const GeneralCatalog = (props) => {
         <View style={MyStyles.cover}>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
             <DropDown
-              data={[
-                { label: "Demo", value: "Demo" },
-                { label: "Demo1", value: "Demo1" },
-              ]}
-              ext_val="value"
-              ext_lbl="label"
+              data={subcategorylist}
+              ext_val="subcategory_id"
+              ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                setParam({ ...param, subCategory: val });
+                setparam({ ...param, subcategory_id: val });
+                ProductList();
               }}
               placeholder="SubCategory"
             />
@@ -59,9 +116,11 @@ const GeneralCatalog = (props) => {
               label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
-              value={param.full_name}
+              value={param.min_amount}
+              keyboardType={"number-pad"}
               onChangeText={(text) => {
-                setparam({ ...param, full_name: text });
+                setparam({ ...param, min_amount: text });
+                ProductList();
               }}
             />
             <TextInput
@@ -69,9 +128,11 @@ const GeneralCatalog = (props) => {
               label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
-              value={param.full_name}
+              value={param.max_amount}
+              keyboardType={"number-pad"}
               onChangeText={(text) => {
-                setparam({ ...param, full_name: text });
+                setparam({ ...param, max_amount: text });
+                ProductList();
               }}
             />
             <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
@@ -114,16 +175,17 @@ const GeneralCatalog = (props) => {
         data={productList}
         onDone={(items) => {
           selectedProducts.push({
-            subCategory: param.subCategory,
+            subcategory_id: param.subcategory_id,
             data: items,
           });
           setSelectedProducts([...selectedProducts]);
         }}
         onClose={() => setProduct(false)}
       />
+
       <SelectCustomer
         visible={contact}
-        data={productList}
+        data={customerList}
         onDone={(items) => {
           setSelectedContacts(items);
           setRemarks(true);
@@ -150,7 +212,7 @@ const GeneralCatalog = (props) => {
                   label="Start Date"
                   inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
                   value={moment()}
-                  onValueChange={(date) => {}}
+                  onValueChange={(date) => { }}
                 />
                 <TextInput
                   mode="flat"
