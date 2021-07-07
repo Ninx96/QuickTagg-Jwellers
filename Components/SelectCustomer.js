@@ -74,9 +74,9 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                         }
                       }
                 }
-                title="Rahul"
+                title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
-                description="9716612244"
+                description={item.mobile}
                 left={(props) => <Avatar.Icon icon="account" />} //iski jagah Avatar.Image use krna jab photu lagani ho
                 right={() =>
                   multiple ? (

@@ -133,7 +133,7 @@ const ProductsPreview = (props) => {
 
         let ImagesList = [];
         ImagesList = resp.data[0].images;
-        setProductImages(param);
+        setProductImages(ImagesList);
       } else {
         Alert.alert(
           "Error !",

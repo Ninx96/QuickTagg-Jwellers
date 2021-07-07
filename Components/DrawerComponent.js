@@ -60,10 +60,10 @@ const DrawerComponent = ({ userDetails }) => {
       />
 
       {/* --------------------- Catalogs------------------- */}
-      <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" />
-      <Drawer.Screen component={ExhibitionCatalog} name="ExhibitionCatalog" />
-      <Drawer.Screen component={CustomerCatalog} name="CustomerCatalog" />
-      <Drawer.Screen component={TryAndBuyCatalog} name="TryAndBuyCatalog" />
+      <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" initialParams={userDetails} />
+      <Drawer.Screen component={ExhibitionCatalog} name="ExhibitionCatalog" initialParams={userDetails} />
+      <Drawer.Screen component={CustomerCatalog} name="CustomerCatalog" initialParams={userDetails} />
+      <Drawer.Screen component={TryAndBuyCatalog} name="TryAndBuyCatalog" initialParams={userDetails} />
 
       {/* --------------------- Settings------------------- */}
       <Drawer.Screen component={SettingsMenu} name="SettingsMenu" />

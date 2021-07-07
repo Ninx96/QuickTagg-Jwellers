@@ -52,7 +52,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                 }}
               >
                 <Image
-                  source={require("../assets/upload.png")}
+                 source={{ uri: item.url_image + '' + item.image_path }}
                   style={{
                     height: 120,
                     width: 120,

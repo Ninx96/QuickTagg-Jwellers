@@ -49,8 +49,8 @@ const CustomerList = (props) => {
               style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
               title={item.full_name}
               titleStyle={{ fontWeight: "bold" }}
-              description={item.mobile +'          '+ item.category_name}             
-              left={() => { return (<TouchableRipple style={MyStyles.squarefixedRatio} onPress={() => { props.navigation.navigate("Profile", { customer_id: item.customer_id }) }}><Text style={{color:'red'}}>{item.category_name.charAt(0)}</Text></TouchableRipple>) }}
+              description={item.mobile + '          ' + item.category_name}
+              left={() => { return (<TouchableRipple style={MyStyles.squarefixedRatio} onPress={() => { props.navigation.navigate("Profile", { customer_id: item.customer_id }) }}><Text style={{ color: 'red' }}>{item.category_name == null ? '' : item.category_name.charAt(0)}</Text></TouchableRipple>) }}
               right={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("CustomerForm", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="chevron-right" /></TouchableRipple>) }}
             />
           )

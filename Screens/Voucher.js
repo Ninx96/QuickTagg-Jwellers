@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ImageBackground, ScrollView, View, FlatList } from "react-native";
+import { ImageBackground, ScrollView, View, FlatList, Alert } from "react-native";
 import { Button, Checkbox, FAB, Text, TextInput, Card, IconButton, } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
@@ -15,6 +15,10 @@ const VoucherList = (props) => {
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
+    Browse();
+  }, []);
+
+  const Browse = (id) => {
     let param = {}
     postRequest("masters/customer/voucher/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
@@ -27,7 +31,20 @@ const VoucherList = (props) => {
       }
     });
     setLoading(false);
-  }, []);
+  }
+  const Delete = (id) => {
+    setLoading(true);
+    let data = { voucher_id: id }
+    postRequest("masters/customer/voucher/delete", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
+        }
+        setLoading(false);
+      }
+    });
+  }
+
 
   return (
     <View style={MyStyles.container}>
@@ -70,6 +87,22 @@ const VoucherList = (props) => {
                 </View>
                 <View>
                   <IconButton icon="pencil" onPress={() => props.navigation.navigate("VoucherForm", { voucher_id: item.voucher_id })} />
+                  <IconButton icon="close" onPress={() => {
+                    Alert.alert(
+                      "Alert",
+                      "You want to delete?",
+                      [
+                        {
+                          text: "No",
+                          onPress: () => {
+
+                          },
+                          style: "cancel"
+                        },
+                        { text: "Yes", onPress: () => { Delete(item.voucher_id); } }
+                      ]
+                    );
+                  }} />
                 </View>
               </View>
             </Card.Content>
@@ -231,7 +264,20 @@ const VoucherForm = (props) => {
               { justifyContent: "center", marginVertical: 40 },
             ]}
           >
-            <Button mode="contained" uppercase={false}>
+            <Button mode="contained" uppercase={false}
+              onPress={() => {
+                setLoading(true);
+                postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
+                  console.log(resp);
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      props.navigation.navigate("VoucherList");
+                    }
+                    setLoading(false);
+                  }
+                });
+              }}
+            >
               Submit
             </Button>
           </View>
