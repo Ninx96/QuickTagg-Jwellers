@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import {
   Button,
   Text,
@@ -30,13 +37,13 @@ const GeneralCatalog = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
-    subcategory_id: '',
-    min_amount: '',
-    max_amount: '',
-    title: '',
-    entry_no: '',
-    remarks: '',
-    customer_session_products: []
+    subcategory_id: "",
+    min_amount: "",
+    max_amount: "",
+    title: "",
+    entry_no: "",
+    remarks: "",
+    customer_session_products: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -47,8 +54,12 @@ const GeneralCatalog = (props) => {
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
   React.useEffect(() => {
-    let data = { branch_id: branchId }
-    postRequest("transactions/customer/session/getSubcategory", data, userToken).then((resp) => {
+    let data = { branch_id: branchId };
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
@@ -59,30 +70,34 @@ const GeneralCatalog = (props) => {
       }
     });
 
-    postRequest("transactions/customer/customerListMob", data, userToken).then((resp) => {
-      if (resp.status == 200) {
-        setCustomerList(resp.data);
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+    postRequest("transactions/customer/customerListMob", data, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
+    );
     setLoading(false);
-
   }, []);
 
   const ProductList = () => {
     let data = {
       subcategory_id: param.subcategory_id,
       min_amount: param.min_amount,
-      max_amount: param.max_amount
-    }
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+      max_amount: param.max_amount,
+    };
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
-
       } else {
         Alert.alert(
           "Error !",
@@ -91,10 +106,13 @@ const GeneralCatalog = (props) => {
       }
     });
     setLoading(false);
-  }
+  };
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <Loading isloading={false} />
       <CustomHeader {...props} />
       <ScrollView>
@@ -135,11 +153,24 @@ const GeneralCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
-              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "space-evenly", marginVertical: 40 },
+              ]}
+            >
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setProduct(true)}
+              >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -154,13 +185,49 @@ const GeneralCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>
+                  {item.subCategory}
+                </Subheading>
                 {item.data.map((item, i) => (
-                  <Image
-                    key={index + i}
-                    source={require("../../assets/upload.png")}
-                    style={{ height: 80, width: 80, margin: 2 }}
-                  />
+                  <View>
+                    <IconButton
+                      icon="close"
+                      style={{
+                        backgroundColor: "red",
+                        position: "relative",
+                        left: 85,
+                        top: 18,
+                        zIndex: 10,
+                      }}
+                      size={10}
+                      onPress={() => {
+                        selectedProducts[index].data.splice(i, 1);
+                        setSelectedProducts([...selectedProducts]);
+                      }}
+                    />
+                    <View
+                      key={i}
+                      style={{
+                        backgroundColor: "#FFF",
+                        margin: 5,
+                        borderRadius: 10,
+                        width: 100,
+                        alignItems: "center",
+                        zIndex: 1,
+                      }}
+                    >
+                      <Card.Cover
+                        source={{ uri: item.url_image + "" + item.image_path }}
+                        style={{ width: 98, height: 80, borderRadius: 10 }}
+                      />
+
+                      <View style={{ padding: 5 }}>
+                        <Text>
+                          {item.product_name} {item.product_code}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                 ))}
               </View>
             );
@@ -194,7 +261,10 @@ const GeneralCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -212,7 +282,7 @@ const GeneralCatalog = (props) => {
                   label="Start Date"
                   inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
                   value={moment()}
-                  onValueChange={(date) => { }}
+                  onValueChange={(date) => {}}
                 />
                 <TextInput
                   mode="flat"
@@ -222,7 +292,12 @@ const GeneralCatalog = (props) => {
                   numberOfLines={3}
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
-                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
                   <Button mode="contained" uppercase={false}>
                     Submit
                   </Button>

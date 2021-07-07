@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Image } from "react-native";
-import { Portal, Modal, IconButton, Button, Text } from "react-native-paper";
+import { Portal, Modal, IconButton, Button, Text,Card } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
 const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
@@ -51,16 +51,25 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   setListData([...listData]);
                 }}
               >
-                <Image
-                 source={{ uri: item.url_image + '' + item.image_path }}
-                  style={{
-                    height: 120,
-                    width: 120,
-                    margin: 5,
-                    borderColor: "black",
-                    borderWidth: item.selected ? 1 : 0,
-                  }}
-                />
+                <Card
+            style={{
+              margin: 5,
+              borderRadius: 10,
+              width: 120,
+              alignItems: "center",
+              borderColor:"black",
+              borderWidth: item.selected ? 1 : 0
+            }}
+            
+          >
+            <Card.Cover
+              source={{ uri: item.url_image + '' + item.image_path }}
+              style={{ width: 115, height: 110 }}
+            />
+            <View style={{ padding: 5 }}>
+              <Text>{item.product_name} {item.product_code}</Text>
+            </View>
+          </Card>
               </TouchableOpacity>
             )}
             numColumns={3}

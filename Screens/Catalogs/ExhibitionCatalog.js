@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import {
   Button,
   Text,
@@ -35,7 +42,10 @@ const ExhibitionCatalog = (props) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <Loading isloading={false} />
       <CustomHeader {...props} />
       <ScrollView>
@@ -74,11 +84,24 @@ const ExhibitionCatalog = (props) => {
                 setparam({ ...param, full_name: text });
               }}
             />
-            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
-              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "space-evenly", marginVertical: 40 },
+              ]}
+            >
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setProduct(true)}
+              >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -93,13 +116,49 @@ const ExhibitionCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>
+                  {item.subCategory}
+                </Subheading>
                 {item.data.map((item, i) => (
-                  <Image
-                    key={index + i}
-                    source={require("../../assets/upload.png")}
-                    style={{ height: 80, width: 80, margin: 2 }}
-                  />
+                  <View>
+                    <IconButton
+                      icon="close"
+                      style={{
+                        backgroundColor: "red",
+                        position: "relative",
+                        left: 85,
+                        top: 18,
+                        zIndex: 10,
+                      }}
+                      size={10}
+                      onPress={() => {
+                        selectedProducts[index].data.splice(i, 1);
+                        setSelectedProducts([...selectedProducts]);
+                      }}
+                    />
+                    <View
+                      key={i}
+                      style={{
+                        backgroundColor: "#FFF",
+                        margin: 5,
+                        borderRadius: 10,
+                        width: 100,
+                        alignItems: "center",
+                        zIndex: 1,
+                      }}
+                    >
+                      <Card.Cover
+                        source={{ uri: item.url_image + "" + item.image_path }}
+                        style={{ width: 98, height: 80, borderRadius: 10 }}
+                      />
+
+                      <View style={{ padding: 5 }}>
+                        <Text>
+                          {item.product_name} {item.product_code}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                 ))}
               </View>
             );
@@ -132,7 +191,10 @@ const ExhibitionCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -160,7 +222,12 @@ const ExhibitionCatalog = (props) => {
                   numberOfLines={3}
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
-                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
                   <Button mode="contained" uppercase={false}>
                     Submit
                   </Button>
