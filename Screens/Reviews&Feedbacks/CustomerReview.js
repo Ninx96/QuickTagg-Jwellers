@@ -26,16 +26,25 @@ const CustomerReviewList = (props) => {
     <View style={MyStyles.container}>
       <CustomHeader {...props} />
       <FlatList
-        data={griddata}
+        data={[{}]}
         renderItem={({ item, index }) => (
-          <Card>
+          <Card
+            style={{
+              marginHorizontal: 20,
+              marginVertical: 20,
+              borderRadius: 10,
+            }}
+          >
             <Card.Title
+              style={{ marginTop: 10 }}
+              title="Rahul"
+              titleStyle={{ marginLeft: 20 }}
               left={() => (
                 <Avatar.Image source={require("../../assets/upload.png")} />
               )}
               right={() => <IconButton icon="pencil" />}
             />
-            <Card.Content>
+            <Card.Content style={{ height: 180, marginTop: 20 }}>
               <Text>Review Review Review</Text>
             </Card.Content>
           </Card>
@@ -62,7 +71,7 @@ const CustomerReview = (props) => {
   const [loading, setLoading] = useState(true);
   return (
     <ImageBackground
-      source={require("../assets/login-bg.jpg")}
+      source={require("../../assets/login-bg.jpg")}
       style={MyStyles.container}
     >
       <CustomHeader {...props} />
@@ -92,7 +101,7 @@ const CustomerReview = (props) => {
           />
           <ImageUpload
             label="Upload Image :"
-            source={require("../assets/upload.png")}
+            source={require("../../assets/upload.png")}
             onClearImage={() => {}}
             onUploadImage={() => {}}
           />
@@ -112,4 +121,4 @@ const CustomerReview = (props) => {
   );
 };
 
-export default CustomerReview;
+export { CustomerReviewList, CustomerReview };
