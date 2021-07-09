@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  FlatList,
-  Alert,
-} from "react-native";
+import React, { useState } from "react";
+import { ImageBackground, ScrollView, View, FlatList } from "react-native";
 import {
   Button,
-  Checkbox,
   FAB,
   Text,
   TextInput,
@@ -19,19 +12,18 @@ import {
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import MyStyles from "../../Styles/MyStyles";
-import moment from "moment";
 
 const CustomerReviewList = (props) => {
   return (
     <View style={MyStyles.container}>
       <CustomHeader {...props} />
       <FlatList
-        data={[{}]}
+        data={[{}, {}, {}]}
         renderItem={({ item, index }) => (
           <Card
             style={{
               marginHorizontal: 20,
-              marginVertical: 20,
+              marginVertical: 5,
               borderRadius: 10,
             }}
           >
@@ -99,12 +91,15 @@ const CustomerReview = (props) => {
               setParam({ ...param, address: text });
             }}
           />
-          <ImageUpload
-            label="Upload Image :"
-            source={require("../../assets/upload.png")}
-            onClearImage={() => {}}
-            onUploadImage={() => {}}
-          />
+          <View style={[MyStyles.row, { justifyContent: "center" }]}>
+            <ImageUpload
+              label="Upload Image :"
+              source={require("../../assets/upload.png")}
+              onClearImage={() => {}}
+              onUploadImage={() => {}}
+            />
+          </View>
+
           <View
             style={[
               MyStyles.row,

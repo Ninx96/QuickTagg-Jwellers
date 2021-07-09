@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Image } from "react-native";
-import {
-  Drawer,
-  Text,
-  Divider,
-  Subheading,
-  useTheme,
-} from "react-native-paper";
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import { Drawer, Divider } from "react-native-paper";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
@@ -15,19 +9,12 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
-import { Profile, ProfileList } from "../Screens/Profile";
-import {
-  Products,
-  ProductsList,
-  ProductsPreview,
-} from "../Screens/Products/Products";
-import { Category, CategoryList } from "../Screens/Products/Category";
-import { SubCategory, SubCategoryList } from "../Screens/Products/SubCategory";
+import { Profile } from "../Screens/Profile";
+import { Products, ProductsPreview } from "../Screens/Products/Products";
+import { Category } from "../Screens/Products/Category";
+import { SubCategory } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
-import {
-  GeneralCatalog,
-  GeneralCatalogList,
-} from "../Screens/Catalogs/GeneralCatalog";
+import { GeneralCatalog } from "../Screens/Catalogs/GeneralCatalog";
 import SettingsMenu from "../Screens/SettingsMenu";
 import {
   CustomerCategory,
@@ -43,6 +30,8 @@ import {
   CustomerReview,
   CustomerReviewList,
 } from "../Screens/Reviews&Feedbacks/CustomerReview";
+import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
+
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
 
@@ -143,6 +132,12 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen
         component={CustomerReviewList}
         name="CustomerReviewList"
+        initialParams={userDetails}
+      />
+
+      <Drawer.Screen
+        component={CustomerFeedback}
+        name="CustomerFeedback"
         initialParams={userDetails}
       />
 
@@ -264,6 +259,13 @@ const DrawerContent = (props) => {
             label="Customer Review"
             onPress={() => {
               props.navigation.navigate("CustomerReviewList");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="Customer Feedback"
+            onPress={() => {
+              props.navigation.navigate("CustomerFeedback");
             }}
           />
         </Drawer.Section>
