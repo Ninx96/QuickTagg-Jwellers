@@ -16,21 +16,16 @@ import { SubCategory } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
 import { GeneralCatalog } from "../Screens/Catalogs/GeneralCatalog";
 import SettingsMenu from "../Screens/SettingsMenu";
-import {
-  CustomerCategory,
-  CustomerCategoryList,
-} from "../Screens/Settings/CustomerCategory";
+import { CustomerCategory, CustomerCategoryList } from "../Screens/Settings/CustomerCategory";
 import { BranchStaff, BranchStaffList } from "../Screens/Settings/BranchStaff";
 import { BranchArea, BranchAreaList } from "../Screens/Settings/BranchArea";
 import TabToScan from "../Screens/Settings/TabToScan";
 import { ExhibitionCatalog } from "../Screens/Catalogs/ExhibitionCatalog";
 import { CustomerCatalog } from "../Screens/Catalogs/CustomerCatalog";
 import { TryAndBuyCatalog } from "../Screens/Catalogs/TryAndBuyCatalog";
-import {
-  CustomerReview,
-  CustomerReviewList,
-} from "../Screens/Reviews&Feedbacks/CustomerReview";
+import { CustomerReview, CustomerReviewList } from "../Screens/Reviews&Feedbacks/CustomerReview";
 import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
+import SMS from "../Screens/SMS";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -48,52 +43,21 @@ const DrawerComponent = ({ userDetails }) => {
       drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen component={Dashboard} name="Dashboard" />
-      <Drawer.Screen
-        component={CustomerList}
-        name="CustomerList"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={CustomerForm}
-        name="CustomerForm"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={VoucherList}
-        name="VoucherList"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={VoucherForm}
-        name="VoucherForm"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
+      <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
+      <Drawer.Screen component={VoucherList} name="VoucherList" initialParams={userDetails} />
+      <Drawer.Screen component={VoucherForm} name="VoucherForm" initialParams={userDetails} />
+      <Drawer.Screen component={SMS} name="SMS" initialParams={userDetails} />
       <Drawer.Screen
         component={Profile}
         name="Profile"
         initialParams={userDetails} // aise krke bhejna hai ok
       />
       {/* --------------------- Products------------------- */}
-      <Drawer.Screen
-        component={ProductTabs}
-        name="ProductTabs"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={Products}
-        name="Products"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={Category}
-        name="Category"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={SubCategory}
-        name="SubCategory"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={ProductTabs} name="ProductTabs" initialParams={userDetails} />
+      <Drawer.Screen component={Products} name="Products" initialParams={userDetails} />
+      <Drawer.Screen component={Category} name="Category" initialParams={userDetails} />
+      <Drawer.Screen component={SubCategory} name="SubCategory" initialParams={userDetails} />
       <Drawer.Screen
         component={ProductsPreview}
         name="ProductsPreview"
@@ -101,11 +65,7 @@ const DrawerComponent = ({ userDetails }) => {
       />
 
       {/* --------------------- Catalogs------------------- */}
-      <Drawer.Screen
-        component={GeneralCatalog}
-        name="GeneralCatalog"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={GeneralCatalog} name="GeneralCatalog" initialParams={userDetails} />
       <Drawer.Screen
         component={ExhibitionCatalog}
         name="ExhibitionCatalog"
@@ -124,11 +84,7 @@ const DrawerComponent = ({ userDetails }) => {
 
       {/* ----------------------Review & FeedBack----------- */}
 
-      <Drawer.Screen
-        component={CustomerReview}
-        name="CustomerReview"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={CustomerReview} name="CustomerReview" initialParams={userDetails} />
       <Drawer.Screen
         component={CustomerReviewList}
         name="CustomerReviewList"
@@ -153,21 +109,9 @@ const DrawerComponent = ({ userDetails }) => {
         name="CustomerCategory"
         initialParams={userDetails}
       />
-      <Drawer.Screen
-        component={BranchArea}
-        name="BranchArea"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={BranchAreaList}
-        name="BranchAreaList"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={BranchStaff}
-        name="BranchStaff"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={BranchArea} name="BranchArea" initialParams={userDetails} />
+      <Drawer.Screen component={BranchAreaList} name="BranchAreaList" initialParams={userDetails} />
+      <Drawer.Screen component={BranchStaff} name="BranchStaff" initialParams={userDetails} />
       <Drawer.Screen
         component={BranchStaffList}
         name="BranchStaffList"
@@ -266,6 +210,13 @@ const DrawerContent = (props) => {
             label="Customer Feedback"
             onPress={() => {
               props.navigation.navigate("CustomerFeedback");
+            }}
+          />
+          <Drawer.Item
+            icon="home"
+            label="SMS"
+            onPress={() => {
+              props.navigation.navigate("SMS");
             }}
           />
         </Drawer.Section>
