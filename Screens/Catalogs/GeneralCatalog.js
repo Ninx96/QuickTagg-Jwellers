@@ -30,11 +30,140 @@ import SelectCustomer from "../../Components/SelectCustomer";
 import { postRequest } from "../../Services/RequestServices";
 
 const GeneralCatalogList = (props) => {
-  return <View style={MyStyles.container}></View>;
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [griddata, setgriddata] = useState([]);
+
+  React.useEffect(() => {
+    Browse();
+  }, []);
+
+  const Browse = (id) => {
+    postRequest("transactions/customer/generalsession/browse", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setgriddata(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
+      }
+    );
+    setLoading(false);
+  };
+  const Delete = (id) => {
+    setLoading(true);
+    postRequest("transactions/customer/generalsession/delete", { tran_id: id }, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          if (resp.data[0].valid) {
+            Browse();
+          }
+          setLoading(false);
+        }
+      }
+    );
+  };
+  return (
+    <View style={MyStyles.container}>
+      <CustomHeader {...props} />
+
+      <FlatList
+        data={griddata}
+        renderItem={({ item, index }) => (
+          <Card
+            key={item.tran_id}
+            style={{
+              marginHorizontal: 20,
+              padding: 0,
+              borderRadius: 10,
+              marginVertical: 5,
+            }}
+          >
+            <Card.Title
+              style={{
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}
+              title={item.title}
+              titleStyle={{
+                textAlign: "center",
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            />
+            <Card.Content>
+              <View style={MyStyles.row}>
+                <View>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    {item.entry_no}
+                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    {item.no_of_customer}  {"Customers"}
+                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>
+                    {item.no_of_product}  {"Products"}
+                  </Text>
+                  <Text>
+                    {item.remarks}
+                  </Text>
+                </View>
+                <View>
+                  <IconButton
+                    icon="pencil"
+                    onPress={() =>
+                      props.navigation.navigate("GeneralCatalog", {
+                        tran_id: item.tran_id,
+                      })
+                    }
+                  />
+                  <IconButton
+                    icon="close"
+                    onPress={() => {
+                      Alert.alert("Alert", "You want to delete?", [
+                        {
+                          text: "No",
+                          onPress: () => { },
+                          style: "cancel",
+                        },
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            Delete(item.tran_id);
+                          },
+                        },
+                      ]);
+                    }}
+                  />
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+        }}
+        icon="plus"
+        onPress={() =>
+          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
+        }
+      />
+    </View>
+  );
 };
 
 const GeneralCatalog = (props) => {
-  const { userToken, branchId } = props.route.params;
+
+  const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
     subcategory_id: "",
@@ -44,6 +173,7 @@ const GeneralCatalog = (props) => {
     entry_no: "",
     remarks: "",
     customer_session_products: [],
+    customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -53,13 +183,11 @@ const GeneralCatalog = (props) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
+
+
   React.useEffect(() => {
-    let data = { branch_id: branchId };
-    postRequest(
-      "transactions/customer/session/getSubcategory",
-      data,
-      userToken
-    ).then((resp) => {
+
+    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
@@ -70,7 +198,7 @@ const GeneralCatalog = (props) => {
       }
     });
 
-    postRequest("transactions/customer/customerListMob", data, userToken).then(
+    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
       (resp) => {
         if (resp.status == 200) {
           setCustomerList(resp.data);
@@ -82,6 +210,51 @@ const GeneralCatalog = (props) => {
         }
       }
     );
+
+    postRequest("transactions/customer/generalsession/preview", { tran_id: tran_id }, userToken).then((resp) => {
+      if (resp.status == 200) {
+       
+        if (tran_id == 0) {
+          param.entry_no = resp.data[0].entry_no;
+          setparam({ ...param });
+        }
+        else {
+          param.title = resp.data[0].title;
+          param.entry_no = resp.data[0].entry_no;         
+          param.remarks = resp.data[0].remarks;
+          param.subcategory_id = resp.data[0].products[0].subcategory_id;
+          ProductList();
+          alert(tran_id);
+          console.log(resp.data[0].products);
+
+          // param.customer_session_products.push({
+          //   subcategory_id: item.subcategory_id,
+          //   category_id: item.category_id,
+          //   product_id: item.product_id
+          // });
+
+          // param.customers.push({
+          //   customer_id: item.customer_id,
+          //   mobile: item.mobile,
+          //   customer_name: item.full_name
+          // });
+
+          setparam({ ...param });
+
+          selectedProducts.push({            
+            data: resp.data[0].products,
+          });
+          setSelectedProducts([...selectedProducts]);
+
+        }
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
     setLoading(false);
   }, []);
 
@@ -91,11 +264,7 @@ const GeneralCatalog = (props) => {
       min_amount: param.min_amount,
       max_amount: param.max_amount,
     };
-    postRequest(
-      "transactions/customer/session/getProducts",
-      data,
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
@@ -203,6 +372,8 @@ const GeneralCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
+                        param.customer_session_products[index].data.splice(i, 1);
+                        setparam([...param]);
                       }}
                     />
                     <View
@@ -241,11 +412,20 @@ const GeneralCatalog = (props) => {
         visible={product}
         data={productList}
         onDone={(items) => {
+
           selectedProducts.push({
             subcategory_id: param.subcategory_id,
             data: items,
           });
           setSelectedProducts([...selectedProducts]);
+          items.map((item, index) => {
+            param.customer_session_products.push({
+              subcategory_id: item.subcategory_id,
+              category_id: item.category_id,
+              product_id: item.product_id
+            });
+            setparam({ ...param, customer_session_products: param.customer_session_products });
+          });
         }}
         onClose={() => setProduct(false)}
       />
@@ -256,6 +436,19 @@ const GeneralCatalog = (props) => {
         onDone={(items) => {
           setSelectedContacts(items);
           setRemarks(true);
+          if (items.length == 0) {
+            setparam({ ...param, customers: [] });
+          }
+          else {
+            items.map((item, index) => {
+              param.customers.push({
+                customer_id: item.customer_id,
+                mobile: item.mobile,
+                customer_name: item.full_name
+              });
+              setparam({ ...param, customers: param.customers });
+            });
+          }
         }}
         onClose={() => setContact(false)}
       />
@@ -272,17 +465,29 @@ const GeneralCatalog = (props) => {
                   size={30}
                   color="black"
                   onPress={() => {
-                    setProduct(true);
+                    setContact(true);
                     setRemarks(false);
                   }}
                 />
               </View>
               <View style={MyStyles.cover}>
-                <DatePicker
-                  label="Start Date"
-                  inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
-                  value={moment()}
-                  onValueChange={(date) => {}}
+                <TextInput
+                  mode="flat"
+                  label="Entry No"
+                  placeholder="Entry No"
+                  value={param.entry_no}
+                  disabled={true}
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                />
+                <TextInput
+                  mode="flat"
+                  label="Title"
+                  placeholder="Title"
+                  value={param.title}
+                  onChangeText={(text) => {
+                    setparam({ ...param, title: text });
+                  }}
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
                   mode="flat"
@@ -291,6 +496,10 @@ const GeneralCatalog = (props) => {
                   multiline
                   numberOfLines={3}
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  value={param.remarks}
+                  onChangeText={(text) => {
+                    setparam({ ...param, remarks: text });
+                  }}
                 />
                 <View
                   style={[
@@ -298,7 +507,21 @@ const GeneralCatalog = (props) => {
                     { justifyContent: "center", marginVertical: 40 },
                   ]}
                 >
-                  <Button mode="contained" uppercase={false}>
+                  <Button mode="contained" uppercase={false}
+                    onPress={() => {
+                      //console.log(param);
+                      setLoading(true);
+                      postRequest("transactions/customer/generalsession/insert", param, userToken).then((resp) => {
+                        if (resp.status == 200) {
+                          if (resp.data[0].valid) {
+                            props.navigation.navigate("GeneralCatalogList");
+
+                          }
+                          setLoading(false);
+                        }
+                      });
+                    }}
+                  >
                     Submit
                   </Button>
                 </View>
