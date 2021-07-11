@@ -75,7 +75,7 @@ const ProductsList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("Products")}
+        onPress={() => props.navigation.navigate("ProductsForm", { product_id: 0 })}
       />
     </View>
   );
@@ -239,8 +239,72 @@ const ProductsPreview = (props) => {
   );
 };
 
-const Products = (props) => {
-  const [param, setParam] = useState({});
+const ProductsForm = (props) => {
+  const { product_id } = props.route.params;
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [genderlist, setgenderlist] = useState([
+    { label: "Male", value: "Male" },
+    { label: "Female", value: "Female" },
+  ]);
+  const [categorylist, setcategorylist] = useState([]);
+  const [subcategorylist, setsubcategorylist] = useState([]);
+  const [productavailablelist, setproductavailablelist] = useState([
+    { label: "In Stock", value: "In Stock" },
+    { label: "Make To Order", value: "Make To Order" },
+  ]);
+  const [param, setparam] = useState({
+    product_id: 0,
+    product_name: "",
+    product_code: "",
+    gender: "",
+    category_id: "",
+    price: "",
+    discounted_price: "",
+    weight: "",
+    size_length: "",
+    metal: "",
+    material: "",
+    available: false,
+    remarks: "",
+    on_demand: "",
+    qty: "",
+    Metal: "",
+    trial: false,
+    businesses: false,
+    disable: false,
+    exhibition: false,
+    product_images: [],
+    product_subcategory_list: [],
+  });
+
+  React.useEffect(() => {
+    postRequest("masters/product/subcategory/getCategory", {}, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setcategorylist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
+    setLoading(false);
+  }, []);
+
+  const SubcategoryList = (category_id) => {
+    postRequest("masters/product/subcategory/getSubcategory", { category_id: category_id }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setsubcategorylist(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+  }
   return (
     <ImageBackground
       style={MyStyles.container}
@@ -253,9 +317,9 @@ const Products = (props) => {
             label="Product Name"
             placeholder="Product Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.product_name}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, product_name: text });
             }}
           />
           <TextInput
@@ -263,13 +327,13 @@ const Products = (props) => {
             label="Product Code"
             placeholder="Product Code"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.product_code}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, product_code: text });
             }}
           />
           <DropDown
-            data={[]}
+            data={genderlist}
             ext_val="value"
             ext_lbl="label"
             value={param.gender}
@@ -279,23 +343,24 @@ const Products = (props) => {
             placeholder="Shop For"
           />
           <DropDown
-            data={[]}
-            ext_val="value"
-            ext_lbl="label"
-            value={param.gender}
+            data={categorylist}
+            ext_val="category_id"
+            ext_lbl="category_name"
+            value={param.category_id}
             onChange={(val) => {
-              setparam({ ...param, gender: val });
+              setparam({ ...param, category_id: val });
+              SubcategoryList(val);
             }}
             placeholder="Product Category"
           />
           <DropDown
-            data={[]}
-            ext_val="value"
-            ext_lbl="label"
-            value={param.gender}
-            onChange={(val) => {
-              setparam({ ...param, gender: val });
-            }}
+            data={subcategorylist}
+            ext_val="subcategory_id"
+            ext_lbl="subcategory_name"
+            // value={param.gender}
+            // onChange={(val) => {
+            //   setparam({ ...param, gender: val });
+            // }}
             placeholder="Product Sub Category"
           />
           <TextInput
@@ -303,9 +368,9 @@ const Products = (props) => {
             label="Price"
             placeholder="Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.price}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, price: text });
             }}
           />
           <TextInput
@@ -313,9 +378,9 @@ const Products = (props) => {
             label="Discoounted Price"
             placeholder="Discoounted Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.discounted_price}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, discounted_price: text });
             }}
           />
           <TextInput
@@ -323,9 +388,9 @@ const Products = (props) => {
             label="Weight"
             placeholder="Weight"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.weight}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, weight: text });
             }}
           />
           <TextInput
@@ -333,9 +398,9 @@ const Products = (props) => {
             label="Size/Length"
             placeholder="Size/Length"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.size_length}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, size_length: text });
             }}
           />
           <TextInput
@@ -343,9 +408,9 @@ const Products = (props) => {
             label="Metal"
             placeholder="Metal"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.metal}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, metal: text });
             }}
           />
           <TextInput
@@ -353,18 +418,18 @@ const Products = (props) => {
             label="Material"
             placeholder="Material"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.material}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, material: text });
             }}
           />
           <DropDown
-            data={[]}
+            data={productavailablelist}
             ext_val="value"
             ext_lbl="label"
-            value={param.gender}
+            value={param.on_demand}
             onChange={(val) => {
-              setparam({ ...param, gender: val });
+              setparam({ ...param, on_demand: val });
             }}
             placeholder="Product Availablity"
           />
@@ -375,27 +440,54 @@ const Products = (props) => {
             multiline
             numberOfLines={3}
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.address}
+            value={param.remarks}
             onChangeText={(text) => {
-              setparam({ ...param, address: text });
+              setparam({ ...param, remarks: text });
             }}
           />
-          <Checkbox.Item label="Exhibition" onPress={() => { }} />
-          <Checkbox.Item label="Business" onPress={() => { }} />
-          <Checkbox.Item label="Trial at Home" onPress={() => { }} />
-          <Checkbox.Item label="Disable" onPress={() => { }} />
+          <Checkbox.Item
+            label="Exhibition"
+            status={param.exhibition ? "checked" : "unchecked"}
+            onPress={(e) => {
+              setparam({ ...param, exhibition: !param.exhibition });
+            }}
+          />
+          <Checkbox.Item
+            label="Business"
+            status={param.businesses ? "checked" : "unchecked"}
+            onPress={(e) => {
+              setparam({ ...param, businesses: !param.businesses });
+            }}
+          />
+           <Checkbox.Item
+            label="Trial at Home"
+            status={param.trial ? "checked" : "unchecked"}
+            onPress={(e) => {
+              setparam({ ...param, trial: !param.trial });
+            }}
+          />
+          <Checkbox.Item
+            label="Disable"
+            status={param.disable ? "checked" : "unchecked"}
+            onPress={(e) => {
+              setparam({ ...param, disable: !param.disable });
+            }}
+          />
+          
           <MultipleImages data={[]} onSelect={(fileArray) => { }} />
+
           <Button
             mode="contained"
             la
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/customer/insert", param, token).then(
+              postRequest("masters/product/insert", param, userToken).then(
                 (resp) => {
+                  console.log(resp);
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
-                      props.navigation.navigate("CustomerList");
+                      props.navigation.navigate("ProductTabs");
                     } else {
                       Alert.alert("Error !", resp.error);
                     }
@@ -418,4 +510,4 @@ const Products = (props) => {
   );
 };
 
-export { Products, ProductsPreview, ProductsList };
+export { ProductsForm, ProductsPreview, ProductsList };

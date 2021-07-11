@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, FlatList, Image, } from "react-native";
-import { Button, Text, FAB, TextInput, Card, IconButton, } from "react-native-paper";
+import { ImageBackground, ScrollView, View, FlatList, Image, Alert} from "react-native";
+import { Button, Text,List, FAB, TextInput, Card, IconButton, TouchableRipple } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
@@ -11,7 +11,10 @@ const CategoryList = (props) => {
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
-    let param = {}
+    Browse();
+  }, []);
+  const Browse = () => {
+  let param = {}
     postRequest("masters/product/subcategory/getCategory", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
@@ -23,7 +26,19 @@ const CategoryList = (props) => {
       }
     });
     setLoading(false);
-  }, []);
+  }
+  const Delete = (id) => {
+    setLoading(true);    
+    postRequest("masters/product/category/delete", { category_id: id }, userToken).then((resp) => {
+      console.log(resp);
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
+        }
+        setLoading(false);
+      }
+    });
+  }
   return (
     <View style={MyStyles.container}>
       <FlatList
@@ -49,7 +64,28 @@ const CategoryList = (props) => {
                   style={{ height: 80, width: 150 }}
                 />
                 <View>
-                  <IconButton icon="pencil" />
+                  {/* <IconButton icon="pencil" /> */}
+                  <TouchableRipple
+                    style={{ zIndex: 0 }}
+                    onPress={() => {
+                      Alert.alert(
+                        "Alert",
+                        "You want to delete?",
+                        [
+                          {
+                            text: "No",
+                            onPress: () => {
+
+                            },
+                            style: "cancel"
+                          },
+                          { text: "Yes", onPress: () => { Delete(item.category_id); } }
+                        ]
+                      );
+                    }}
+                  >
+                    <List.Icon {...props} icon="close" />
+                  </TouchableRipple>
                 </View>
               </View>
             </Card.Content>
@@ -65,7 +101,7 @@ const CategoryList = (props) => {
         }}
         icon="plus"
         onPress={() => {
-          props.navigation.navigate("SubCategory", {
+          props.navigation.navigate("CategoryForm", {
             category_id: 0,
           });
         }}
@@ -74,8 +110,15 @@ const CategoryList = (props) => {
   );
 };
 
-const Category = (props) => {
-  const [param, setParam] = useState({});
+const CategoryForm = (props) => {
+  const { staff_id } = props.route.params;
+  const { userToken } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [param, setparam] = useState({
+    category_name: "",
+    image_path: "",
+    banner_path: ""
+  });
   return (
     <ImageBackground
       style={MyStyles.container}
@@ -88,9 +131,9 @@ const Category = (props) => {
             label="Category Name"
             placeholder="Category Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.full_name}
+            value={param.category_name}
             onChangeText={(text) => {
-              setparam({ ...param, full_name: text });
+              setparam({ ...param, category_name: text });
             }}
           />
           <View style={MyStyles.row}>
@@ -113,7 +156,19 @@ const Category = (props) => {
               { justifyContent: "center", marginVertical: 40 },
             ]}
           >
-            <Button mode="contained" uppercase={false}>
+            <Button mode="contained" uppercase={false}
+              onPress={() => {
+                setLoading(true);
+                postRequest("masters/product/category/insert", param, userToken).then((resp) => {
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      props.navigation.navigate("ProductTabs");
+
+                    }
+                    setLoading(false);
+                  }
+                });
+              }}>
               Submit
             </Button>
           </View>
@@ -123,4 +178,4 @@ const Category = (props) => {
   );
 };
 
-export { Category, CategoryList };
+export { CategoryForm, CategoryList };

@@ -10,26 +10,20 @@ import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile } from "../Screens/Profile";
-import { Products, ProductsPreview } from "../Screens/Products/Products";
-import { Category } from "../Screens/Products/Category";
-import { SubCategory } from "../Screens/Products/SubCategory";
+import { ProductsForm, ProductsPreview, ProductsList } from "../Screens/Products/Products";
+import { CategoryForm, CategoryList } from "../Screens/Products/Category";
+import { SubCategoryForm, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
-import { GeneralCatalog } from "../Screens/Catalogs/GeneralCatalog";
+import { GeneralCatalog, GeneralCatalogList } from "../Screens/Catalogs/GeneralCatalog";
 import SettingsMenu from "../Screens/SettingsMenu";
-import {
-  CustomerCategory,
-  CustomerCategoryList,
-} from "../Screens/Settings/CustomerCategory";
+import { CustomerCategory, CustomerCategoryList, } from "../Screens/Settings/CustomerCategory";
 import { BranchStaff, BranchStaffList } from "../Screens/Settings/BranchStaff";
 import { BranchArea, BranchAreaList } from "../Screens/Settings/BranchArea";
 import TabToScan from "../Screens/Settings/TabToScan";
-import { ExhibitionCatalog } from "../Screens/Catalogs/ExhibitionCatalog";
-import { CustomerCatalog } from "../Screens/Catalogs/CustomerCatalog";
-import { TryAndBuyCatalog } from "../Screens/Catalogs/TryAndBuyCatalog";
-import {
-  CustomerReview,
-  CustomerReviewList,
-} from "../Screens/Reviews&Feedbacks/CustomerReview";
+import { ExhibitionCatalog, ExhibitionCatalogList } from "../Screens/Catalogs/ExhibitionCatalog";
+import { CustomerCatalog, CustomerCatalogList } from "../Screens/Catalogs/CustomerCatalog";
+import { TryAndBuyCatalog, TryAndBuyCatalogList } from "../Screens/Catalogs/TryAndBuyCatalog";
+import { CustomerReview, CustomerReviewList, } from "../Screens/Reviews&Feedbacks/CustomerReview";
 import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
 
 const DrawerComponent = ({ userDetails }) => {
@@ -80,30 +74,55 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
       />
       <Drawer.Screen
-        component={Products}
-        name="Products"
+        component={ProductsForm}
+        name="ProductsForm"
         initialParams={userDetails}
       />
-      <Drawer.Screen
-        component={Category}
-        name="Category"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={SubCategory}
-        name="SubCategory"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
+       <Drawer.Screen
         component={ProductsPreview}
         name="ProductsPreview"
+        initialParams={userDetails}
+      />
+       <Drawer.Screen
+        component={ProductsList}
+        name="ProductsList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={CategoryForm}
+        name="CategoryForm"
+        initialParams={userDetails}
+      />
+       <Drawer.Screen
+        component={CategoryList}
+        name="CategoryList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={SubCategoryForm}
+        name="SubCategoryForm"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={SubCategoryList}
+        name="SubCategoryList"
         initialParams={userDetails}
       />
 
       {/* --------------------- Catalogs------------------- */}
       <Drawer.Screen
+        component={GeneralCatalogList}
+        name="GeneralCatalogList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
         component={GeneralCatalog}
         name="GeneralCatalog"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={ExhibitionCatalogList}
+        name="ExhibitionCatalogList"
         initialParams={userDetails}
       />
       <Drawer.Screen
@@ -112,8 +131,18 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
       />
       <Drawer.Screen
+        component={CustomerCatalogList}
+        name="CustomerCatalogList"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
         component={CustomerCatalog}
         name="CustomerCatalog"
+        initialParams={userDetails}
+      />
+      <Drawer.Screen
+        component={TryAndBuyCatalogList}
+        name="TryAndBuyCatalogList"
         initialParams={userDetails}
       />
       <Drawer.Screen
@@ -121,7 +150,6 @@ const DrawerComponent = ({ userDetails }) => {
         name="TryAndBuyCatalog"
         initialParams={userDetails}
       />
-
       {/* ----------------------Review & FeedBack----------- */}
 
       <Drawer.Screen
@@ -230,7 +258,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="General Catalogs"
             onPress={() => {
-              props.navigation.navigate("GeneralCatalog");
+              props.navigation.navigate("GeneralCatalogList");
             }}
           />
           <Drawer.Item
@@ -244,7 +272,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="CustomerCatalog"
             onPress={() => {
-              props.navigation.navigate("CustomerCatalog");
+              props.navigation.navigate("CustomerCatalogList");
             }}
           />
           <Drawer.Item
