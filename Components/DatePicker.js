@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from "react";
 
 import { TextInputMask } from "react-native-masked-text";
-import { TouchableRipple, TextInput, Portal, Button } from "react-native-paper";
+import {
+  TouchableRipple,
+  TextInput,
+  Portal,
+  Button,
+  IconButton,
+} from "react-native-paper";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { Platform, View } from "react-native";
 
-const DatePicker = ({ value, onValueChange, label, inputStyles, containerStyle, disabled }) => {
+const DatePicker = ({
+  value,
+  onValueChange,
+  label,
+  inputStyles,
+  containerStyle,
+  disabled,
+  mode = "input",
+}) => {
   const [android, setAndroid] = useState(false);
   const [ios, setIos] = useState(false);
   const [text, setText] = React.useState(moment(value).format("DD/MM/YYYY"));
 
   React.useEffect(() => {
     const date = moment(value).format("YYYY-MM-DD");
-    const showDate = date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+    const showDate =
+      date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
     setText(showDate);
   }, [value]);
 
@@ -76,23 +91,63 @@ const DatePicker = ({ value, onValueChange, label, inputStyles, containerStyle, 
         </Portal>
       )}
 
-      <TextInput
-        render={(props) => (
-          <TextInputMask
-            {...props}
-            type={"custom"}
-            options={{
-              mask: "99/99/9999",
-            }}
-          />
-        )}
-        right={
-          <TextInput.Icon
+      {mode == "input" ? (
+        <TextInput
+          render={(props) => (
+            <TextInputMask
+              {...props}
+              type={"custom"}
+              options={{
+                mask: "99/99/9999",
+              }}
+            />
+          )}
+          right={
+            <TextInput.Icon
+              disabled={disabled}
+              theme={{ colors: { text: "#22356A" } }}
+              size={30}
+              style={{ marginBottom: 0 }}
+              name="calendar"
+              onPress={() => {
+                if (Platform.OS == "ios") {
+                  setIos(true);
+                } else {
+                  setAndroid(true);
+                }
+              }}
+              forceTextInputFocus={false}
+            />
+          }
+          onChangeText={(val) => {
+            setText(val);
+          }}
+          onBlur={() => {
+            if (text.length === 10) {
+              const setDate =
+                text.split("/")[2] +
+                "-" +
+                text.split("/")[1] +
+                "-" +
+                text.split("/")[0];
+              onValueChange(moment(setDate).format("YYYY-MM-DD"));
+            } else {
+              setText(moment(value).format("DD/MM/YYYY"));
+            }
+          }}
+          keyboardType="number-pad"
+          maxLength={10}
+          value={text}
+          mode="flat"
+          label={label}
+          disabled={disabled}
+          style={[inputStyles]}
+        />
+      ) : (
+        <View style={{ flexDirection: "row" }}>
+          <IconButton
             disabled={disabled}
-            theme={{ colors: { text: "#22356A" } }}
-            size={30}
-            style={{ marginBottom: 0 }}
-            name="calendar"
+            icon="calendar"
             onPress={() => {
               if (Platform.OS == "ios") {
                 setIos(true);
@@ -100,29 +155,17 @@ const DatePicker = ({ value, onValueChange, label, inputStyles, containerStyle, 
                 setAndroid(true);
               }
             }}
-            forceTextInputFocus={false}
           />
-        }
-        onChangeText={(val) => {
-          setText(val);
-        }}
-        onBlur={() => {
-          if (text.length === 10) {
-            const setDate =
-              text.split("/")[2] + "-" + text.split("/")[1] + "-" + text.split("/")[0];
-            onValueChange(moment(setDate).format("YYYY-MM-DD"));
-          } else {
-            setText(moment(value).format("DD/MM/YYYY"));
-          }
-        }}
-        keyboardType="number-pad"
-        maxLength={10}
-        value={text}
-        mode="flat"
-        label={label}
-        disabled={disabled}
-        style={[inputStyles]}
-      />
+
+          <TextInputMask
+            value={text}
+            type={"custom"}
+            options={{
+              mask: "99/99/9999",
+            }}
+          />
+        </View>
+      )}
     </>
     // </TouchableRipple>
   );
