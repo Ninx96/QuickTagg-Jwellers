@@ -121,7 +121,7 @@ const CustomerCatalogList = (props) => {
                     }
                   />
                   <IconButton
-                    icon="close"
+                    icon="delete"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {

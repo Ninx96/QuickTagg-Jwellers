@@ -211,7 +211,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="ExhibitionCatalog"
             onPress={() => {
-              props.navigation.navigate("ExhibitionCatalog");
+              props.navigation.navigate("ExhibitionCatalogList");
             }}
           />
           <Drawer.Item
@@ -225,7 +225,7 @@ const DrawerContent = (props) => {
             icon="home"
             label="TryAndBuyCatalog"
             onPress={() => {
-              props.navigation.navigate("TryAndBuyCatalog");
+              props.navigation.navigate("TryAndBuyCatalogList");
             }}
           />
           <Drawer.Item

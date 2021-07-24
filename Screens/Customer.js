@@ -140,11 +140,8 @@ const CustomerForm = (props) => {
     });
 
 
-    if (customer_id != 0) {
-      let param = {
-        customer_id: customer_id
-      }
-      postRequest("masters/customer/preview", param, userToken).then((resp) => {
+    if (customer_id != 0) {    
+      postRequest("masters/customer/preview", {customer_id: customer_id}, userToken).then((resp) => {
         if (resp.status == 200) {
           param.customer_id = resp.data.customer_id;
           param.address = resp.data.address;
