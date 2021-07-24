@@ -81,7 +81,7 @@ const SubCategoryList = (props) => {
                       );
                     }}
                   >
-                    <List.Icon {...props} icon="close" />
+                    <List.Icon {...props} icon="delete" />
                   </TouchableRipple>
                 </>
               );

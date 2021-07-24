@@ -121,7 +121,7 @@ const GeneralCatalogList = (props) => {
                     }
                   />
                   <IconButton
-                    icon="close"
+                    icon="delete"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
@@ -197,51 +197,87 @@ const GeneralCatalog = (props) => {
         );
       }
     });
-
-    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+    if (tran_id == 0) {
+      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            setCustomerList(resp.data);
+          } else {
+            Alert.alert(
+              "Error !",
+              "Oops! \nSeems like we run into some Server Error"
+            );
+          }
         }
-      }
-    );
+      );
+    }
 
     postRequest("transactions/customer/generalsession/preview", { tran_id: tran_id }, userToken).then((resp) => {
       if (resp.status == 200) {
-       
+
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
         }
         else {
           param.title = resp.data[0].title;
-          param.entry_no = resp.data[0].entry_no;         
+          param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
-          ProductList();
-          alert(tran_id);
-          console.log(resp.data[0].products);
+          // console.log(resp.data);
+           alert(tran_id);
 
-          // param.customer_session_products.push({
-          //   subcategory_id: item.subcategory_id,
-          //   category_id: item.category_id,
-          //   product_id: item.product_id
-          // });
+          param.customer_session_products = resp.data[0].products;
 
-          // param.customers.push({
-          //   customer_id: item.customer_id,
-          //   mobile: item.mobile,
-          //   customer_name: item.full_name
-          // });
+          let cust = [
+            { customer_id: "192", full_name: "test", mobile: "8978977891", selected: "checked" },
+            { customer_id: "199", full_name: "test", mobile: "3333546985", selected: "checked" },
+          ];
 
-          setparam({ ...param });
+          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+            (resp1) => {
+              if (resp1.status == 200) {
+                let data = [];
+              
+                resp1.data.map((item1) => {
+                  cust.map((item2) => {
+                    console.log(item1.product_id == item2.product_id);
+                    if (item1.product_id == item2.product_id) {
+                      data.push({
+                        customer_id: item.customer_id,
+                        mobile: item.mobile,
+                        full_name: item.full_name,
+                        selected: "checked"
+                      });
+                    }
+                    else {
+                      data.push({
+                        customer_id: item.customer_id,
+                        mobile: item.mobile,
+                        full_name: item.full_name
+                      });
+                    }
+                  });
+                  console.log("dsgdfgfd "+data);
+                });
+                alert("s");
+                console.log("dsgdfgfd "+data);
+                setCustomerList(data);
+              } else {
+                Alert.alert(
+                  "Error !",
+                  "Oops! \nSeems like we run into some Server Error"
+                );
+              }
+            }
+          );
 
-          selectedProducts.push({            
+
+
+
+          setparam({ ...param, customers: resp.data[0].customers });
+
+          selectedProducts.push({
             data: resp.data[0].products,
           });
           setSelectedProducts([...selectedProducts]);
@@ -418,14 +454,7 @@ const GeneralCatalog = (props) => {
             data: items,
           });
           setSelectedProducts([...selectedProducts]);
-          items.map((item, index) => {
-            param.customer_session_products.push({
-              subcategory_id: item.subcategory_id,
-              category_id: item.category_id,
-              product_id: item.product_id
-            });
-            setparam({ ...param, customer_session_products: param.customer_session_products });
-          });
+          setparam({ ...param, customer_session_products: items });
         }}
         onClose={() => setProduct(false)}
       />
@@ -440,14 +469,7 @@ const GeneralCatalog = (props) => {
             setparam({ ...param, customers: [] });
           }
           else {
-            items.map((item, index) => {
-              param.customers.push({
-                customer_id: item.customer_id,
-                mobile: item.mobile,
-                customer_name: item.full_name
-              });
-              setparam({ ...param, customers: param.customers });
-            });
+            setparam({ ...param, customers: items });
           }
         }}
         onClose={() => setContact(false)}
