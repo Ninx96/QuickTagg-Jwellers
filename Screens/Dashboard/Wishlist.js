@@ -77,28 +77,27 @@ const Wishlist = () => {
               </DataTable.Row>
             </DataTable>
           </View>
-
-          <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
-            <Button
-              mode="contained"
-              color="#DC143C"
-              uppercase={false}
-              style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
-              onPress={() => setVisible({ ...visible, customer_chart: true })}
-            >
-              Not Visting
-            </Button>
-            <Button
-              mode="contained"
-              color="#DC143C"
-              uppercase={false}
-              style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
-              onPress={() => setVisible({ ...visible, customer_chart: true })}
-            >
-              Not Visting
-            </Button>
-          </View>
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            Not Visting
+          </Button>
+        </View>
 
         <GraphView visible={visible.customers_graph} />
 
@@ -171,26 +170,25 @@ const Wishlist = () => {
               </DataTable.Row>
             </DataTable>
           </View>
-
-          <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
-            <Button
-              mode="contained"
-              color="#DC143C"
-              uppercase={false}
-              style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
-            >
-              Not Visting
-            </Button>
-            <Button
-              mode="contained"
-              color="#DC143C"
-              uppercase={false}
-              style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
-            >
-              Not Visting
-            </Button>
-          </View>
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            Not Visting
+          </Button>
+        </View>
       </ScrollView>
     </View>
   );
@@ -225,7 +223,7 @@ const GraphView = ({ visible = false }) => {
     return (
       <View
         style={{
-          backgroundColor: "#dc3545",
+          backgroundColor: "#FFF",
           marginHorizontal: 20,
           borderRadius: 10,
           padding: 10,
@@ -295,7 +293,7 @@ const ChartView = ({ visible = false }) => {
     return (
       <View
         style={{
-          backgroundColor: "#dc3545",
+          backgroundColor: "#FFF",
           marginHorizontal: 20,
           borderRadius: 10,
           padding: 10,
