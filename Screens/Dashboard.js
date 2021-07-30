@@ -131,6 +131,7 @@ const Dashboard = (props) => {
             ),
           }}
           component={Wishlist}
+          initialParams={props.route.params}
         />
         <Tab.Screen
           name="Notification"
@@ -140,6 +141,7 @@ const Dashboard = (props) => {
             ),
           }}
           component={Notification}
+          initialParams={props.route.params}
         />
       </Tab.Navigator>
     </View>

@@ -265,7 +265,7 @@ const VoucherForm = (props) => {
           <View style={MyStyles.row}>
             <DatePicker
               label="Start Date"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
               value={param.start_date}
               onValueChange={(date) => {
                 setparam({ ...param, start_date: date });
@@ -273,7 +273,7 @@ const VoucherForm = (props) => {
             />
             <DatePicker
               label="End Date"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
               value={param.end_date}
               onValueChange={(date) => {
                 setparam({ ...param, end_date: date });

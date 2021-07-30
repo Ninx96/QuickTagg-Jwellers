@@ -42,7 +42,8 @@ const DrawerComponent = ({ userDetails }) => {
       initialRouteName="Dashboard"
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <Drawer.Screen component={Dashboard} name="Dashboard" />
+      <Drawer.Screen component={Dashboard} name="Dashboard"  initialParams={userDetails} />
+      <Drawer.Screen component={Dashboard} name="GraphView"  initialParams={userDetails} />
       <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
       <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
       <Drawer.Screen component={VoucherList} name="VoucherList" initialParams={userDetails} />
