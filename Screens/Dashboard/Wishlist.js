@@ -122,6 +122,7 @@ const Wishlist = (props) => {
               </DataTable.Row>
             </DataTable>
           </View>
+
           <GraphView visible={visible.customers_graph}/>
 
           <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
@@ -146,7 +147,28 @@ const Wishlist = (props) => {
           </View>
           <ChartView visible={visible.new_customer_chart} />
           <ChartView visible={visible.not_response_chart} />
+
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            Not Visting
+          </Button>
+        </View>
 
 
         <Card
@@ -218,8 +240,28 @@ const Wishlist = (props) => {
               </DataTable.Row>
             </DataTable>
           </View>
+
           <GraphView visible={visible.cart_graph} />
+
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            Not Visting
+          </Button>
+        </View>
       </ScrollView>
     </View>
   );
@@ -298,8 +340,10 @@ const GraphView = ({ visible = false }) => {
     return (
       <View
         style={{
+
           backgroundColor: "#fff",
           marginHorizontal: 0,
+
           borderRadius: 10,
           padding: 10,
           marginVertical: 10,
@@ -368,8 +412,10 @@ const ChartView = ({ visible = false }) => {
     return (
       <View
         style={{
+
           backgroundColor: "#fff",
           marginHorizontal: 0,
+
           borderRadius: 10,
           padding: 10,
           marginVertical: 10,
