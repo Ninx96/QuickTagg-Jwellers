@@ -26,6 +26,7 @@ import { TryAndBuyCatalog, TryAndBuyCatalogList } from "../Screens/Catalogs/TryA
 import { CustomerReview, CustomerReviewList } from "../Screens/Reviews&Feedbacks/CustomerReview";
 import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
 import SMS from "../Screens/SMS";
+import TitleBar from "./TitleBar";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -41,10 +42,19 @@ const DrawerComponent = ({ userDetails }) => {
       }}
       initialRouteName="Dashboard"
       drawerContent={(props) => <DrawerContent {...props} />}
+      drawerStyle={{ width: "50%" }}
     >
-      <Drawer.Screen component={Dashboard} name="Dashboard"  initialParams={userDetails} />
-      <Drawer.Screen component={Dashboard} name="GraphView"  initialParams={userDetails} />
-      <Drawer.Screen component={CustomerList} name="CustomerList" initialParams={userDetails} />
+      <Drawer.Screen component={Dashboard} name="Dashboard" initialParams={userDetails} />
+      <Drawer.Screen component={Dashboard} name="GraphView" initialParams={userDetails} />
+      <Drawer.Screen
+        component={CustomerList}
+        name="CustomerList"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Customer" />,
+        }}
+      />
       <Drawer.Screen component={CustomerForm} name="CustomerForm" initialParams={userDetails} />
       <Drawer.Screen component={VoucherList} name="VoucherList" initialParams={userDetails} />
       <Drawer.Screen component={VoucherForm} name="VoucherForm" initialParams={userDetails} />
