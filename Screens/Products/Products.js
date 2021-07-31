@@ -1,21 +1,6 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  Alert,
-  FlatList,
-  Image,
-} from "react-native";
-import {
-  Button,
-  Text,
-  FAB,
-  TextInput,
-  Checkbox,
-  Card,
-  IconButton,
-} from "react-native-paper";
+import { ImageBackground, ScrollView, View, Alert, FlatList, Image } from "react-native";
+import { Button, Text, FAB, TextInput, Checkbox, Card, IconButton } from "react-native-paper";
 import Swiper from "react-native-swiper";
 
 import MyStyles from "../../Styles/MyStyles";
@@ -28,15 +13,12 @@ const ProductsList = (props) => {
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
-    let param = {}
+    let param = {};
     postRequest("masters/product/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -55,14 +37,18 @@ const ProductsList = (props) => {
               width: 120,
               alignItems: "center",
             }}
-            onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}
+            onPress={() =>
+              props.navigation.navigate("ProductsPreview", { product_id: item.product_id })
+            }
           >
             <Card.Cover
-              source={{ uri: item.url_image + '' + item.image_path }}
+              source={{ uri: item.url_image + "" + item.image_path }}
               style={{ width: 120, height: 110 }}
             />
             <View style={{ padding: 5 }}>
-              <Text>{item.product_name} {item.product_code}</Text>
+              <Text>
+                {item.product_name} {item.product_code}
+              </Text>
             </View>
           </Card>
         )}
@@ -86,29 +72,29 @@ const ProductsPreview = (props) => {
   const { product_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
-    product_id: '',
-    product_code: '',
-    product_name: '',
-    remarks: '',
-    price: '',
-    disable: '',
-    exhibition: '',
-    businesses: '',
-    trial: '',
-    discounted_price: '',
-    weight: '',
-    size_length: '',
-    gender: '',
-    Metal: '',
-    material: '',
-    on_demand: '',
-    available: '',
-    qty: '',
+    product_id: "",
+    product_code: "",
+    product_name: "",
+    remarks: "",
+    price: "",
+    disable: "",
+    exhibition: "",
+    businesses: "",
+    trial: "",
+    discounted_price: "",
+    weight: "",
+    size_length: "",
+    gender: "",
+    Metal: "",
+    material: "",
+    on_demand: "",
+    available: "",
+    qty: "",
   });
 
   const [productImages, setProductImages] = useState([{}, {}, {}]);
   React.useEffect(() => {
-    let data = { product_id: product_id }
+    let data = { product_id: product_id };
     postRequest("masters/product/preview", data, userToken).then((resp) => {
       if (resp.status == 200) {
         param.product_id = resp.data[0].product_id;
@@ -135,10 +121,7 @@ const ProductsPreview = (props) => {
         ImagesList = resp.data[0].images;
         setProductImages(ImagesList);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -162,9 +145,7 @@ const ProductsPreview = (props) => {
           />
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
-          <Text style={{ fontWeight: "bold", fontSize: 22 }}>
-            {param.product_name}
-          </Text>
+          <Text style={{ fontWeight: "bold", fontSize: 22 }}>{param.product_name}</Text>
           <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: {param.product_code}</Text>
           <Text style={{ fontSize: 18 }}>
             Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text> {"      "}
@@ -181,19 +162,22 @@ const ProductsPreview = (props) => {
 
         <View style={{ height: 300, marginTop: 20 }}>
           <Swiper>
-            {productImages.length > 0 ? productImages.map((resp, index) => {
-              return (
-                <Image
-                  key={resp.image_id}
-                  source={{ uri: resp.url + '' + resp.image_path }}
-                  style={[{ height: 250, width: "100%" }]}
-                />
-              );
-            }) :
+            {productImages.length > 0 ? (
+              productImages.map((resp, index) => {
+                return (
+                  <Image
+                    key={resp.image_id}
+                    source={{ uri: resp.url + "" + resp.image_path }}
+                    style={[{ height: 250, width: "100%" }]}
+                  />
+                );
+              })
+            ) : (
               <Image
                 source={require("../../assets/upload.png")}
                 style={[{ height: 250, width: "100%" }]}
-              />}
+              />
+            )}
           </Swiper>
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
@@ -283,10 +267,7 @@ const ProductsForm = (props) => {
       if (resp.status == 200) {
         setcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -294,26 +275,24 @@ const ProductsForm = (props) => {
   }, []);
 
   const SubcategoryList = (category_id) => {
-    postRequest("masters/product/subcategory/getSubcategory", { category_id: category_id }, userToken).then((resp) => {
+    postRequest(
+      "masters/product/subcategory/getSubcategory",
+      { category_id: category_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
-  }
+  };
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Product Name"
             placeholder="Product Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -323,7 +302,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Product Code"
             placeholder="Product Code"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -364,7 +343,7 @@ const ProductsForm = (props) => {
             placeholder="Product Sub Category"
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Price"
             placeholder="Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -374,7 +353,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Discoounted Price"
             placeholder="Discoounted Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -384,7 +363,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Weight"
             placeholder="Weight"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -394,7 +373,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Size/Length"
             placeholder="Size/Length"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -404,7 +383,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Metal"
             placeholder="Metal"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -414,7 +393,7 @@ const ProductsForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Material"
             placeholder="Material"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -434,7 +413,7 @@ const ProductsForm = (props) => {
             placeholder="Product Availablity"
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Remarks"
             placeholder="Remarks"
             multiline
@@ -459,7 +438,7 @@ const ProductsForm = (props) => {
               setparam({ ...param, businesses: !param.businesses });
             }}
           />
-           <Checkbox.Item
+          <Checkbox.Item
             label="Trial at Home"
             status={param.trial ? "checked" : "unchecked"}
             onPress={(e) => {
@@ -473,8 +452,8 @@ const ProductsForm = (props) => {
               setparam({ ...param, disable: !param.disable });
             }}
           />
-          
-          <MultipleImages data={[]} onSelect={(fileArray) => { }} />
+
+          <MultipleImages data={[]} onSelect={(fileArray) => {}} />
 
           <Button
             mode="contained"
@@ -482,24 +461,19 @@ const ProductsForm = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/product/insert", param, userToken).then(
-                (resp) => {
-                  console.log(resp);
-                  if (resp.status == 200) {
-                    if (resp.data[0].valid) {
-                      props.navigation.navigate("ProductTabs");
-                    } else {
-                      Alert.alert("Error !", resp.error);
-                    }
+              postRequest("masters/product/insert", param, userToken).then((resp) => {
+                console.log(resp);
+                if (resp.status == 200) {
+                  if (resp.data[0].valid) {
+                    props.navigation.navigate("ProductTabs");
                   } else {
-                    Alert.alert(
-                      "Error !",
-                      "Oops! \nSeems like we run into some Server Error"
-                    );
+                    Alert.alert("Error !", resp.error);
                   }
-                  setLoading(false);
+                } else {
+                  Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
                 }
-              );
+                setLoading(false);
+              });
             }}
           >
             Submit

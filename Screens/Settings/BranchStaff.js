@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ImageBackground,
-  ScrollView,
-  FlatList,
-  Alert,
-} from "react-native";
-import {
-  Button,
-  FAB,
-  List,
-  TextInput,
-  TouchableRipple,
-} from "react-native-paper";
+import { View, ImageBackground, ScrollView, FlatList, Alert } from "react-native";
+import { Button, FAB, List, TextInput, TouchableRipple } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
@@ -32,10 +20,7 @@ const BranchStaffList = (props) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -114,9 +99,7 @@ const BranchStaffList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("BranchStaff", { staff_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("BranchStaff", { staff_id: 0 })}
       />
     </View>
   );
@@ -145,10 +128,7 @@ const BranchStaff = (props) => {
           param.mobile = resp.data[0].mobile;
           setparam({ ...param });
         } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
       });
     }
@@ -156,14 +136,11 @@ const BranchStaff = (props) => {
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Staff Name"
             placeholder="Staff Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -173,7 +150,7 @@ const BranchStaff = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Staff Mobile"
             placeholder="Staff Mobile"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -190,16 +167,14 @@ const BranchStaff = (props) => {
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/staff/insert", param, userToken).then(
-                (resp) => {
-                  if (resp.status == 200) {
-                    if (resp.data[0].valid) {
-                      props.navigation.navigate("BranchStaffList");
-                    }
-                    setLoading(false);
+              postRequest("masters/staff/insert", param, userToken).then((resp) => {
+                if (resp.status == 200) {
+                  if (resp.data[0].valid) {
+                    props.navigation.navigate("BranchStaffList");
                   }
+                  setLoading(false);
                 }
-              );
+              });
             }}
           >
             Submit

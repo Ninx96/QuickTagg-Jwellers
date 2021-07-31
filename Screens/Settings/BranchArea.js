@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ImageBackground,
-  ScrollView,
-  FlatList,
-  Alert,
-} from "react-native";
-import {
-  Button,
-  FAB,
-  List,
-  TextInput,
-  TouchableRipple,
-} from "react-native-paper";
+import { View, ImageBackground, ScrollView, FlatList, Alert } from "react-native";
+import { Button, FAB, List, TextInput, TouchableRipple } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
@@ -31,10 +19,7 @@ const BranchAreaList = (props) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -138,10 +123,7 @@ const BranchArea = (props) => {
           param.area_name = resp.data[0].area_name;
           setparam({ ...param });
         } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
       });
     }
@@ -149,14 +131,11 @@ const BranchArea = (props) => {
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Branch Area"
             placeholder="Branch Area"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -171,16 +150,14 @@ const BranchArea = (props) => {
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/area/insert", param, userToken).then(
-                (resp) => {
-                  if (resp.status == 200) {
-                    if (resp.data[0].valid) {
-                      props.navigation.navigate("BranchAreaList");
-                    }
-                    setLoading(false);
+              postRequest("masters/area/insert", param, userToken).then((resp) => {
+                if (resp.status == 200) {
+                  if (resp.data[0].valid) {
+                    props.navigation.navigate("BranchAreaList");
                   }
+                  setLoading(false);
                 }
-              );
+              });
             }}
           >
             Submit

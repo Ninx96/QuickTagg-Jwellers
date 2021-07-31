@@ -170,7 +170,7 @@ const CustomerForm = (props) => {
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Full Name"
             placeholder="Full Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -180,7 +180,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Mobile No."
             placeholder="Mobile No."
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -192,7 +192,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Email"
             placeholder="Email"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -269,7 +269,7 @@ const CustomerForm = (props) => {
             />
           </View>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Profession"
             placeholder="Profession"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -279,7 +279,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Address"
             placeholder="Address"
             multiline

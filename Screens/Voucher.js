@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  FlatList,
-  Alert,
-} from "react-native";
-import {
-  Button,
-  Checkbox,
-  FAB,
-  Text,
-  TextInput,
-  Card,
-  IconButton,
-} from "react-native-paper";
+import { ImageBackground, ScrollView, View, FlatList, Alert } from "react-native";
+import { Button, Checkbox, FAB, Text, TextInput, Card, IconButton } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
@@ -34,33 +20,26 @@ const VoucherList = (props) => {
 
   const Browse = (id) => {
     let param = {};
-    postRequest("masters/customer/voucher/browse", param, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
+    postRequest("masters/customer/voucher/browse", param, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    );
+    });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
     let data = { voucher_id: id };
-    postRequest("masters/customer/voucher/delete", data, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest("masters/customer/voucher/delete", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
 
   return (
@@ -77,25 +56,32 @@ const VoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <Card.Title
-              style={{
-                backgroundColor: "pink",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-              }}
-              title={item.voucher_name}
-              titleStyle={{
-                textAlign: "center",
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            />
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  backgroundColor: "pink",
+                  borderTopRightRadius: 10,
+                  borderTopLeftRadius: 10,
+                  margin: 0,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.voucher_name}
+              </Text>
+            </View>
             <Card.Content>
-              <View style={MyStyles.row}>
+              <View style={[MyStyles.row, { margin: 0 }]}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.voucher_heading}
-                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.voucher_heading}</Text>
                   <Text style={{ marginBottom: 20 }}>
                     {"Value => "}
                     {item.voucher_value}
@@ -147,9 +133,7 @@ const VoucherList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("VoucherForm", { voucher_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("VoucherForm", { voucher_id: 0 })}
       />
     </View>
   );
@@ -191,10 +175,7 @@ const VoucherForm = (props) => {
   const template =
     "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
   return (
-    <ImageBackground
-      source={require("../assets/login-bg.jpg")}
-      style={MyStyles.container}
-    >
+    <ImageBackground source={require("../assets/login-bg.jpg")} style={MyStyles.container}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <DropDown
@@ -230,7 +211,7 @@ const VoucherForm = (props) => {
           />
 
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Voucher Name"
             placeholder="Voucher Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -240,7 +221,7 @@ const VoucherForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Voucher Heading"
             placeholder="Voucher Heading"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -250,7 +231,7 @@ const VoucherForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Voucher Value"
             placeholder="Voucher Value"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -298,7 +279,7 @@ const VoucherForm = (props) => {
             </View>
           ) : (
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Duration"
               placeholder="Duration"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -310,7 +291,7 @@ const VoucherForm = (props) => {
             />
           )}
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="SMS Template"
             multiline
             numberOfLines={4}
@@ -339,22 +320,13 @@ const VoucherForm = (props) => {
               onUploadImage={() => {}}
             />
           </View>
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
+          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
             <Button
               mode="contained"
               uppercase={false}
               onPress={() => {
                 setLoading(true);
-                postRequest(
-                  "masters/customer/voucher/insert",
-                  param,
-                  userToken
-                ).then((resp) => {
+                postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   console.log(resp);
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {

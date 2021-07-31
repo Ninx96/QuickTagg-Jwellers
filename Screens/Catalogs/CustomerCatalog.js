@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
 import {
   Button,
   Text,
@@ -39,27 +32,18 @@ const CustomerCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/session/browse", {}, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
+    postRequest("transactions/customer/session/browse", {}, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    );
+    });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest(
-      "transactions/customer/session/delete",
-      { tran_id: id },
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/delete", { tran_id: id }, userToken).then((resp) => {
       if (resp.status == 200) {
         if (resp.data[0].valid) {
           Browse();
@@ -98,9 +82,7 @@ const CustomerCatalogList = (props) => {
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.entry_no}
-                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.no_of_customer} {"Customers"}
                   </Text>
@@ -157,9 +139,7 @@ const CustomerCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("CustomerCatalog", { tran_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("CustomerCatalog", { tran_id: 0 })}
       />
     </View>
   );
@@ -196,41 +176,26 @@ const CustomerCatalog = (props) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
-    postRequest(
-      "transactions/customer/customerListMob",
-      { branch_id: branchId },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        setCustomerList(resp.data);
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        }
       }
-    });
+    );
 
-    postRequest(
-      "transactions/customer/session/preview",
-      { tran_id: 0 },
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/preview", { tran_id: 0 }, userToken).then((resp) => {
       if (resp.status == 200) {
         param.entry_no = resp.data[0].entry_no;
         setparam({ ...param });
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -242,27 +207,17 @@ const CustomerCatalog = (props) => {
       min_amount: param.min_amount,
       max_amount: param.max_amount,
     };
-    postRequest(
-      "transactions/customer/session/getProducts",
-      data,
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -279,7 +234,7 @@ const CustomerCatalog = (props) => {
               placeholder="SubCategory"
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -291,7 +246,7 @@ const CustomerCatalog = (props) => {
               }}
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -302,24 +257,11 @@ const CustomerCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View
-              style={[
-                MyStyles.row,
-                { justifyContent: "space-evenly", marginVertical: 40 },
-              ]}
-            >
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setProduct(true)}
-              >
+            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
+              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
                 Add Products
               </Button>
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setContact(true)}
-              >
+              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
                 Next
               </Button>
             </View>
@@ -334,9 +276,7 @@ const CustomerCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>
-                  {item.subCategory}
-                </Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -352,10 +292,7 @@ const CustomerCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(
-                          i,
-                          1
-                        );
+                        param.customer_session_products[index].data.splice(i, 1);
                         setparam([...param]);
                       }}
                     />
@@ -438,10 +375,7 @@ const CustomerCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground
-            style={MyStyles.container}
-            source={require("../../assets/login-bg.jpg")}
-          >
+          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -456,7 +390,7 @@ const CustomerCatalog = (props) => {
               </View>
               <View style={MyStyles.cover}>
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Entry No"
                   placeholder="Entry No"
                   value={param.entry_no}
@@ -464,7 +398,7 @@ const CustomerCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Title"
                   placeholder="Title"
                   value={param.title}
@@ -474,7 +408,7 @@ const CustomerCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Remarks"
                   placeholder="Remarks"
                   multiline
@@ -485,30 +419,23 @@ const CustomerCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View
-                  style={[
-                    MyStyles.row,
-                    { justifyContent: "center", marginVertical: 40 },
-                  ]}
-                >
+                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
                   <Button
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
                       //console.log(param);
                       setLoading(true);
-                      postRequest(
-                        "transactions/customer/session/insert",
-                        param,
-                        userToken
-                      ).then((resp) => {
-                        if (resp.status == 200) {
-                          if (resp.data[0].valid) {
-                            props.navigation.navigate("CustomerCatalogList");
+                      postRequest("transactions/customer/session/insert", param, userToken).then(
+                        (resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              props.navigation.navigate("CustomerCatalogList");
+                            }
+                            setLoading(false);
                           }
-                          setLoading(false);
                         }
-                      });
+                      );
                     }}
                   >
                     Submit

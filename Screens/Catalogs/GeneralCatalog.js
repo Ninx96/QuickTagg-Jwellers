@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
 import {
   Button,
   Text,
@@ -39,36 +32,27 @@ const GeneralCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest(
-      "transactions/customer/generalsession/browse",
-      {},
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/generalsession/browse", {}, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest(
-      "transactions/customer/generalsession/delete",
-      { tran_id: id },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        if (resp.data[0].valid) {
-          Browse();
+    postRequest("transactions/customer/generalsession/delete", { tran_id: id }, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          if (resp.data[0].valid) {
+            Browse();
+          }
+          setLoading(false);
         }
-        setLoading(false);
       }
-    });
+    );
   };
   return (
     <View style={MyStyles.container}>
@@ -100,9 +84,7 @@ const GeneralCatalogList = (props) => {
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.entry_no}
-                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.no_of_customer} {"Customers"}
                   </Text>
@@ -159,9 +141,7 @@ const GeneralCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("GeneralCatalog", { tran_id: 0 })}
       />
     </View>
   );
@@ -198,27 +178,19 @@ const GeneralCatalog = (props) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     if (tran_id == 0) {
-      postRequest(
-        "transactions/customer/customerListMob",
-        { branch_id: branchId },
-        userToken
-      ).then((resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            setCustomerList(resp.data);
+          } else {
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          }
         }
-      });
+      );
     }
 
     postRequest(
@@ -287,10 +259,7 @@ const GeneralCatalog = (props) => {
               console.log("dsgdfgfd " + data);
               setCustomerList(data);
             } else {
-              Alert.alert(
-                "Error !",
-                "Oops! \nSeems like we run into some Server Error"
-              );
+              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
             }
           });
 
@@ -302,10 +271,7 @@ const GeneralCatalog = (props) => {
           setSelectedProducts([...selectedProducts]);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -318,28 +284,18 @@ const GeneralCatalog = (props) => {
       min_amount: param.min_amount,
       max_amount: param.max_amount,
     };
-    postRequest(
-      "transactions/customer/session/getProducts",
-      data,
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -356,7 +312,7 @@ const GeneralCatalog = (props) => {
               placeholder="SubCategory"
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -368,7 +324,7 @@ const GeneralCatalog = (props) => {
               }}
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -379,24 +335,11 @@ const GeneralCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View
-              style={[
-                MyStyles.row,
-                { justifyContent: "space-evenly", marginVertical: 40 },
-              ]}
-            >
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setProduct(true)}
-              >
+            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
+              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
                 Add Products
               </Button>
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setContact(true)}
-              >
+              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
                 Next
               </Button>
             </View>
@@ -411,9 +354,7 @@ const GeneralCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>
-                  {item.subCategory}
-                </Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -429,10 +370,7 @@ const GeneralCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(
-                          i,
-                          1
-                        );
+                        param.customer_session_products[index].data.splice(i, 1);
                         setparam([...param]);
                       }}
                     />
@@ -498,10 +436,7 @@ const GeneralCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground
-            style={MyStyles.container}
-            source={require("../../assets/login-bg.jpg")}
-          >
+          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -516,7 +451,7 @@ const GeneralCatalog = (props) => {
               </View>
               <View style={MyStyles.cover}>
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Entry No"
                   placeholder="Entry No"
                   value={param.entry_no}
@@ -524,7 +459,7 @@ const GeneralCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Title"
                   placeholder="Title"
                   value={param.title}
@@ -534,7 +469,7 @@ const GeneralCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Remarks"
                   placeholder="Remarks"
                   multiline
@@ -545,12 +480,7 @@ const GeneralCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View
-                  style={[
-                    MyStyles.row,
-                    { justifyContent: "center", marginVertical: 40 },
-                  ]}
-                >
+                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
                   <Button
                     mode="contained"
                     uppercase={false}

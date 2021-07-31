@@ -10,48 +10,24 @@ import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
 import { Profile } from "../Screens/Profile";
-import {
-  ProductsForm,
-  ProductsPreview,
-  ProductsList,
-} from "../Screens/Products/Products";
+import { ProductsForm, ProductsPreview, ProductsList } from "../Screens/Products/Products";
 import { CategoryForm, CategoryList } from "../Screens/Products/Category";
-import {
-  SubCategoryForm,
-  SubCategoryList,
-} from "../Screens/Products/SubCategory";
+import { SubCategoryForm, SubCategoryList } from "../Screens/Products/SubCategory";
 import ProductTabs from "../Screens/ProductTabs";
-import {
-  GeneralCatalog,
-  GeneralCatalogList,
-} from "../Screens/Catalogs/GeneralCatalog";
+import { GeneralCatalog, GeneralCatalogList } from "../Screens/Catalogs/GeneralCatalog";
 import SettingsMenu from "../Screens/SettingsMenu";
-import {
-  CustomerCategory,
-  CustomerCategoryList,
-} from "../Screens/Settings/CustomerCategory";
+import { CustomerCategory, CustomerCategoryList } from "../Screens/Settings/CustomerCategory";
 import { BranchStaff, BranchStaffList } from "../Screens/Settings/BranchStaff";
 import { BranchArea, BranchAreaList } from "../Screens/Settings/BranchArea";
 import TabToScan from "../Screens/Settings/TabToScan";
-import {
-  ExhibitionCatalog,
-  ExhibitionCatalogList,
-} from "../Screens/Catalogs/ExhibitionCatalog";
-import {
-  CustomerCatalog,
-  CustomerCatalogList,
-} from "../Screens/Catalogs/CustomerCatalog";
-import {
-  TryAndBuyCatalog,
-  TryAndBuyCatalogList,
-} from "../Screens/Catalogs/TryAndBuyCatalog";
-import {
-  CustomerReview,
-  CustomerReviewList,
-} from "../Screens/Reviews&Feedbacks/CustomerReview";
+import { ExhibitionCatalog, ExhibitionCatalogList } from "../Screens/Catalogs/ExhibitionCatalog";
+import { CustomerCatalog, CustomerCatalogList } from "../Screens/Catalogs/CustomerCatalog";
+import { TryAndBuyCatalog, TryAndBuyCatalogList } from "../Screens/Catalogs/TryAndBuyCatalog";
+import { CustomerReview, CustomerReviewList } from "../Screens/Reviews&Feedbacks/CustomerReview";
 import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
 import SMS from "../Screens/SMS";
 import TitleBar from "./TitleBar";
+import ReviewTabs from "../Screens/ReviewTabs";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -69,16 +45,8 @@ const DrawerComponent = ({ userDetails }) => {
       drawerContent={(props) => <DrawerContent {...props} />}
       drawerStyle={{ width: "50%" }}
     >
-      <Drawer.Screen
-        component={Dashboard}
-        name="Dashboard"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={Dashboard}
-        name="GraphView"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={Dashboard} name="Dashboard" initialParams={userDetails} />
+      <Drawer.Screen component={Dashboard} name="GraphView" initialParams={userDetails} />
       <Drawer.Screen
         component={CustomerList}
         name="CustomerList"
@@ -161,11 +129,7 @@ const DrawerComponent = ({ userDetails }) => {
           header: (props) => <TitleBar {...props} title="Products" />,
         }}
       />
-      <Drawer.Screen
-        component={ProductsList}
-        name="ProductsList"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={ProductsList} name="ProductsList" initialParams={userDetails} />
       <Drawer.Screen
         component={CategoryForm}
         name="CategoryForm"
@@ -175,24 +139,20 @@ const DrawerComponent = ({ userDetails }) => {
           header: (props) => <TitleBar {...props} title="Category" />,
         }}
       />
-      <Drawer.Screen
-        component={CategoryList}
-        name="CategoryList"
-        initialParams={userDetails}
-      />
+      <Drawer.Screen component={CategoryList} name="CategoryList" initialParams={userDetails} />
       <Drawer.Screen
         component={SubCategoryForm}
         name="SubCategoryForm"
-        initialParams={userDetails}
-      />
-      <Drawer.Screen
-        component={SubCategoryList}
-        name="SubCategoryList"
         initialParams={userDetails}
         options={{
           headerShown: true,
           header: (props) => <TitleBar {...props} title="Subcategory" />,
         }}
+      />
+      <Drawer.Screen
+        component={SubCategoryList}
+        name="SubCategoryList"
+        initialParams={userDetails}
       />
 
       {/* --------------------- Catalogs------------------- */}
@@ -256,9 +216,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => (
-            <TitleBar {...props} title="Try and Buy Catalog" />
-          ),
+          header: (props) => <TitleBar {...props} title="Try and Buy Catalog" />,
         }}
       />
       <Drawer.Screen
@@ -267,9 +225,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => (
-            <TitleBar {...props} title="Try and Buy Catalog" />
-          ),
+          header: (props) => <TitleBar {...props} title="Try and Buy Catalog" />,
         }}
       />
       {/* ----------------------Review & FeedBack----------- */}
@@ -284,15 +240,13 @@ const DrawerComponent = ({ userDetails }) => {
         }}
       />
       <Drawer.Screen
-        component={CustomerReviewList}
-        name="CustomerReviewList"
+        component={ReviewTabs}
+        name="ReviewFeedback"
         initialParams={userDetails}
-      />
-
-      <Drawer.Screen
-        component={CustomerFeedback}
-        name="CustomerFeedback"
-        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Reviews" />,
+        }}
       />
 
       {/* --------------------- Settings------------------- */}
@@ -382,94 +336,85 @@ const DrawerContent = (props) => {
         />
       </Drawer.Section>
       <DrawerContentScrollView {...props}>
-        <Drawer.Section title="Menu">
-          <Drawer.Item
-            icon="home"
-            label="Dashboard"
-            onPress={() => {
-              props.navigation.navigate("Dashboard");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Customer"
-            onPress={() => {
-              props.navigation.navigate("CustomerList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Voucher"
-            onPress={() => {
-              props.navigation.navigate("VoucherList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Products"
-            onPress={() => {
-              props.navigation.navigate("ProductTabs");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Settings"
-            onPress={() => {
-              props.navigation.navigate("SettingsMenu");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="General Catalogs"
-            onPress={() => {
-              props.navigation.navigate("GeneralCatalogList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="ExhibitionCatalog"
-            onPress={() => {
-              props.navigation.navigate("ExhibitionCatalogList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="CustomerCatalog"
-            onPress={() => {
-              props.navigation.navigate("CustomerCatalogList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="TryAndBuyCatalog"
-            onPress={() => {
-              props.navigation.navigate("TryAndBuyCatalogList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Customer Review"
-            onPress={() => {
-              props.navigation.navigate("CustomerReviewList");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="Customer Feedback"
-            onPress={() => {
-              props.navigation.navigate("CustomerFeedback");
-            }}
-          />
-          <Drawer.Item
-            icon="home"
-            label="SMS"
-            onPress={() => {
-              props.navigation.navigate("SMS");
-            }}
-          />
-        </Drawer.Section>
+        {/* <Drawer.Section title="Menu"> */}
+        <Drawer.Item
+          label="Dashboard"
+          onPress={() => {
+            props.navigation.navigate("Dashboard");
+          }}
+        />
+        <Drawer.Item
+          label="Customer"
+          onPress={() => {
+            props.navigation.navigate("CustomerList");
+          }}
+        />
+        <Drawer.Item
+          label="Voucher"
+          onPress={() => {
+            props.navigation.navigate("VoucherList");
+          }}
+        />
+        <Drawer.Item
+          label="Products"
+          onPress={() => {
+            props.navigation.navigate("ProductTabs");
+          }}
+        />
+        <Drawer.Item
+          label="Settings"
+          onPress={() => {
+            props.navigation.navigate("SettingsMenu");
+          }}
+        />
+        <Drawer.Item
+          label="General Catalogs"
+          onPress={() => {
+            props.navigation.navigate("GeneralCatalogList");
+          }}
+        />
+        <Drawer.Item
+          label="ExhibitionCatalog"
+          onPress={() => {
+            props.navigation.navigate("ExhibitionCatalogList");
+          }}
+        />
+        <Drawer.Item
+          label="CustomerCatalog"
+          onPress={() => {
+            props.navigation.navigate("CustomerCatalogList");
+          }}
+        />
+        <Drawer.Item
+          label="TryAndBuyCatalog"
+          onPress={() => {
+            props.navigation.navigate("TryAndBuyCatalogList");
+          }}
+        />
+
+        <Drawer.Item
+          label="Reviews"
+          onPress={() => {
+            props.navigation.navigate("ReviewFeedback");
+          }}
+        />
+
+        <Drawer.Item
+          label="SMS"
+          onPress={() => {
+            props.navigation.navigate("SMS");
+          }}
+        />
+
+        <Drawer.Item
+          label="Log Out"
+          onPress={() => {
+            signOut();
+          }}
+        />
+        {/* </Drawer.Section> */}
       </DrawerContentScrollView>
-      <Drawer.Section title="Quicktagg (1.0.0)">
+      {/* <Drawer.Section title="Quicktagg (1.0.0)">
         <Divider />
         <Drawer.Item
           icon="exit-to-app"
@@ -478,7 +423,7 @@ const DrawerContent = (props) => {
             signOut();
           }}
         />
-      </Drawer.Section>
+      </Drawer.Section> */}
     </View>
   );
 };

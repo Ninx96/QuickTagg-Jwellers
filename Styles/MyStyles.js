@@ -15,10 +15,11 @@ const MyStyles = StyleSheet.create({
 
   cover: {
     flex: 1,
-    //justifyContent: "center",
+    justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.6)",
     margin: 20,
     borderRadius: 10,
+    padding: 10,
   },
 
   centerAlign: {
