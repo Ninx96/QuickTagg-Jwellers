@@ -65,8 +65,6 @@ const VoucherList = (props) => {
 
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
-
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -197,7 +195,6 @@ const VoucherForm = (props) => {
       source={require("../assets/login-bg.jpg")}
       style={MyStyles.container}
     >
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <DropDown

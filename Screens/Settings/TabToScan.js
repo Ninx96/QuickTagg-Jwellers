@@ -12,7 +12,6 @@ const TabToScan = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <ImageUpload

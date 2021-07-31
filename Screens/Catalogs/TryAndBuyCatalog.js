@@ -54,21 +54,21 @@ const TryAndBuyCatalogList = (props) => {
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("transactions/customer/trial/delete", { tran_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "transactions/customer/trial/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
-
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -101,14 +101,18 @@ const TryAndBuyCatalogList = (props) => {
                     {item.entry_no}
                   </Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.no_of_customer}  {"Customers"}
+                    {item.no_of_customer} {"Customers"}
                   </Text>
-                  <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>
-                    {item.no_of_product}  {"Products"}
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      marginBottom: 10,
+                    }}
+                  >
+                    {item.no_of_product} {"Products"}
                   </Text>
-                  <Text>
-                    {item.remarks}
-                  </Text>
+                  <Text>{item.remarks}</Text>
                 </View>
                 <View>
                   <IconButton
@@ -125,7 +129,7 @@ const TryAndBuyCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -183,8 +187,11 @@ const TryAndBuyCatalog = (props) => {
   const [subcategorylist, setsubcategorylist] = useState([]);
 
   React.useEffect(() => {
-
-    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
@@ -195,29 +202,33 @@ const TryAndBuyCatalog = (props) => {
       }
     });
 
-    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-      }
-    );
-
-    postRequest("transactions/customer/trial/preview", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/customerListMob",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
-       
+        setCustomerList(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
+    postRequest(
+      "transactions/customer/trial/preview",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
-        }
-        else {
+        } else {
           param.title = resp.data[0].title;
-          param.entry_no = resp.data[0].entry_no;         
+          param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
           ProductList();
@@ -238,11 +249,10 @@ const TryAndBuyCatalog = (props) => {
 
           setparam({ ...param });
 
-          selectedProducts.push({            
+          selectedProducts.push({
             data: resp.data[0].products,
           });
           setSelectedProducts([...selectedProducts]);
-
         }
       } else {
         Alert.alert(
@@ -261,7 +271,11 @@ const TryAndBuyCatalog = (props) => {
       min_amount: param.min_amount,
       max_amount: param.max_amount,
     };
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
@@ -280,11 +294,10 @@ const TryAndBuyCatalog = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <Loading isloading={false} />
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
-         <DropDown
+            <DropDown
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
@@ -418,7 +431,7 @@ const TryAndBuyCatalog = (props) => {
             param.product_ids.push({
               subcategory_id: item.subcategory_id,
               category_id: item.category_id,
-              product_id: item.product_id
+              product_id: item.product_id,
             });
             setparam({ ...param, product_ids: param.product_ids });
           });
@@ -433,13 +446,12 @@ const TryAndBuyCatalog = (props) => {
           setRemarks(true);
           if (items.length == 0) {
             setparam({ ...param, customers: [] });
-          }
-          else {
+          } else {
             items.map((item, index) => {
               param.customers.push({
                 customer_id: item.customer_id,
                 mobile: item.mobile,
-                customer_name: item.full_name
+                customer_name: item.full_name,
               });
               setparam({ ...param, customers: param.customers });
             });
@@ -466,7 +478,7 @@ const TryAndBuyCatalog = (props) => {
                 />
               </View>
               <View style={MyStyles.cover}>
-              <TextInput
+                <TextInput
                   mode="flat"
                   label="Entry No"
                   placeholder="Entry No"
@@ -502,15 +514,20 @@ const TryAndBuyCatalog = (props) => {
                     { justifyContent: "center", marginVertical: 40 },
                   ]}
                 >
-               <Button mode="contained" uppercase={false}
+                  <Button
+                    mode="contained"
+                    uppercase={false}
                     onPress={() => {
                       //console.log(param);
                       setLoading(true);
-                      postRequest("transactions/customer/trial/insert", param, userToken).then((resp) => {
+                      postRequest(
+                        "transactions/customer/trial/insert",
+                        param,
+                        userToken
+                      ).then((resp) => {
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
                             props.navigation.navigate("TryAndBuyCatalogList");
-
                           }
                           setLoading(false);
                         }

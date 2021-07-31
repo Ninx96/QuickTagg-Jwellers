@@ -15,7 +15,6 @@ const CustomerFeedback = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={[{}, {}, {}]}
         renderItem={({ item, index }) => (

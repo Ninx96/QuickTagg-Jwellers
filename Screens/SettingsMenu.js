@@ -7,7 +7,6 @@ import MyStyles from "../Styles/MyStyles";
 const SettingsMenu = (props) => {
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <ScrollView>
         <List.Item
           onPress={() => props.navigation.navigate("CustomerCategoryList")}

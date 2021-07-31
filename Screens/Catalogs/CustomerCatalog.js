@@ -38,7 +38,7 @@ const CustomerCatalogList = (props) => {
     Browse();
   }, []);
 
-  const Browse = (id) => {  
+  const Browse = (id) => {
     postRequest("transactions/customer/session/browse", {}, userToken).then(
       (resp) => {
         if (resp.status == 200) {
@@ -55,21 +55,21 @@ const CustomerCatalogList = (props) => {
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("transactions/customer/session/delete", { tran_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "transactions/customer/session/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
-
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -102,14 +102,18 @@ const CustomerCatalogList = (props) => {
                     {item.entry_no}
                   </Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.no_of_customer}  {"Customers"}
+                    {item.no_of_customer} {"Customers"}
                   </Text>
-                  <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>
-                    {item.no_of_product}  {"Products"}
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      marginBottom: 10,
+                    }}
+                  >
+                    {item.no_of_product} {"Products"}
                   </Text>
-                  <Text>
-                    {item.remarks}
-                  </Text>
+                  <Text>{item.remarks}</Text>
                 </View>
                 <View>
                   <IconButton
@@ -126,7 +130,7 @@ const CustomerCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -183,9 +187,12 @@ const CustomerCatalog = (props) => {
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
 
-
   React.useEffect(() => {
-    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
@@ -196,20 +203,26 @@ const CustomerCatalog = (props) => {
       }
     });
 
-    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
+    postRequest(
+      "transactions/customer/customerListMob",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        setCustomerList(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
-    );
+    });
 
-    postRequest("transactions/customer/session/preview", { tran_id: 0 }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/preview",
+      { tran_id: 0 },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         param.entry_no = resp.data[0].entry_no;
         setparam({ ...param });
@@ -229,7 +242,11 @@ const CustomerCatalog = (props) => {
       min_amount: param.min_amount,
       max_amount: param.max_amount,
     };
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
@@ -247,7 +264,6 @@ const CustomerCatalog = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <Loading isloading={false} />
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
@@ -336,7 +352,10 @@ const CustomerCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(i, 1);
+                        param.customer_session_products[index].data.splice(
+                          i,
+                          1
+                        );
                         setparam([...param]);
                       }}
                     />
@@ -385,9 +404,12 @@ const CustomerCatalog = (props) => {
             param.customer_session_products.push({
               subcategory_id: item.subcategory_id,
               category_id: item.category_id,
-              product_id: item.product_id
+              product_id: item.product_id,
             });
-            setparam({ ...param, customer_session_products: param.customer_session_products });
+            setparam({
+              ...param,
+              customer_session_products: param.customer_session_products,
+            });
           });
         }}
         onClose={() => setProduct(false)}
@@ -401,13 +423,12 @@ const CustomerCatalog = (props) => {
           setRemarks(true);
           if (items.length == 0) {
             setparam({ ...param, customers: [] });
-          }
-          else {
+          } else {
             items.map((item, index) => {
               param.customers.push({
                 customer_id: item.customer_id,
                 mobile: item.mobile,
-                customer_name: item.full_name
+                customer_name: item.full_name,
               });
               setparam({ ...param, customers: param.customers });
             });
@@ -434,7 +455,7 @@ const CustomerCatalog = (props) => {
                 />
               </View>
               <View style={MyStyles.cover}>
-              <TextInput
+                <TextInput
                   mode="flat"
                   label="Entry No"
                   placeholder="Entry No"
@@ -470,11 +491,17 @@ const CustomerCatalog = (props) => {
                     { justifyContent: "center", marginVertical: 40 },
                   ]}
                 >
-                  <Button mode="contained" uppercase={false}
+                  <Button
+                    mode="contained"
+                    uppercase={false}
                     onPress={() => {
                       //console.log(param);
                       setLoading(true);
-                      postRequest("transactions/customer/session/insert", param, userToken).then((resp) => {
+                      postRequest(
+                        "transactions/customer/session/insert",
+                        param,
+                        userToken
+                      ).then((resp) => {
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
                             props.navigation.navigate("CustomerCatalogList");

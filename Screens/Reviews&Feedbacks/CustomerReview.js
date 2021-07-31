@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, FlatList, Alert } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  FlatList,
+  Alert,
+} from "react-native";
 import {
   Button,
   FAB,
@@ -39,20 +45,21 @@ const CustomerReviewList = (props) => {
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("masters/customer/customerreview/delete", { tran_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "masters/customer/customerreview/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -70,25 +77,36 @@ const CustomerReviewList = (props) => {
               left={() => (
                 <Avatar.Image source={require("../../assets/upload.png")} />
               )}
-              right={() =>
-                <><IconButton icon="pencil" onPress={() => { props.navigation.navigate("CustomerReview", { tran_id: item.tran_id }) }} />
-                  <IconButton icon="delete" onPress={() => {
-                    Alert.alert(
-                      "Alert",
-                      "You want to delete?",
-                      [
+              right={() => (
+                <>
+                  <IconButton
+                    icon="pencil"
+                    onPress={() => {
+                      props.navigation.navigate("CustomerReview", {
+                        tran_id: item.tran_id,
+                      });
+                    }}
+                  />
+                  <IconButton
+                    icon="delete"
+                    onPress={() => {
+                      Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {
-
-                          },
-                          style: "cancel"
+                          onPress: () => {},
+                          style: "cancel",
                         },
-                        { text: "Yes", onPress: () => { Delete(item.tran_id); } }
-                      ]
-                    );
-                  }} /></>
-              }
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            Delete(item.tran_id);
+                          },
+                        },
+                      ]);
+                    }}
+                  />
+                </>
+              )}
             />
             <Card.Content style={{ height: 180, marginTop: 20 }}>
               <Text>{item.review}</Text>
@@ -119,13 +137,16 @@ const CustomerReview = (props) => {
     tran_id: "0",
     customer_name: "",
     image_path: "",
-    review: ""
+    review: "",
   });
 
   React.useEffect(() => {
-
     if (tran_id != 0) {
-      postRequest("masters/customer/customerreview/preview", { tran_id: tran_id }, userToken).then((resp) => {
+      postRequest(
+        "masters/customer/customerreview/preview",
+        { tran_id: tran_id },
+        userToken
+      ).then((resp) => {
         if (resp.status == 200) {
           param.tran_id = resp.data.tran_id;
           param.customer_name = resp.data.customer_name;
@@ -148,7 +169,6 @@ const CustomerReview = (props) => {
       source={require("../../assets/login-bg.jpg")}
       style={MyStyles.container}
     >
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
@@ -177,8 +197,8 @@ const CustomerReview = (props) => {
             <ImageUpload
               label="Upload Image :"
               source={require("../../assets/upload.png")}
-              onClearImage={() => { }}
-              onUploadImage={() => { }}
+              onClearImage={() => {}}
+              onUploadImage={() => {}}
             />
           </View>
 
@@ -194,7 +214,11 @@ const CustomerReview = (props) => {
               onPress={() => {
                 setLoading(true);
 
-                postRequest("masters/customer/customerreview/insert", param, userToken).then((resp) => {
+                postRequest(
+                  "masters/customer/customerreview/insert",
+                  param,
+                  userToken
+                ).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
                       props.navigation.navigate("CustomerReviewList");
