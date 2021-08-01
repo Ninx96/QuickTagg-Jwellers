@@ -316,9 +316,32 @@ const Wishlist = (props) => {
               Not Response
             </Button>
           </View>
+
           <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
           <NotResposeCustomersChartView visible={visible.not_response_chart} data={notresponsecustomerchartdata} />
+
+
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+            onPress={() => setVisible({ ...visible, customer_chart: true })}
+          >
+            Not Visting
+          </Button>
+        </View>
 
 
         <Card
@@ -390,8 +413,27 @@ const Wishlist = (props) => {
               </DataTable.Row>
             </DataTable>
           </View>
+
           <CartGraphView visible={visible.cart_graph} data={cartgraphdata} />
         </Card>
+        <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            New Customers
+          </Button>
+          <Button
+            mode="contained"
+            color="#DC143C"
+            uppercase={false}
+            style={{ borderRadius: 20, borderColor: "#FFF", borderWidth: 1 }}
+          >
+            Not Visting
+          </Button>
+        </View>
       </ScrollView>
     </View>
   );
@@ -415,8 +457,10 @@ const CustomerGraphView = ({ visible = false, data }) => {
     return (
       <View
         style={{
+
           backgroundColor: "#fff",
           marginHorizontal: 0,
+
           borderRadius: 10,
           padding: 10,
           marginVertical: 10,
@@ -491,8 +535,10 @@ const NotResposeCustomersChartView = ({ visible = false, data }) => {
     return (
       <View
         style={{
+
           backgroundColor: "#fff",
           marginHorizontal: 0,
+
           borderRadius: 10,
           padding: 10,
           marginVertical: 10,

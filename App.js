@@ -5,9 +5,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperDefaultTheme,
+  configureFonts,
 } from "react-native-paper";
 import AppLoading from "expo-app-loading";
 import * as SecureStore from "expo-secure-store";
+import * as Font from "expo-font";
 
 import { AuthContext } from "./Components/Context";
 
@@ -15,6 +17,29 @@ import Login from "./Screens/Auth/Login";
 import DrawerComponent from "./Components/DrawerComponent";
 
 export default function App() {
+  const [fontsLoaded, setFontLoaded] = React.useState(false);
+
+  const getFonts = () =>
+    Font.loadAsync({
+      "helvetica-regular": require("./assets/fonts/regular.otf"),
+      "helvetica-medium": require("./assets/fonts/medium.otf"),
+      "helvetica-bold": require("./assets/fonts/bold.otf"),
+    });
+
+  const fontConfig = {
+    default: {
+      regular: {
+        fontFamily: "helvetica-regular",
+      },
+      medium: {
+        fontFamily: "helvetica-medium",
+      },
+      bold: {
+        fontFamily: "helvetica-bold",
+      },
+    },
+  };
+
   const PaperTheme = {
     ...PaperDefaultTheme,
     mode: "adaptive",
@@ -24,6 +49,7 @@ export default function App() {
       primary: "#ffba3c",
       accent: "#ffba3c",
     },
+    fonts: configureFonts(fontConfig),
   };
 
   const initialLoginState = {
@@ -62,10 +88,7 @@ export default function App() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(
-    loginReducer,
-    initialLoginState
-  );
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(
     () => ({
@@ -126,7 +149,7 @@ export default function App() {
     }, 1000);
   }, []);
 
-  if (!loginState.loading) {
+  if (!loginState.loading && fontsLoaded) {
     return (
       <PaperProvider theme={PaperTheme}>
         <AuthContext.Provider value={authContext}>
@@ -144,9 +167,9 @@ export default function App() {
   } else {
     return (
       <AppLoading
-        //startAsync={getFonts}
+        startAsync={getFonts}
         onError={console.warn}
-        //onFinish={() => setFontLoaded(true)}
+        onFinish={() => setFontLoaded(true)}
       />
     );
   }
