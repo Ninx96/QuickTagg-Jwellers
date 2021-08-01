@@ -31,18 +31,11 @@ const TryAndBuyCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-
-    postRequest("transactions/customer/trialsession/browse", {}, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
-
+    postRequest("transactions/customer/trialsession/browse", {}, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -196,17 +189,18 @@ const TryAndBuyCatalog = (props) => {
       }
     );
 
-
-    postRequest("transactions/customer/trialsession/preview-session", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/trialsession/preview-session",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
-       
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
-        }
-        else {
+        } else {
           param.title = resp.data[0].title;
-          param.entry_no = resp.data[0].entry_no;         
+          param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
           ProductList();
@@ -225,25 +219,23 @@ const TryAndBuyCatalog = (props) => {
           //   customer_name: item.full_name
           // });
 
+          // param.customers.push({
+          //   customer_id: item.customer_id,
+          //   mobile: item.mobile,
+          //   customer_name: item.full_name
+          // });
 
-            // param.customers.push({
-            //   customer_id: item.customer_id,
-            //   mobile: item.mobile,
-            //   customer_name: item.full_name
-            // });
+          setparam({ ...param });
 
-            setparam({ ...param });
-
-            selectedProducts.push({
-              data: resp.data[0].products,
-            });
-            setSelectedProducts([...selectedProducts]);
-          }
-        } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          selectedProducts.push({
+            data: resp.data[0].products,
+          });
+          setSelectedProducts([...selectedProducts]);
         }
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    );
+    });
 
     setLoading(false);
   }, []);
@@ -404,9 +396,7 @@ const TryAndBuyCatalog = (props) => {
           setRemarks(true);
           if (items.length == 0) {
             setparam({ ...param, session_customers: [] });
-          }
-          else {
-
+          } else {
             items.map((item, index) => {
               param.session_customers.push({
                 customer_id: item.customer_id,
@@ -465,20 +455,18 @@ const TryAndBuyCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View
-                  style={[
-                    MyStyles.row,
-                    { justifyContent: "center", marginVertical: 40 },
-                  ]}
-                >
-               <Button mode="contained" uppercase={false}
-                    onPress={() => {                     
+                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                  <Button
+                    mode="contained"
+                    uppercase={false}
+                    onPress={() => {
                       setLoading(true);
-                      postRequest("transactions/customer/trial/insert", param, userToken).then((resp) => {
-                        if (resp.status == 200) {                      
-                            props.navigation.navigate("TryAndBuyCatalogList");                        
-                          setLoading(false);
-
+                      postRequest("transactions/customer/trial/insert", param, userToken).then(
+                        (resp) => {
+                          if (resp.status == 200) {
+                            props.navigation.navigate("TryAndBuyCatalogList");
+                            setLoading(false);
+                          }
                         }
                       );
                     }}

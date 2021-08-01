@@ -43,12 +43,11 @@ const ProductsList = (props) => {
           >
             <Card.Cover
               source={{ uri: item.url_image + "" + item.image_path }}
-              style={{ width: 120, height: 110 }}
+              style={{ width: 120, height: 120 }}
             />
-            <View style={{ padding: 5 }}>
-              <Text>
-                {item.product_name} {item.product_code}
-              </Text>
+            <View style={{ padding: 5, paddingVertical: 10 }}>
+              <Text>{item.product_name}</Text>
+              <Text>{item.product_code}</Text>
             </View>
           </Card>
         )}
@@ -130,7 +129,7 @@ const ProductsPreview = (props) => {
   return (
     <View style={MyStyles.container}>
       <ScrollView>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
@@ -143,7 +142,7 @@ const ProductsPreview = (props) => {
             color="black"
             onPress={() => props.navigation.goBack()}
           />
-        </View>
+        </View> */}
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
           <Text style={{ fontWeight: "bold", fontSize: 22 }}>{param.product_name}</Text>
           <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: {param.product_code}</Text>
@@ -180,40 +179,40 @@ const ProductsPreview = (props) => {
             )}
           </Swiper>
         </View>
-        <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
-          <View style={{ marginVertical: 5 }}>
+        <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Availablity :</Text>
             <Text>{param.available}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Metal :</Text>
             <Text>{param.Metal}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Material :</Text>
             <Text>{param.material}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Disable :</Text>
             <Text>{param.disable}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Exhibition :</Text>
             <Text>{param.exhibition}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Weight :</Text>
             <Text>{param.weight}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Size/Length :</Text>
             <Text>{param.size_length}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Gender :</Text>
             <Text>{param.gender}</Text>
           </View>
-          <View style={{ marginVertical: 5 }}>
+          <View style={MyStyles.row}>
             <Text style={{ fontWeight: "bold" }}>Description :</Text>
             <Text>{param.product_code}</Text>
           </View>

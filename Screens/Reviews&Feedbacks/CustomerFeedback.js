@@ -23,20 +23,27 @@ const CustomerFeedback = (props) => {
               marginHorizontal: 20,
               marginVertical: 5,
               borderRadius: 10,
-              padding: 20,
+              padding: 10,
               backgroundColor: "#FE428D",
             }}
           >
             <View>
               <View>
-                <Text>Name</Text>
-                <View style={MyStyles.row}>
-                  <Text>9874563210</Text>
-                  <View style={{ flexDirection: "row" }}>{ratingStar(5)}</View>
+                <Text style={{ fontSize: 15, color: "#FFF" }}>Name</Text>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "flex-start", marginVertical: 0, color: "#FFF" },
+                  ]}
+                >
+                  <Text style={{ fontSize: 15, color: "#FFF" }}>9874563210</Text>
+                  <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
+                    {ratingStar(5)}
+                  </View>
                 </View>
               </View>
 
-              <View style={MyStyles.row}>
+              <View style={[MyStyles.row, { marginVertical: 0 }]}>
                 <Button
                   mode="contained"
                   color="#4297FE"
@@ -48,8 +55,8 @@ const CustomerFeedback = (props) => {
                 </Button>
               </View>
 
-              <View style={{ height: 100 }}>
-                <Text>Remarks Remarks Remarks</Text>
+              <View style={{ height: 70 }}>
+                <Text style={{ fontSize: 15, color: "#FFF" }}>Remarks Remarks Remarks</Text>
               </View>
             </View>
           </Card>

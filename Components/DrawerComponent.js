@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Image } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { Drawer, Divider } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import * as Linking from "expo-linking";
 
 //Screen Imports
 import Dashboard from "../Screens/Dashboard";
@@ -335,8 +336,8 @@ const DrawerContent = (props) => {
           style={{ width: "100%", height: 200 }}
         />
       </Drawer.Section>
-      <DrawerContentScrollView {...props}>
-        {/* <Drawer.Section title="Menu"> */}
+
+      <ScrollView {...props}>
         <Drawer.Item
           label="Dashboard"
           onPress={() => {
@@ -350,23 +351,12 @@ const DrawerContent = (props) => {
           }}
         />
         <Drawer.Item
-          label="Voucher"
-          onPress={() => {
-            props.navigation.navigate("VoucherList");
-          }}
-        />
-        <Drawer.Item
           label="Products"
           onPress={() => {
             props.navigation.navigate("ProductTabs");
           }}
         />
-        <Drawer.Item
-          label="Settings"
-          onPress={() => {
-            props.navigation.navigate("SettingsMenu");
-          }}
-        />
+
         <Drawer.Item
           label="General Catalogs"
           onPress={() => {
@@ -393,9 +383,9 @@ const DrawerContent = (props) => {
         />
 
         <Drawer.Item
-          label="Reviews"
+          label="Voucher"
           onPress={() => {
-            props.navigation.navigate("ReviewFeedback");
+            props.navigation.navigate("VoucherList");
           }}
         />
 
@@ -407,23 +397,35 @@ const DrawerContent = (props) => {
         />
 
         <Drawer.Item
+          label="Settings"
+          onPress={() => {
+            props.navigation.navigate("SettingsMenu");
+          }}
+        />
+
+        <Drawer.Item
+          label="Reviews"
+          onPress={() => {
+            props.navigation.navigate("ReviewFeedback");
+          }}
+        />
+
+        <Drawer.Item
           label="Log Out"
           onPress={() => {
             signOut();
           }}
         />
-        {/* </Drawer.Section> */}
-      </DrawerContentScrollView>
-      {/* <Drawer.Section title="Quicktagg (1.0.0)">
+      </ScrollView>
+
+      <Drawer.Section title="Quicktagg (1.0.0)">
         <Divider />
         <Drawer.Item
-          icon="exit-to-app"
-          label="Log Out"
-          onPress={() => {
-            signOut();
-          }}
+          icon="phone"
+          // label="Log Out"
+          onPress={() => Linking.openURL("tel:9874561230")}
         />
-      </Drawer.Section> */}
+      </Drawer.Section>
     </View>
   );
 };

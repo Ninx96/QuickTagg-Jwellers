@@ -14,6 +14,7 @@ import MyStyles from "../../Styles/MyStyles";
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import { postRequest } from "../../Services/RequestServices";
+
 const CategoryList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -59,38 +60,43 @@ const CategoryList = (props) => {
             }}
           >
             <Card.Cover source={require("../../assets/upload.png")} style={{ height: 150 }} />
-            <Card.Content>
-              <View style={MyStyles.row}>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.category_name}</Text>
-                <Image
-                  source={require("../../assets/upload.png")}
-                  style={{ height: 80, width: 150 }}
-                />
-                <View>
-                  {/* <IconButton icon="pencil" /> */}
-                  <TouchableRipple
-                    style={{ zIndex: 0 }}
-                    onPress={() => {
-                      Alert.alert("Alert", "You want to delete?", [
-                        {
-                          text: "No",
-                          onPress: () => {},
-                          style: "cancel",
+
+            <View style={[MyStyles.row, { marginVertical: 0, paddingHorizontal: 10 }]}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.category_name}</Text>
+              <Image
+                source={require("../../assets/upload.png")}
+                style={{
+                  height: 80,
+                  width: 150,
+                  marginLeft: "auto",
+                  alignSelf: "flex-end",
+                  marginBottom: 5,
+                }}
+              />
+              <View>
+                <IconButton icon="pencil" />
+                <TouchableRipple
+                  style={{ zIndex: 0 }}
+                  onPress={() => {
+                    Alert.alert("Alert", "You want to delete?", [
+                      {
+                        text: "No",
+                        onPress: () => {},
+                        style: "cancel",
+                      },
+                      {
+                        text: "Yes",
+                        onPress: () => {
+                          Delete(item.category_id);
                         },
-                        {
-                          text: "Yes",
-                          onPress: () => {
-                            Delete(item.category_id);
-                          },
-                        },
-                      ]);
-                    }}
-                  >
-                    <List.Icon {...props} icon="delete" />
-                  </TouchableRipple>
-                </View>
+                      },
+                    ]);
+                  }}
+                >
+                  <List.Icon {...props} icon="delete" />
+                </TouchableRipple>
               </View>
-            </Card.Content>
+            </View>
           </Card>
         )}
         keyExtractor={(item, index) => index.toString()}

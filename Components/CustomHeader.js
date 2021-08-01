@@ -19,10 +19,10 @@ const CustomHeader = (props) => {
     >
       <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />
 
-      {/* <Image
+      <Image
         style={{ resizeMode: "contain", width: 200, height: 50 }}
         source={require("../assets/logo.png")}
-      /> */}
+      />
       <IconButton icon="dots-vertical" size={25} onPress={() => Alert.alert("Coming Soon...")} />
     </SafeAreaView>
   );

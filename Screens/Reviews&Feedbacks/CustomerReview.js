@@ -45,7 +45,7 @@ const CustomerReviewList = (props) => {
           <Card
             style={{
               marginHorizontal: 20,
-              marginVertical: 5,
+              marginVertical: 10,
               borderRadius: 10,
               backgroundColor: "#FF3647",
             }}
@@ -54,7 +54,7 @@ const CustomerReviewList = (props) => {
               style={{ marginTop: 0 }}
               title={item.customer_name}
               titleStyle={{ textAlign: "center", color: "#FFF" }}
-              left={() => <Avatar.Image source={require("../../assets/upload.png")} size={90} />}
+              left={() => <Avatar.Image source={require("../../assets/upload.png")} size={85} />}
               right={() => (
                 <>
                   <IconButton
@@ -88,12 +88,9 @@ const CustomerReviewList = (props) => {
                 </>
               )}
             />
-            {/* <View style={[MyStyles.row, { margin: 0 }]}>
-              <Avatar.Image source={require("../../assets/upload.png")} size={80} />
-              <Text></Text>
-            </View> */}
-            <Card.Content style={{ height: 180, marginTop: 20 }}>
-              <Text>{item.review}</Text>
+
+            <Card.Content style={{ height: 120, marginTop: 20 }}>
+              <Text style={{ color: "#FFF", fontSize: 15 }}>{item.review}</Text>
             </Card.Content>
           </Card>
         )}

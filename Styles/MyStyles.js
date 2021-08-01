@@ -7,6 +7,7 @@ const MyStyles = StyleSheet.create({
 
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
 
   wrapper: {
@@ -64,7 +65,7 @@ const MyStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 5,
+    marginVertical: 8,
   },
   squarefixedRatio: {
     flexDirection: "row",
@@ -72,11 +73,12 @@ const MyStyles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
     aspectRatio: 1,
-    width: "6%",
+    width: "5%",
     borderColor: "grey",
     borderWidth: 1,
     borderRadius: 3,
     alignSelf: "center",
+    margin: 6,
   },
 });
 
