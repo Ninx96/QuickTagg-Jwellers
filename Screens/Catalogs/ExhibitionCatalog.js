@@ -39,7 +39,7 @@ const ExhibitionCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/exhibition/browse", {}, userToken).then(
+    postRequest("transactions/customer/exhibitionsession/browse", {}, userToken).then(
       (resp) => {
         if (resp.status == 200) {
           setgriddata(resp.data);
@@ -120,7 +120,7 @@ const ExhibitionCatalogList = (props) => {
                       })
                     }
                   />
-                  <IconButton
+                  {/* <IconButton
                     icon="delete"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
@@ -137,7 +137,7 @@ const ExhibitionCatalogList = (props) => {
                         },
                       ]);
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
             </Card.Content>
@@ -172,7 +172,7 @@ const ExhibitionCatalog = (props) => {
     entry_no: "",
     remarks: "",
     product_ids: [],
-    customers: [],
+    session_customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -209,7 +209,7 @@ const ExhibitionCatalog = (props) => {
       }
     );
 
-    postRequest("transactions/customer/exhibition/preview", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest("transactions/customer/exhibitionsession/preview-session", { tran_id: tran_id }, userToken).then((resp) => {
       if (resp.status == 200) {
        
         if (tran_id == 0) {
@@ -231,7 +231,7 @@ const ExhibitionCatalog = (props) => {
           //   product_id: item.product_id
           // });
 
-          // param.customers.push({
+          // param.session_customers.push({
           //   customer_id: item.customer_id,
           //   mobile: item.mobile,
           //   customer_name: item.full_name
@@ -433,16 +433,16 @@ const ExhibitionCatalog = (props) => {
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
-            setparam({ ...param, customers: [] });
+            setparam({ ...param, session_customers: [] });
           }
           else {
             items.map((item, index) => {
-              param.customers.push({
+              param.session_customers.push({
                 customer_id: item.customer_id,
                 mobile: item.mobile,
                 customer_name: item.full_name
               });
-              setparam({ ...param, customers: param.customers });
+              setparam({ ...param, session_customers: param.session_customers });
             });
           }
         }}
@@ -505,14 +505,11 @@ const ExhibitionCatalog = (props) => {
                 >
                   <Button mode="contained" uppercase={false}
                     onPress={() => {
-                      //console.log(param);
+                      console.log(param);
                       setLoading(true);
                       postRequest("transactions/customer/exhibition/insert", param, userToken).then((resp) => {
-                        if (resp.status == 200) {
-                          if (resp.data[0].valid) {
-                            props.navigation.navigate("ExhibitionCatalogList");
-
-                          }
+                        if (resp.status == 200) {                        
+                            props.navigation.navigate("ExhibitionCatalogList");                         
                           setLoading(false);
                         }
                       });

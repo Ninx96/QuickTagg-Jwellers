@@ -122,7 +122,7 @@ const VoucherList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -188,6 +188,15 @@ const VoucherForm = (props) => {
     voucher_sms: "",
     voucher_type: "",
     voucher_value: "",
+  });
+
+  const [Banner, setBanner] = React.useState(require("../assets/upload.png"));
+  const [Image, setImage] = React.useState(require("../assets/upload.png"));
+  const [voucheruploads, setvoucheruploads] = useState({
+    banner_name: "banner-" + moment().format('YYYYMMDD-hhmmss') + ".png",
+    banner_base64: "",
+    image_name: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png",
+    image_base64: "",
   });
 
   const template =
@@ -331,15 +340,23 @@ const VoucherForm = (props) => {
           <View style={MyStyles.row}>
             <ImageUpload
               label="Voucher Image :"
-              source={require("../assets/upload.png")}
-              onClearImage={() => {}}
-              onUploadImage={() => {}}
+              source={Image}
+              onClearImage={() => { }}
+              onUploadImage={(result) => {
+                setImage({ uri: result.uri });
+                setvoucheruploads({ ...voucheruploads, image_base64: result.base64 });
+                setparam({ ...param, image_path: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png" })
+              }}
             />
             <ImageUpload
               label="Voucher Banner :"
-              source={require("../assets/upload.png")}
-              onClearImage={() => {}}
-              onUploadImage={() => {}}
+              source={Banner}
+              onClearImage={() => { }}
+              onUploadImage={(result) => {
+                setBanner({ uri: result.uri });
+                setvoucheruploads({ ...voucheruploads, banner_base64: result.base64 });
+                setparam({ ...param, banner_image: "banner-" + moment().format('YYYYMMDD-hhmmss') + ".png" })
+              }}
             />
           </View>
           <View
@@ -353,14 +370,27 @@ const VoucherForm = (props) => {
               uppercase={false}
               onPress={() => {
                 setLoading(true);
-                postRequest(
-                  "masters/customer/voucher/insert",
-                  param,
-                  userToken
-                ).then((resp) => {
-                  console.log(resp);
+                postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
+                      if (param.banner_image !== "") {
+                        postRequest("masters/customer/UploadvoucherBannerMob64", { base64image: voucheruploads.banner_base64, imageName: param.banner_image }, userToken).then((resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              console.log("banner : " + resp.data[0].valid);
+                            }
+                          }
+                        });
+                      }
+                      if (param.image_path !== "") {
+                        postRequest("masters/customer/UploadvoucherBannerMob64", { base64image: voucheruploads.image_base64, imageName: param.image_path }, userToken).then((resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              console.log("image : " + resp.data[0].valid);
+                            }
+                          }
+                        });
+                      }
                       props.navigation.navigate("VoucherList");
                     }
                     setLoading(false);
