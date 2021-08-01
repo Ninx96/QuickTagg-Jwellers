@@ -19,29 +19,59 @@ const Wishlist = (props) => {
     total_cart: '',
     total_cart_exhibition: '',
     total_cart_upload: '',
-    total_cart_wishlist: ''
+    total_cart_wishlist: '',
+    new_customer_estore: '',
+    new_customer_visits: '',
+    new_customer_exhibition: '',
+    total_notVisitCustomer_estore: '',
+    total_notVisitCustomer_visits: '',
+    total_notVisitCustomer_exhibition: ''
+  });
+  const [chartData1, setChartData1] = React.useState({
+    chartDataLabels: [0],
+    chartDataEstore: [0],
+    chartDataVisits: [0],
+    chartDataExhibition: [0],
+  });
+  const [chartData2, setChartData2] = React.useState({
+    chartDataLabels: [0],
+    chartDataWishlist: [0],
+    chartDataUploads: [0],
+    chartDataExhibition: [0],
   });
 
   React.useEffect(() => {
-    Figures();
+    AllFigures();
+    CustomersGraphFigures();
+    CartGraphFigures();
     setLoading(false);
   }, []);
 
-  const Figures = () => {
-   
+  const AllFigures = () => {
     postRequest("masters/dashboard/figures", { branch_id: branchId, from_date: '', to_date: '' }, userToken).then((resp) => {
       if (resp.status == 200) {
         figures.total_customers = resp.data[0].total_customers;
         figures.total_customer_visits = resp.data[0].total_customers;
         figures.total_customer_estore = resp.data[0].total_customers;
         figures.total_customer_exhibition = resp.data[0].total_customers;
+
         figures.new_customers = resp.data[0].total_customers;
+
         figures.total_notVisitCustomer = resp.data[0].total_customers;
+
         figures.total_cart = resp.data[0].total_customers;
         figures.total_cart_exhibition = resp.data[0].total_customers;
         figures.total_cart_upload = resp.data[0].total_customers;
         figures.total_cart_wishlist = resp.data[0].total_customers;
-        setfigures({ ...figures })
+
+        figures.new_customer_estore = resp.data[0].new_customer_estore;
+        figures.new_customer_visits = resp.data[0].new_customer_visits;
+        figures.new_customer_exhibition = resp.data[0].new_customer_exhibition;
+        figures.total_notVisitCustomer_estore = resp.data[0].total_notVisitCustomer_estore;
+        figures.total_notVisitCustomer_visits = resp.data[0].total_notVisitCustomer_visits;
+        figures.total_notVisitCustomer_exhibition = resp.data[0].total_notVisitCustomer_exhibition;
+        setfigures({ ...figures });
+
       } else {
         Alert.alert(
           "Error !",
@@ -50,6 +80,148 @@ const Wishlist = (props) => {
       }
     });
   }
+  //---------------Customer Graph Data--------------------------//
+  const CustomersGraphFigures = () => {
+    postRequest("masters/dashboard/customer_graph", { branch_id: branchId, from_date: '2021/01/01', to_date: '2021/07/30' }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        chartData1.chartDataLabels = [0];
+        chartData1.chartDataEstore = [0];
+        chartData1.chartDataVisits = [0];
+        chartData1.chartDataExhibition = [0];
+        for (const itemObj of resp.data) {
+          chartData1.chartDataLabels.push(itemObj.date);
+          chartData1.chartDataEstore.push(itemObj.estore);
+          chartData1.chartDataVisits.push(itemObj.visits);
+          chartData1.chartDataExhibition.push(itemObj.exhibitions);
+        }
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+  }
+
+  const customergraphdata = {
+    labels: chartData1.chartDataLabels,
+    datasets: [
+      {
+        data: chartData1.chartDataEstore,
+        color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+      {
+        data: chartData1.chartDataVisits,
+        color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+      {
+        data: chartData1.chartDataExhibition,
+        color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+    ],
+    legend: ["E-Store", "Visits", "Exhibition"], // optional
+  };
+  //-------------------------End--------------------------------//
+
+
+  //---------------Cart Graph Data--------------------------//
+  const CartGraphFigures = () => {
+    postRequest("masters/dashboard/cart_graph", { branch_id: branchId, from_date: '2021/01/01', to_date: '2021/07/30' }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        chartData2.chartDataLabels = [0];
+        chartData2.chartDataWishlist = [0];
+        chartData2.chartDataUploads = [0];
+        chartData2.chartDataExhibition = [0];
+        for (const itemObj of resp.data) {
+          chartData2.chartDataLabels.push(itemObj.date);
+          chartData2.chartDataWishlist.push(itemObj.visits);
+          chartData2.chartDataUploads.push(itemObj.designs);
+          chartData2.chartDataExhibition.push(itemObj.exhibition);
+        }
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+  }
+
+  const cartgraphdata = {
+    labels: chartData2.chartDataLabels,
+    datasets: [
+      {
+        data: chartData2.chartDataWishlist,
+        color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+      {
+        data: chartData2.chartDataUploads,
+        color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+      {
+        data: chartData2.chartDataExhibition,
+        color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+        strokeWidth: 1, // optional
+      },
+    ],
+    legend: ["Wishlist", "Uploads", "Exhibition"], // optional
+  };
+  //-------------------------End--------------------------------//
+  //---------------New Cusomer Chart Data--------------------------//
+  const newcustomerchartdata = [
+    {
+      name: "E-Store",
+      population: figures.new_customer_estore,
+      color: "rgba(131, 167, 234, 1)",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Visits",
+      population: figures.new_customer_visits,
+      color: "#F00",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Exhibition",
+      population: figures.new_customer_exhibition,
+      color: "red",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    }
+  ];
+  //------------------------End--------------------------------//
+  //---------------New Cusomer Chart Data--------------------------//
+  const notresponsecustomerchartdata = [
+    {
+      name: "E-Store",
+      population: figures.total_notVisitCustomer_estore,
+      color: "rgba(131, 167, 234, 1)",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Visits",
+      population: figures.total_notVisitCustomer_visits,
+      color: "#F00",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Exhibition",
+      population: figures.total_notVisitCustomer_exhibition,
+      color: "red",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    }
+  ];
+  //------------------------End--------------------------------//
   return (
     <View style={MyStyles.container}>
       <ScrollView>
@@ -122,8 +294,7 @@ const Wishlist = (props) => {
               </DataTable.Row>
             </DataTable>
           </View>
-
-          <GraphView visible={visible.customers_graph}/>
+          <CustomerGraphView visible={visible.customers_graph} data={customergraphdata} />
 
           <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
             <Button
@@ -145,8 +316,10 @@ const Wishlist = (props) => {
               Not Response
             </Button>
           </View>
-          <ChartView visible={visible.new_customer_chart} />
-          <ChartView visible={visible.not_response_chart} />
+
+          <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
+          <NotResposeCustomersChartView visible={visible.not_response_chart} data={notresponsecustomerchartdata} />
+
 
         </Card>
         <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
@@ -241,8 +414,7 @@ const Wishlist = (props) => {
             </DataTable>
           </View>
 
-          <GraphView visible={visible.cart_graph} />
-
+          <CartGraphView visible={visible.cart_graph} data={cartgraphdata} />
         </Card>
         <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
           <Button
@@ -267,15 +439,8 @@ const Wishlist = (props) => {
   );
 };
 
-const GraphView = ({ visible = false }) => {
+const CustomerGraphView = ({ visible = false, data }) => {
   const screenWidth = Dimensions.get("window").width - 60;
- // const { userToken, branchId } = props.route.params;
-  const [chartData, setChartData] = React.useState({
-    chartDataLabels: [0],
-    chartDataEstore: [0],
-    chartDataVisits: [0],
-    chartDataExhibition: [0],
-  });
 
   const chartConfig = {
     backgroundGradientFrom: "#000",
@@ -288,54 +453,6 @@ const GraphView = ({ visible = false }) => {
     useShadowColorFromDataset: true, // optional
   };
 
-  
-  React.useEffect(() => {   
-    GraphFigures();
-  }, []);
-
-  const GraphFigures = () => {
-    postRequest("masters/dashboard/customer_graph", { branch_id: 2, from_date: '2021/01/01', to_date: '2021/07/30' }, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2NvbXBhbnlfaWQiOjIsInRva2VuX2JyYW5jaF9pZCI6MiwiaWF0IjoxNjI3NjQzNzQ3LCJleHAiOjE2Mjc2Nzk3NDd9.gTA1jXdIBOKo9qjXE5zTL83dLXflcs_M6soF5t1tKYw').then((resp) => {
-      if (resp.status == 200) {
-        chartData.chartDataLabels = [0];
-        chartData.chartDataEstore = [0];
-        chartData.chartDataVisits = [0];
-        chartData.chartDataExhibition = [0];
-        for (const itemObj of resp.data) {
-          chartData.chartDataLabels.push(itemObj.datetime);
-          chartData.chartDataEstore.push(itemObj.estore);
-          chartData.chartDataVisits.push(itemObj.visits);
-          chartData.chartDataExhibition.push(itemObj.exhibitions);
-        }
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
-      }
-    });
-  }
-
-  const data = {
-    labels: chartData.chartDataLabels,
-    datasets: [
-      {
-        data: chartData.chartDataEstore,
-        color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
-        strokeWidth: 2, // optional
-      },
-      {
-        data: chartData.chartDataVisits,
-        color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2, // optional
-      },
-      {
-        data: chartData.chartDataExhibition,
-        color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
-        strokeWidth: 2, // optional
-      },
-    ],
-    legend: ["E-Store","Visits","Exhibition"], // optional
-  };
   if (visible) {
     return (
       <View
@@ -357,7 +474,7 @@ const GraphView = ({ visible = false }) => {
   return null;
 };
 
-const ChartView = ({ visible = false }) => {
+const NewCustomersChartView = ({ visible = false, data }) => {
   const screenWidth = Dimensions.get("window").width - 60;
 
   const chartConfig = {
@@ -371,43 +488,49 @@ const ChartView = ({ visible = false }) => {
     },
   };
 
-  const data = [
-    {
-      name: "Seoul",
-      population: 21500000,
-      color: "rgba(131, 167, 234, 1)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
+
+  if (visible) {
+    return (
+      <View
+        style={{
+          backgroundColor: "#fff",
+          marginHorizontal: 0,
+          borderRadius: 10,
+          padding: 10,
+          marginVertical: 10,
+        }}
+      >
+        <PieChart
+          data={data}
+          width={screenWidth}
+          height={220}
+          chartConfig={chartConfig}
+          accessor={"population"}
+          backgroundColor={"transparent"}
+          paddingLeft={10}
+          center={[0, 0]}
+          absolute
+        />
+      </View>
+    );
+  }
+  return null;
+};
+const NotResposeCustomersChartView = ({ visible = false, data }) => {
+  const screenWidth = Dimensions.get("window").width - 60;
+
+  const chartConfig = {
+    backgroundColor: "#1cc910",
+    backgroundGradientFrom: "#eff3ff",
+    backgroundGradientTo: "#efefef",
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(34, 53, 106, ${opacity})`,
+    style: {
+      borderRadius: 10,
     },
-    {
-      name: "Toronto",
-      population: 2800000,
-      color: "#F00",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Beijing",
-      population: 527612,
-      color: "red",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "New York",
-      population: 8538000,
-      color: "#000",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Moscow",
-      population: 11920000,
-      color: "rgb(0, 0, 255)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-  ];
+  };
+
+
   if (visible) {
     return (
       <View
@@ -437,5 +560,36 @@ const ChartView = ({ visible = false }) => {
   }
   return null;
 };
+const CartGraphView = ({ visible = false, data }) => {
+  const screenWidth = Dimensions.get("window").width - 60;
 
+  const chartConfig = {
+    backgroundGradientFrom: "#000",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#000",
+    backgroundGradientToOpacity: 0,
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: true, // optional
+  };
+
+  if (visible) {
+    return (
+      <View
+        style={{
+          backgroundColor: "#fff",
+          marginHorizontal: 0,
+          borderRadius: 10,
+          padding: 10,
+          marginVertical: 10,
+        }}
+      >
+        <LineChart data={data} width={screenWidth} height={220} chartConfig={chartConfig} />
+      </View>
+    );
+  }
+
+  return null;
+};
 export default Wishlist;

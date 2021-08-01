@@ -32,11 +32,18 @@ const ExhibitionCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/exhibition/browse", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
-        setgriddata(resp.data);
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+
+    postRequest("transactions/customer/exhibitionsession/browse", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setgriddata(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
+
       }
     });
     setLoading(false);
@@ -108,7 +115,7 @@ const ExhibitionCatalogList = (props) => {
                       })
                     }
                   />
-                  <IconButton
+                  {/* <IconButton
                     icon="delete"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
@@ -125,7 +132,7 @@ const ExhibitionCatalogList = (props) => {
                         },
                       ]);
                     }}
-                  />
+                  /> */}
                 </View>
               </View>
             </Card.Content>
@@ -158,7 +165,7 @@ const ExhibitionCatalog = (props) => {
     entry_no: "",
     remarks: "",
     product_ids: [],
-    customers: [],
+    session_customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -192,26 +199,34 @@ const ExhibitionCatalog = (props) => {
       }
     );
 
-    postRequest("transactions/customer/exhibition/preview", { tran_id: tran_id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (tran_id == 0) {
-            param.entry_no = resp.data[0].entry_no;
-            setparam({ ...param });
-          } else {
-            param.title = resp.data[0].title;
-            param.entry_no = resp.data[0].entry_no;
-            param.remarks = resp.data[0].remarks;
-            param.subcategory_id = resp.data[0].products[0].subcategory_id;
-            ProductList();
-            alert(tran_id);
-            console.log(resp.data[0].products);
+    postRequest("transactions/customer/exhibitionsession/preview-session", { tran_id: tran_id }, userToken).then((resp) => {
+      if (resp.status == 200) {
+       
+        if (tran_id == 0) {
+          param.entry_no = resp.data[0].entry_no;
+          setparam({ ...param });
+        }
+        else {
+          param.title = resp.data[0].title;
+          param.entry_no = resp.data[0].entry_no;         
+          param.remarks = resp.data[0].remarks;
+          param.subcategory_id = resp.data[0].products[0].subcategory_id;
+          ProductList();
+          alert(tran_id);
+          console.log(resp.data[0].products);
 
-            // param.product_ids.push({
-            //   subcategory_id: item.subcategory_id,
-            //   category_id: item.category_id,
-            //   product_id: item.product_id
-            // });
+          // param.product_ids.push({
+          //   subcategory_id: item.subcategory_id,
+          //   category_id: item.category_id,
+          //   product_id: item.product_id
+          // });
+
+          // param.session_customers.push({
+          //   customer_id: item.customer_id,
+          //   mobile: item.mobile,
+          //   customer_name: item.full_name
+          // });
+
 
             // param.customers.push({
             //   customer_id: item.customer_id,
@@ -390,15 +405,18 @@ const ExhibitionCatalog = (props) => {
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
-            setparam({ ...param, customers: [] });
-          } else {
+
+            setparam({ ...param, session_customers: [] });
+          }
+          else {
+
             items.map((item, index) => {
-              param.customers.push({
+              param.session_customers.push({
                 customer_id: item.customer_id,
                 mobile: item.mobile,
                 customer_name: item.full_name,
               });
-              setparam({ ...param, customers: param.customers });
+              setparam({ ...param, session_customers: param.session_customers });
             });
           }
         }}
@@ -455,16 +473,14 @@ const ExhibitionCatalog = (props) => {
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
-                      //console.log(param);
+                      console.log(param);
                       setLoading(true);
-                      postRequest("transactions/customer/exhibition/insert", param, userToken).then(
-                        (resp) => {
-                          if (resp.status == 200) {
-                            if (resp.data[0].valid) {
-                              props.navigation.navigate("ExhibitionCatalogList");
-                            }
-                            setLoading(false);
-                          }
+
+                      postRequest("transactions/customer/exhibition/insert", param, userToken).then((resp) => {
+                        if (resp.status == 200) {                        
+                            props.navigation.navigate("ExhibitionCatalogList");                         
+                          setLoading(false);
+
                         }
                       );
                     }}
