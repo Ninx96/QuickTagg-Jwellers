@@ -9,13 +9,12 @@ const CustomerFeedback = (props) => {
   const ratingStar = (rating) => {
     const resp = [];
     for (let i = 0; i < rating; i++) {
-      resp.push(<Icon key={i} name="star" color="#ffba3c" size={20} />);
+      resp.push(<Icon key={i} name="star" color="#ffba3c" size={25} />);
     }
     return resp;
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={[{}, {}, {}]}
         renderItem={({ item, index }) => (
@@ -25,6 +24,7 @@ const CustomerFeedback = (props) => {
               marginVertical: 5,
               borderRadius: 10,
               padding: 20,
+              backgroundColor: "#FE428D",
             }}
           >
             <View>
@@ -37,7 +37,13 @@ const CustomerFeedback = (props) => {
               </View>
 
               <View style={MyStyles.row}>
-                <Button mode="contained" uppercase={false}>
+                <Button
+                  mode="contained"
+                  color="#4297FE"
+                  uppercase={false}
+                  style={{ borderColor: "#FFF", borderWidth: 1 }}
+                  labelStyle={{ color: "#FFF" }}
+                >
                   Service
                 </Button>
               </View>

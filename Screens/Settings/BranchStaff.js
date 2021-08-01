@@ -13,26 +13,23 @@ const BranchStaffList = (props) => {
   React.useEffect(() => {
     Browse();
   }, []);
-  
+
   const Browse = (id) => {
-    let param = {}
+    let param = {};
     postRequest("masters/staff/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
     setLoading(false);
-  }
+  };
 
   const Delete = (id) => {
     setLoading(true);
-    let data = { staff_id: id }
+    let data = { staff_id: id };
     postRequest("masters/staff/delete", data, userToken).then((resp) => {
       if (resp.status == 200) {
         if (resp.data[0].valid) {
@@ -41,11 +38,10 @@ const BranchStaffList = (props) => {
         setLoading(false);
       }
     });
-  }
+  };
 
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -61,7 +57,9 @@ const BranchStaffList = (props) => {
                   <TouchableRipple
                     style={{ zIndex: 0 }}
                     onPress={() => {
-                      props.navigation.navigate("BranchStaff", { staff_id: item.staff_id });
+                      props.navigation.navigate("BranchStaff", {
+                        staff_id: item.staff_id,
+                      });
                     }}
                   >
                     <List.Icon {...props} icon="pencil" />
@@ -69,20 +67,19 @@ const BranchStaffList = (props) => {
                   <TouchableRipple
                     style={{ zIndex: 0 }}
                     onPress={() => {
-                      Alert.alert(
-                        "Alert",
-                        "You want to delete?",
-                        [
-                          {
-                            text: "No",
-                            onPress: () => {
-
-                            },
-                            style: "cancel"
+                      Alert.alert("Alert", "You want to delete?", [
+                        {
+                          text: "No",
+                          onPress: () => {},
+                          style: "cancel",
+                        },
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            Delete(item.staff_id);
                           },
-                          { text: "Yes", onPress: () => { Delete(item.staff_id); } }
-                        ]
-                      );
+                        },
+                      ]);
                     }}
                   >
                     <List.Icon {...props} icon="delete" />
@@ -102,9 +99,7 @@ const BranchStaffList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("BranchStaff", { staff_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("BranchStaff", { staff_id: 0 })}
       />
     </View>
   );
@@ -118,45 +113,34 @@ const BranchStaff = (props) => {
   const [param, setparam] = useState({
     staff_id: "0",
     name: "",
-    mobile: ""
+    mobile: "",
   });
 
   React.useEffect(() => {
-
     if (staff_id != 0) {
       let param = {
-        staff_id: staff_id
-      }
+        staff_id: staff_id,
+      };
       postRequest("masters/staff/preview", param, userToken).then((resp) => {
         if (resp.status == 200) {
-
           param.staff_id = resp.data[0].staff_id;
           param.name = resp.data[0].name;
           param.mobile = resp.data[0].mobile;
           setparam({ ...param });
-
         } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
       });
     }
     setLoading(false);
-
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
-      <CustomHeader {...props} />
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Staff Name"
             placeholder="Staff Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -166,7 +150,7 @@ const BranchStaff = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Staff Mobile"
             placeholder="Staff Mobile"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -177,7 +161,9 @@ const BranchStaff = (props) => {
               setparam({ ...param, mobile: text });
             }}
           />
-          <Button mode="contained" uppercase={false}
+          <Button
+            mode="contained"
+            uppercase={false}
             onPress={() => {
               setLoading(true);
 
@@ -185,12 +171,12 @@ const BranchStaff = (props) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
                     props.navigation.navigate("BranchStaffList");
-
                   }
                   setLoading(false);
                 }
               });
-            }}>
+            }}
+          >
             Submit
           </Button>
         </View>

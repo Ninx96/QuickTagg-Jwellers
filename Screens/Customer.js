@@ -1,14 +1,7 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { ImageBackground, ScrollView, View, Alert } from "react-native";
-import {
-  Button,
-  Text,
-  List,
-  FAB,
-  TextInput,
-  TouchableRipple,
-} from "react-native-paper";
+import { Button, Text, List, FAB, TextInput, TouchableRipple } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
@@ -16,46 +9,68 @@ import MyStyles from "../Styles/MyStyles";
 import { postRequest } from "../Services/RequestServices";
 
 const CustomerList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
-  React.useEffect(() => {
+  //console.log(search);
 
-    let param = {}
+  React.useEffect(() => {
+    let param = {};
     postRequest("masters/customer/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
-
   }, []);
 
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <ScrollView>
-
-        {griddata.length > 0 ? griddata.map((item, index) => {
-          return (
-            <List.Item
-              key={item.customer_id}
-              style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
-              title={item.full_name}
-              titleStyle={{ fontWeight: "bold" }}
-              description={item.mobile + '          ' + item.category_name}
-              left={() => { return (<TouchableRipple style={MyStyles.squarefixedRatio} onPress={() => { props.navigation.navigate("Profile", { customer_id: item.customer_id }) }}><Text style={{ color: 'red' }}>{item.category_name == null ? '' : item.category_name.charAt(0)}</Text></TouchableRipple>) }}
-              right={() => { return (<TouchableRipple style={{ zIndex: 0 }} onPress={() => { props.navigation.navigate("CustomerForm", { customer_id: item.customer_id }) }}><List.Icon {...props} icon="chevron-right" /></TouchableRipple>) }}
-            />
-          )
-        }) : null}
-
+        {griddata.length > 0
+          ? griddata.map((item, index) => {
+              return (
+                <List.Item
+                  key={item.customer_id}
+                  style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
+                  title={item.full_name}
+                  titleStyle={{ fontWeight: "bold" }}
+                  description={item.mobile + "          " + item.category_name}
+                  left={() => {
+                    return (
+                      <TouchableRipple
+                        style={MyStyles.squarefixedRatio}
+                        onPress={() => {
+                          props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                        }}
+                      >
+                        <Text style={{ color: "red" }}>
+                          {item.category_name == null ? "" : item.category_name.charAt(0)}
+                        </Text>
+                      </TouchableRipple>
+                    );
+                  }}
+                  right={() => {
+                    return (
+                      <TouchableRipple
+                        style={{ zIndex: 0 }}
+                        onPress={() => {
+                          props.navigation.navigate("CustomerForm", {
+                            customer_id: item.customer_id,
+                          });
+                        }}
+                      >
+                        <List.Icon {...props} icon="pencil" color="#aaa" />
+                      </TouchableRipple>
+                    );
+                  }}
+                />
+              );
+            })
+          : null}
       </ScrollView>
       <FAB
         style={{
@@ -65,9 +80,7 @@ const CustomerList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("CustomerForm", { customer_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("CustomerForm", { customer_id: 0 })}
       />
     </View>
   );
@@ -84,8 +97,6 @@ const CustomerForm = (props) => {
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
   ]);
-
-
 
   const [param, setparam] = useState({
     customer_id: "0",
@@ -104,27 +115,18 @@ const CustomerForm = (props) => {
   });
 
   React.useEffect(() => {
-
-
     postRequest("masters/customer/category/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
-
         setcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     postRequest("masters/staff/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setstafflist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -132,56 +134,43 @@ const CustomerForm = (props) => {
       if (resp.status == 200) {
         setarealist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
-
-    if (customer_id != 0) {    
-      postRequest("masters/customer/preview", {customer_id: customer_id}, userToken).then((resp) => {
-        if (resp.status == 200) {
-          param.customer_id = resp.data.customer_id;
-          param.address = resp.data.address;
-          param.email = resp.data.email;
-          param.full_name = resp.data.full_name;
-          param.gender = resp.data.gender;
-          param.mobile = resp.data.mobile;
-          param.area_id = resp.data.area_id;
-          param.category_id = resp.data.category_id;
-          param.doa = resp.data.doa;
-          param.dob = resp.data.dob;
-          param.profession = resp.data.profession;
-          param.ref_id = resp.data.ref_id;
-          param.staff_id = resp.data.staff_id;
-          setparam({ ...param });
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+    if (customer_id != 0) {
+      postRequest("masters/customer/preview", { customer_id: customer_id }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            param.customer_id = resp.data.customer_id;
+            param.address = resp.data.address;
+            param.email = resp.data.email;
+            param.full_name = resp.data.full_name;
+            param.gender = resp.data.gender;
+            param.mobile = resp.data.mobile;
+            param.area_id = resp.data.area_id;
+            param.category_id = resp.data.category_id;
+            param.doa = resp.data.doa;
+            param.dob = resp.data.dob;
+            param.profession = resp.data.profession;
+            param.ref_id = resp.data.ref_id;
+            param.staff_id = resp.data.staff_id;
+            setparam({ ...param });
+          } else {
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          }
         }
-      });
+      );
     }
     setLoading(false);
-
-
-
-
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../assets/login-bg.jpg")}
-    >
-      <CustomHeader {...props} />
+    <ImageBackground style={MyStyles.container} source={require("../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Full Name"
             placeholder="Full Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -191,7 +180,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Mobile No."
             placeholder="Mobile No."
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -203,7 +192,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Email"
             placeholder="Email"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -280,7 +269,7 @@ const CustomerForm = (props) => {
             />
           </View>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Profession"
             placeholder="Profession"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -290,7 +279,7 @@ const CustomerForm = (props) => {
             }}
           />
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Address"
             placeholder="Address"
             multiline
@@ -301,12 +290,7 @@ const CustomerForm = (props) => {
               setparam({ ...param, address: text });
             }}
           />
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
+          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
             <Button
               mode="contained"
               uppercase={false}
@@ -317,7 +301,6 @@ const CustomerForm = (props) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
                       props.navigation.navigate("CustomerList");
-
                     }
                     setLoading(false);
                   }

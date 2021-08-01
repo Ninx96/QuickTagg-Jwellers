@@ -14,24 +14,20 @@ const CustomerCategoryList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    let param = {}
+    let param = {};
     postRequest("masters/customer/category/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
-
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
-  }
+  };
 
   const Delete = (id) => {
     setLoading(true);
-    let data = { category_id: id }
+    let data = { category_id: id };
     postRequest("masters/customer/category/delete", data, userToken).then((resp) => {
       if (resp.status == 200) {
         if (resp.data[0].valid) {
@@ -40,10 +36,9 @@ const CustomerCategoryList = (props) => {
         setLoading(false);
       }
     });
-  }
+  };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -58,7 +53,9 @@ const CustomerCategoryList = (props) => {
                   <TouchableRipple
                     style={{ zIndex: 0 }}
                     onPress={() => {
-                      props.navigation.navigate("CustomerCategory", { category_id: item.category_id });
+                      props.navigation.navigate("CustomerCategory", {
+                        category_id: item.category_id,
+                      });
                     }}
                   >
                     <List.Icon {...props} icon="pencil" />
@@ -66,20 +63,19 @@ const CustomerCategoryList = (props) => {
                   <TouchableRipple
                     style={{ zIndex: 0 }}
                     onPress={() => {
-                      Alert.alert(
-                        "Alert",
-                        "You want to delete?",
-                        [
-                          {
-                            text: "No",
-                            onPress: () => {
-
-                            },
-                            style: "cancel"
+                      Alert.alert("Alert", "You want to delete?", [
+                        {
+                          text: "No",
+                          onPress: () => {},
+                          style: "cancel",
+                        },
+                        {
+                          text: "Yes",
+                          onPress: () => {
+                            Delete(item.category_id);
                           },
-                          { text: "Yes", onPress: () => { Delete(item.category_id); } }
-                        ]
-                      );
+                        },
+                      ]);
                     }}
                   >
                     <List.Icon {...props} icon="delete" />
@@ -99,9 +95,7 @@ const CustomerCategoryList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("CustomerCategory", { category_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("CustomerCategory", { category_id: 0 })}
       />
     </View>
   );
@@ -114,45 +108,33 @@ const CustomerCategory = (props) => {
 
   const [param, setparam] = useState({
     category_id: "0",
-    category_name: ""
+    category_name: "",
   });
 
   React.useEffect(() => {
-
-
     if (category_id != 0) {
       let param = {
-        category_id: category_id
-      }
+        category_id: category_id,
+      };
       postRequest("masters/customer/category/preview", param, userToken).then((resp) => {
         if (resp.status == 200) {
-
           param.category_id = resp.data[0].category_id;
           param.category_name = resp.data[0].category_name;
           setparam({ ...param });
-
         } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
       });
     }
     setLoading(false);
-
   }, []);
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
-      <CustomHeader {...props} />
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
-            mode="flat"
+            mode="outlined"
             label="Customer Category"
             placeholder="Customer Category"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -161,13 +143,10 @@ const CustomerCategory = (props) => {
               setparam({ ...param, category_name: text });
             }}
           />
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
-            <Button mode="contained" uppercase={false}
+          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+            <Button
+              mode="contained"
+              uppercase={false}
               onPress={() => {
                 setLoading(true);
 
@@ -175,12 +154,12 @@ const CustomerCategory = (props) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
                       props.navigation.navigate("CustomerCategoryList");
-
                     }
                     setLoading(false);
                   }
                 });
-              }}>
+              }}
+            >
               Submit
             </Button>
           </View>

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
 import {
   Button,
   Text,
@@ -39,18 +32,13 @@ const GeneralCatalogList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/generalsession/browse", {}, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
-        }
+    postRequest("transactions/customer/generalsession/browse", {}, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    );
+    });
     setLoading(false);
   };
   const Delete = (id) => {
@@ -68,8 +56,6 @@ const GeneralCatalogList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
-
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -98,18 +84,20 @@ const GeneralCatalogList = (props) => {
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.entry_no}
+                    {item.no_of_customer} {"Customers"}
                   </Text>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.no_of_customer}  {"Customers"}
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      marginBottom: 10,
+                    }}
+                  >
+                    {item.no_of_product} {"Products"}
                   </Text>
-                  <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>
-                    {item.no_of_product}  {"Products"}
-                  </Text>
-                  <Text>
-                    {item.remarks}
-                  </Text>
+                  <Text>{item.remarks}</Text>
                 </View>
                 <View>
                   <IconButton
@@ -126,7 +114,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -153,16 +141,13 @@ const GeneralCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("GeneralCatalog", { tran_id: 0 })}
       />
     </View>
   );
 };
 
 const GeneralCatalog = (props) => {
-
   const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
@@ -184,17 +169,16 @@ const GeneralCatalog = (props) => {
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
 
-
   React.useEffect(() => {
-
-    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     if (tran_id == 0) {
@@ -203,77 +187,81 @@ const GeneralCatalog = (props) => {
           if (resp.status == 200) {
             setCustomerList(resp.data);
           } else {
-            Alert.alert(
-              "Error !",
-              "Oops! \nSeems like we run into some Server Error"
-            );
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }
         }
       );
     }
 
-    postRequest("transactions/customer/generalsession/preview", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/generalsession/preview",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
-
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
-        }
-        else {
+        } else {
           param.title = resp.data[0].title;
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
           // console.log(resp.data);
-           alert(tran_id);
+          alert(tran_id);
 
           param.customer_session_products = resp.data[0].products;
 
           let cust = [
-            { customer_id: "192", full_name: "test", mobile: "8978977891", selected: "checked" },
-            { customer_id: "199", full_name: "test", mobile: "3333546985", selected: "checked" },
+            {
+              customer_id: "192",
+              full_name: "test",
+              mobile: "8978977891",
+              selected: "checked",
+            },
+            {
+              customer_id: "199",
+              full_name: "test",
+              mobile: "3333546985",
+              selected: "checked",
+            },
           ];
 
-          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-            (resp1) => {
-              if (resp1.status == 200) {
-                let data = [];
-              
-                resp1.data.map((item1) => {
-                  cust.map((item2) => {
-                    console.log(item1.product_id == item2.product_id);
-                    if (item1.product_id == item2.product_id) {
-                      data.push({
-                        customer_id: item.customer_id,
-                        mobile: item.mobile,
-                        full_name: item.full_name,
-                        selected: "checked"
-                      });
-                    }
-                    else {
-                      data.push({
-                        customer_id: item.customer_id,
-                        mobile: item.mobile,
-                        full_name: item.full_name
-                      });
-                    }
-                  });
-                  console.log("dsgdfgfd "+data);
+          postRequest(
+            "transactions/customer/customerListMob",
+            { branch_id: branchId },
+            userToken
+          ).then((resp1) => {
+            if (resp1.status == 200) {
+              let data = [];
+
+              resp1.data.map((item1) => {
+                cust.map((item2) => {
+                  console.log(item1.product_id == item2.product_id);
+                  if (item1.product_id == item2.product_id) {
+                    data.push({
+                      customer_id: item.customer_id,
+                      mobile: item.mobile,
+                      full_name: item.full_name,
+                      selected: "checked",
+                    });
+                  } else {
+                    data.push({
+                      customer_id: item.customer_id,
+                      mobile: item.mobile,
+                      full_name: item.full_name,
+                    });
+                  }
                 });
-                alert("s");
-                console.log("dsgdfgfd "+data);
-                setCustomerList(data);
-              } else {
-                Alert.alert(
-                  "Error !",
-                  "Oops! \nSeems like we run into some Server Error"
-                );
-              }
+                console.log("dsgdfgfd " + data);
+              });
+              alert("s");
+              console.log("dsgdfgfd " + data);
+              setCustomerList(data);
+            } else {
+              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
             }
-          );
-
-
-
+          });
 
           setparam({ ...param, customers: resp.data[0].customers });
 
@@ -281,13 +269,9 @@ const GeneralCatalog = (props) => {
             data: resp.data[0].products,
           });
           setSelectedProducts([...selectedProducts]);
-
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -304,22 +288,15 @@ const GeneralCatalog = (props) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <Loading isloading={false} />
-      <CustomHeader {...props} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
@@ -335,7 +312,7 @@ const GeneralCatalog = (props) => {
               placeholder="SubCategory"
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -347,7 +324,7 @@ const GeneralCatalog = (props) => {
               }}
             />
             <TextInput
-              mode="flat"
+              mode="outlined"
               label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -358,24 +335,11 @@ const GeneralCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View
-              style={[
-                MyStyles.row,
-                { justifyContent: "space-evenly", marginVertical: 40 },
-              ]}
-            >
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setProduct(true)}
-              >
+            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
+              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
                 Add Products
               </Button>
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setContact(true)}
-              >
+              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
                 Next
               </Button>
             </View>
@@ -390,9 +354,7 @@ const GeneralCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>
-                  {item.subCategory}
-                </Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -448,7 +410,6 @@ const GeneralCatalog = (props) => {
         visible={product}
         data={productList}
         onDone={(items) => {
-
           selectedProducts.push({
             subcategory_id: param.subcategory_id,
             data: items,
@@ -467,8 +428,7 @@ const GeneralCatalog = (props) => {
           setRemarks(true);
           if (items.length == 0) {
             setparam({ ...param, customers: [] });
-          }
-          else {
+          } else {
             setparam({ ...param, customers: items });
           }
         }}
@@ -476,10 +436,7 @@ const GeneralCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground
-            style={MyStyles.container}
-            source={require("../../assets/login-bg.jpg")}
-          >
+          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -494,7 +451,7 @@ const GeneralCatalog = (props) => {
               </View>
               <View style={MyStyles.cover}>
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Entry No"
                   placeholder="Entry No"
                   value={param.entry_no}
@@ -502,7 +459,7 @@ const GeneralCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Title"
                   placeholder="Title"
                   value={param.title}
@@ -512,7 +469,7 @@ const GeneralCatalog = (props) => {
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
                 <TextInput
-                  mode="flat"
+                  mode="outlined"
                   label="Remarks"
                   placeholder="Remarks"
                   multiline
@@ -523,21 +480,21 @@ const GeneralCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View
-                  style={[
-                    MyStyles.row,
-                    { justifyContent: "center", marginVertical: 40 },
-                  ]}
-                >
-                  <Button mode="contained" uppercase={false}
+                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                  <Button
+                    mode="contained"
+                    uppercase={false}
                     onPress={() => {
                       //console.log(param);
                       setLoading(true);
-                      postRequest("transactions/customer/generalsession/insert", param, userToken).then((resp) => {
+                      postRequest(
+                        "transactions/customer/generalsession/insert",
+                        param,
+                        userToken
+                      ).then((resp) => {
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
                             props.navigation.navigate("GeneralCatalogList");
-
                           }
                           setLoading(false);
                         }

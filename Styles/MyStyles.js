@@ -15,10 +15,11 @@ const MyStyles = StyleSheet.create({
 
   cover: {
     flex: 1,
-    //justifyContent: "center",
+    justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.6)",
     margin: 20,
     borderRadius: 10,
+    padding: 10,
   },
 
   centerAlign: {
@@ -65,18 +66,18 @@ const MyStyles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
-  squarefixedRatio: {   
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
+  squarefixedRatio: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
     aspectRatio: 1,
-    width:'8%',
-    borderColor:'grey',
-    borderWidth:1,
-    borderRadius:3,
-    alignSelf:'center',
-  }
+    width: "6%",
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 3,
+    alignSelf: "center",
+  },
 });
 
 export default MyStyles;

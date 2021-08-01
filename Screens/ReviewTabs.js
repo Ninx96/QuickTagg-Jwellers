@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import MyStyles from "../Styles/MyStyles";
-import { ProductsList } from "./Products/Products";
-import { CategoryList } from "./Products/Category";
-import { SubCategoryList } from "./Products/SubCategory";
-import CustomHeader from "../Components/CustomHeader";
+import { CustomerReviewList } from "./Reviews&Feedbacks/CustomerReview";
+import CustomerFeedback from "./Reviews&Feedbacks/CustomerFeedback";
 
-const ProductTabs = (props) => {
+const ReviewTabs = (props) => {
   const Tab = createMaterialTopTabNavigator();
 
   return (
@@ -18,18 +16,13 @@ const ProductTabs = (props) => {
         }}
       >
         <Tab.Screen
-          name="Products"
-          component={ProductsList}
+          name="Customer Reviews"
+          component={CustomerReviewList}
           initialParams={props.route.params}
         />
         <Tab.Screen
-          name="Category"
-          component={CategoryList}
-          initialParams={props.route.params}
-        />
-        <Tab.Screen
-          name="SubCategory"
-          component={SubCategoryList}
+          name="Customer Feedback"
+          component={CustomerFeedback}
           initialParams={props.route.params}
         />
       </Tab.Navigator>
@@ -37,4 +30,4 @@ const ProductTabs = (props) => {
   );
 };
 
-export default ProductTabs;
+export default ReviewTabs;
