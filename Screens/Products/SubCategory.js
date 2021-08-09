@@ -170,7 +170,6 @@ const SubCategoryForm = (props) => {
         />
         <TextInput
           mode="outlined"
-          label="SubCategory Name"
           placeholder="SubCategory Name"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
           value={param.subcategory_name}

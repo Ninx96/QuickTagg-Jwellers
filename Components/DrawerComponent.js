@@ -29,6 +29,7 @@ import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
 import SMS from "../Screens/SMS";
 import TitleBar from "./TitleBar";
 import ReviewTabs from "../Screens/ReviewTabs";
+import Catalogs from "../Screens/Catalogs";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -157,6 +158,16 @@ const DrawerComponent = ({ userDetails }) => {
       />
 
       {/* --------------------- Catalogs------------------- */}
+      <Drawer.Screen
+        component={Catalogs}
+        name="Catalogs"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Catalog" />,
+        }}
+      />
+
       <Drawer.Screen
         component={GeneralCatalogList}
         name="GeneralCatalogList"
@@ -333,7 +344,7 @@ const DrawerContent = (props) => {
       <Drawer.Section>
         <Image
           source={{ uri: "https://picsum.photos/200/300" }}
-          style={{ width: "100%", height: 200 }}
+          style={{ width: "100%", height: 150 }}
         />
       </Drawer.Section>
 
@@ -358,27 +369,9 @@ const DrawerContent = (props) => {
         />
 
         <Drawer.Item
-          label="General Catalogs"
+          label="Catalogs"
           onPress={() => {
-            props.navigation.navigate("GeneralCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="ExhibitionCatalog"
-          onPress={() => {
-            props.navigation.navigate("ExhibitionCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="CustomerCatalog"
-          onPress={() => {
-            props.navigation.navigate("CustomerCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="TryAndBuyCatalog"
-          onPress={() => {
-            props.navigation.navigate("TryAndBuyCatalogList");
+            props.navigation.navigate("Catalogs");
           }}
         />
 
@@ -422,6 +415,11 @@ const DrawerContent = (props) => {
         <Divider />
         <Drawer.Item
           icon="phone"
+          // label="Log Out"
+          onPress={() => Linking.openURL("tel:9874561230")}
+        />
+        <Drawer.Item
+          icon="whatsapp"
           // label="Log Out"
           onPress={() => Linking.openURL("tel:9874561230")}
         />

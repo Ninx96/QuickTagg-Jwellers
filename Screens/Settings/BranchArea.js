@@ -136,7 +136,6 @@ const BranchArea = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Branch Area"
             placeholder="Branch Area"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.area_name}

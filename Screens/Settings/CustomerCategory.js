@@ -135,7 +135,6 @@ const CustomerCategory = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Customer Category"
             placeholder="Customer Category"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.category_name}

@@ -1,0 +1,44 @@
+import React, { useState, useEffect } from "react";
+import { ImageBackground } from "react-native";
+import { Button } from "react-native-paper";
+import MyStyles from "../Styles/MyStyles";
+
+const Catalogs = (props) => {
+  return (
+    <ImageBackground
+      style={[MyStyles.container, { justifyContent: "center" }]}
+      source={require("../assets/login-bg.jpg")}
+    >
+      <Button
+        style={{ marginVertical: 10, marginHorizontal: 20 }}
+        mode="contained"
+        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+      >
+        General Catalog
+      </Button>
+      <Button
+        style={{ marginVertical: 10, marginHorizontal: 20 }}
+        mode="contained"
+        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+      >
+        Exhibition Catalog
+      </Button>
+      <Button
+        style={{ marginVertical: 10, marginHorizontal: 20 }}
+        mode="contained"
+        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+      >
+        Customer Catalog
+      </Button>
+      <Button
+        style={{ marginVertical: 10, marginHorizontal: 20 }}
+        mode="contained"
+        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+      >
+        Try And Buy Catalog
+      </Button>
+    </ImageBackground>
+  );
+};
+
+export default Catalogs;

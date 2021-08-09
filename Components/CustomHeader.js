@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Image, SafeAreaView, View } from "react-native";
-import { IconButton } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 import { AuthContext } from "./Context";
 
@@ -19,10 +19,13 @@ const CustomHeader = (props) => {
     >
       <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />
 
-      <Image
+      {/* <Image
         style={{ resizeMode: "contain", width: 200, height: 50 }}
         source={require("../assets/logo.png")}
-      />
+      /> */}
+      <Text style={{ fontSize: 20, alignSelf: "center", flexGrow: 1, marginLeft: 20 }}>
+        {props.title}
+      </Text>
       <IconButton icon="dots-vertical" size={25} onPress={() => Alert.alert("Coming Soon...")} />
     </SafeAreaView>
   );

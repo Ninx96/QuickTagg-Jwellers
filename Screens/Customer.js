@@ -171,7 +171,6 @@ const CustomerForm = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Full Name"
             placeholder="Full Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.full_name}
@@ -181,7 +180,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Mobile No."
             placeholder="Mobile No."
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             keyboardType={"number-pad"}
@@ -193,7 +191,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Email"
             placeholder="Email"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.email}
@@ -270,7 +267,6 @@ const CustomerForm = (props) => {
           </View>
           <TextInput
             mode="outlined"
-            label="Profession"
             placeholder="Profession"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.profession}
@@ -280,7 +276,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Address"
             placeholder="Address"
             multiline
             numberOfLines={3}

@@ -132,7 +132,6 @@ const CategoryForm = (props) => {
       <View style={MyStyles.cover}>
         <TextInput
           mode="outlined"
-          label="Category Name"
           placeholder="Category Name"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
           value={param.category_name}

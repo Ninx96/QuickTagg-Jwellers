@@ -7,6 +7,7 @@ import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import { postRequest } from "../../Services/RequestServices";
+import BadgeRibbon from "../../Components/BadgeRibbon";
 const ProductsList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,7 @@ const ProductsList = (props) => {
               props.navigation.navigate("ProductsPreview", { product_id: item.product_id })
             }
           >
+            <BadgeRibbon />
             <Card.Cover
               source={{ uri: item.url_image + "" + item.image_path }}
               style={{ width: 120, height: 120 }}
@@ -292,7 +294,6 @@ const ProductsForm = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Product Name"
             placeholder="Product Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.product_name}
@@ -302,7 +303,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Product Code"
             placeholder="Product Code"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.product_code}
@@ -343,7 +343,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Price"
             placeholder="Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.price}
@@ -353,7 +352,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Discoounted Price"
             placeholder="Discoounted Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.discounted_price}
@@ -363,7 +361,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Weight"
             placeholder="Weight"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.weight}
@@ -373,7 +370,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Size/Length"
             placeholder="Size/Length"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.size_length}
@@ -383,7 +379,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Metal"
             placeholder="Metal"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.metal}
@@ -393,7 +388,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Material"
             placeholder="Material"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.material}
@@ -413,7 +407,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Remarks"
             placeholder="Remarks"
             multiline
             numberOfLines={3}

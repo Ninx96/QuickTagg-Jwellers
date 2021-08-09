@@ -141,7 +141,6 @@ const BranchStaff = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Staff Name"
             placeholder="Staff Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.name}
@@ -151,7 +150,6 @@ const BranchStaff = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Staff Mobile"
             placeholder="Staff Mobile"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.mobile}

@@ -313,7 +313,6 @@ const GeneralCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.min_amount}
@@ -325,7 +324,6 @@ const GeneralCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.max_amount}
