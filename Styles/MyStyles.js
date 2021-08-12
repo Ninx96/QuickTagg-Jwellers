@@ -80,6 +80,13 @@ const MyStyles = StyleSheet.create({
     alignSelf: "center",
     margin: 6,
   },
+  profile_row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 8,
+    left:30
+  },
 });
 
 export default MyStyles;

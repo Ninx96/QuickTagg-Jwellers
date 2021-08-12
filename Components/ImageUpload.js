@@ -39,7 +39,7 @@ const ImageUpload = ({
       } else {
         const options = {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          quality: 0.2,
+          quality: 0.1,
           base64: true,
           allowsMultipleSelection: true,
         };

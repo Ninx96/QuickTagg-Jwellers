@@ -5,7 +5,7 @@ import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
-
+import moment from "moment";
 const CustomerReviewList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ const CustomerReviewList = (props) => {
   const Browse = (id) => {
     postRequest("masters/customer/customerreview/browse", {}, userToken).then((resp) => {
       if (resp.status == 200) {
+        console.log(resp.data);
         setgriddata(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -118,6 +119,11 @@ const CustomerReview = (props) => {
     image_path: "",
     review: "",
   });
+  const [Image, setImage] = React.useState(require("../../assets/upload.png"));
+  const [imageuploads, setimageuploads] = useState({  
+    image_name: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png",
+    image_base64: "",
+  });
 
   React.useEffect(() => {
     if (tran_id != 0) {
@@ -129,6 +135,8 @@ const CustomerReview = (props) => {
             param.review = resp.data.review;
             param.image_path = resp.data.image_path;
             setparam({ ...param });
+
+            
           } else {
             Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }
@@ -166,9 +174,13 @@ const CustomerReview = (props) => {
         <View style={[MyStyles.row, { justifyContent: "center" }]}>
           <ImageUpload
             label="Upload Image :"
-            source={require("../../assets/upload.png")}
+            source={Image}
             onClearImage={() => {}}
-            onUploadImage={() => {}}
+            onUploadImage={(result) => {
+              setImage({ uri: result.uri });
+              setimageuploads({ ...imageuploads, image_base64: result.base64 });
+              setparam({ ...param, image_path: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png" })
+            }}
           />
         </View>
 
@@ -183,6 +195,15 @@ const CustomerReview = (props) => {
                 (resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
+                      if (param.image_path !== "") {
+                        postRequest("masters/customer/UploadCustomerReviewImageMob64", { base64image: imageuploads.image_base64, imageName: param.image_path }, userToken).then((resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              console.log("image : " + resp.data[0].valid);
+                            }
+                          }
+                        });
+                      }
                       props.navigation.navigate("CustomerReviewList");
                     }
                     setLoading(false);

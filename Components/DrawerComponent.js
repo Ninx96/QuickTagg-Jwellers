@@ -29,7 +29,9 @@ import CustomerFeedback from "../Screens/Reviews&Feedbacks/CustomerFeedback";
 import SMS from "../Screens/SMS";
 import TitleBar from "./TitleBar";
 import ReviewTabs from "../Screens/ReviewTabs";
-
+import Greetings from "../Screens/Dashboard/Greetings";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import RecentActivity from "../Screens/Dashboard/RecentActivity";
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
 
@@ -319,6 +321,26 @@ const DrawerComponent = ({ userDetails }) => {
         options={{
           headerShown: true,
           header: (props) => <TitleBar {...props} title="Tab to Scan" />,
+        }}
+      />
+
+      <Drawer.Screen
+        component={Greetings}
+        name="Greetings"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Greetings" />,
+        }}
+      />
+
+      <Drawer.Screen
+        component={RecentActivity}
+        name="RecentActivity"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Recent Activity" />,
         }}
       />
     </Drawer.Navigator>

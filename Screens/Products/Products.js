@@ -260,6 +260,7 @@ const ProductsForm = (props) => {
     product_images: [],
     product_subcategory_list: [],
   });
+  const [productsuploads, setproductsuploads] = useState([]);
 
   React.useEffect(() => {
     postRequest("masters/product/subcategory/getCategory", {}, userToken).then((resp) => {
@@ -452,7 +453,18 @@ const ProductsForm = (props) => {
             }}
           />
 
-          <MultipleImages data={[]} onSelect={(fileArray) => {}} />
+          <MultipleImages data={[]} onSelect={(fileArray) => {
+            console.log(fileArray);
+            let imagesname = [], imagesdata = [];
+            fileArray.map((resp, index) => {             
+              imagesname.push(resp.name);                       
+              imagesdata.push({ "base64image": resp.uri, "base64image": resp.name });            
+            });
+            setparam({ ...param, product_images: imagesname });   
+            setproductsuploads(imagesdata);
+            console.log(imagesname);
+            console.log(imagesdata);
+          }} />
 
           <Button
             mode="contained"

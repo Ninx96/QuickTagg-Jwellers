@@ -35,6 +35,7 @@ const MultipleImages = ({ onSelect, data = [] }) => {
     const file = await ImageManipulator.manipulateAsync(uri, [], {
       compress: 0.8,
       format: ImageManipulator.SaveFormat.JPEG,
+      base64:true
     });
     return file;
   };
