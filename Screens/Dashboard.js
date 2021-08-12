@@ -3,14 +3,7 @@ import { FlatList, View } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import {
-  List,
-  Modal,
-  Portal,
-  Text,
-  TouchableRipple,
-  Button,
-} from "react-native-paper";
+import { List, Modal, Portal, Text, TouchableRipple, Button } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import Wishlist from "./Dashboard/Wishlist";
@@ -23,7 +16,7 @@ const Dashboard = (props) => {
 
   return (
     <View style={MyStyles.container}>
-      <CustomHeader {...props} />
+      <CustomHeader title="QuickTag" {...props} />
       <Portal>
         <Modal
           visible={modal}
@@ -66,26 +59,10 @@ const Dashboard = (props) => {
                   )}
                   right={() => (
                     <View style={MyStyles.row}>
-                      <Icon
-                        name="cake"
-                        size={20}
-                        style={{ marginHorizontal: 2 }}
-                      />
-                      <Icon
-                        name="inbox"
-                        size={20}
-                        style={{ marginHorizontal: 2 }}
-                      />
-                      <Icon
-                        name="video"
-                        size={20}
-                        style={{ marginHorizontal: 2 }}
-                      />
-                      <Icon
-                        name="heart"
-                        size={20}
-                        style={{ marginHorizontal: 2 }}
-                      />
+                      <Icon name="cake" size={20} style={{ marginHorizontal: 2 }} />
+                      <Icon name="inbox" size={20} style={{ marginHorizontal: 2 }} />
+                      <Icon name="video" size={20} style={{ marginHorizontal: 2 }} />
+                      <Icon name="heart" size={20} style={{ marginHorizontal: 2 }} />
 
                       <Text
                         style={{

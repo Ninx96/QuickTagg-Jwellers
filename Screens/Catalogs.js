@@ -19,21 +19,21 @@ const Catalogs = (props) => {
       <Button
         style={{ marginVertical: 10, marginHorizontal: 20 }}
         mode="contained"
-        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+        onPress={() => props.navigation.navigate("ExhibitionCatalogList")}
       >
         Exhibition Catalog
       </Button>
       <Button
         style={{ marginVertical: 10, marginHorizontal: 20 }}
         mode="contained"
-        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+        onPress={() => props.navigation.navigate("CustomerCatalogList")}
       >
         Customer Catalog
       </Button>
       <Button
         style={{ marginVertical: 10, marginHorizontal: 20 }}
         mode="contained"
-        onPress={() => props.navigation.navigate("GeneralCatalogList")}
+        onPress={() => props.navigation.navigate("TryAndBuyCatalogList")}
       >
         Try And Buy Catalog
       </Button>

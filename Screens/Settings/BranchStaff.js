@@ -62,7 +62,7 @@ const BranchStaffList = (props) => {
                       });
                     }}
                   >
-                    <List.Icon {...props} icon="pencil" />
+                    <List.Icon {...props} icon="pencil" color="#AAA" />
                   </TouchableRipple>
                   <TouchableRipple
                     style={{ zIndex: 0 }}
@@ -82,7 +82,7 @@ const BranchStaffList = (props) => {
                       ]);
                     }}
                   >
-                    <List.Icon {...props} icon="delete" />
+                    <List.Icon {...props} icon="delete" color="#AAA" />
                   </TouchableRipple>
                 </>
               );

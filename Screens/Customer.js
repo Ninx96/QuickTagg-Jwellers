@@ -36,7 +36,15 @@ const CustomerList = (props) => {
                 <List.Item
                   key={item.customer_id}
                   style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
-                  title={item.full_name}
+                  title={
+                    <Text
+                      onPress={() => {
+                        props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                      }}
+                    >
+                      {item.full_name}
+                    </Text>
+                  }
                   titleStyle={{ fontWeight: "bold" }}
                   description={item.mobile + "          " + item.category_name}
                   left={() => {
@@ -201,7 +209,7 @@ const CustomerForm = (props) => {
           <View style={MyStyles.row}>
             <DatePicker
               label="DOB"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
               value={param.dob}
               onValueChange={(date) => {
                 setparam({ ...param, dob: date });
@@ -209,7 +217,7 @@ const CustomerForm = (props) => {
             />
             <DatePicker
               label="DOA"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
               value={param.doa}
               onValueChange={(date) => {
                 setparam({ ...param, doa: date });

@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { TextInputMask } from "react-native-masked-text";
-import {
-  TouchableRipple,
-  TextInput,
-  Portal,
-  Button,
-  IconButton,
-} from "react-native-paper";
+import { TouchableRipple, TextInput, Portal, Button, IconButton } from "react-native-paper";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -28,8 +22,7 @@ const DatePicker = ({
 
   React.useEffect(() => {
     const date = moment(value).format("YYYY-MM-DD");
-    const showDate =
-      date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+    const showDate = date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
     setText(showDate);
   }, [value]);
 
@@ -125,11 +118,7 @@ const DatePicker = ({
           onBlur={() => {
             if (text.length === 10) {
               const setDate =
-                text.split("/")[2] +
-                "-" +
-                text.split("/")[1] +
-                "-" +
-                text.split("/")[0];
+                text.split("/")[2] + "-" + text.split("/")[1] + "-" + text.split("/")[0];
               onValueChange(moment(setDate).format("YYYY-MM-DD"));
             } else {
               setText(moment(value).format("DD/MM/YYYY"));
@@ -139,7 +128,8 @@ const DatePicker = ({
           maxLength={10}
           value={text}
           mode="flat"
-          label={label}
+          placeholder={label}
+          //label={label}
           disabled={disabled}
           style={[inputStyles]}
         />

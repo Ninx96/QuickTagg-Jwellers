@@ -15,18 +15,11 @@ const ProductTabs = (props) => {
       <Tab.Navigator
         tabBarOptions={{
           style: { backgroundColor: "#ffba3c" },
+          labelStyle: { fontSize: 14, fontWeight: "bold" },
         }}
       >
-        <Tab.Screen
-          name="Products"
-          component={ProductsList}
-          initialParams={props.route.params}
-        />
-        <Tab.Screen
-          name="Category"
-          component={CategoryList}
-          initialParams={props.route.params}
-        />
+        <Tab.Screen name="Products" component={ProductsList} initialParams={props.route.params} />
+        <Tab.Screen name="Category" component={CategoryList} initialParams={props.route.params} />
         <Tab.Screen
           name="SubCategory"
           component={SubCategoryList}

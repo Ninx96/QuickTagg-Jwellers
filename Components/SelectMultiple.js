@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Image } from "react-native";
-import { Portal, Modal, IconButton, Button, Text, Card } from "react-native-paper";
+import { Portal, Modal, IconButton, Button, Text, Card, FAB, TextInput } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
 const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
+  const [show, setShow] = useState(false);
   const [listData, setListData] = useState(data);
   useEffect(() => {
     setListData(data);
@@ -16,23 +17,26 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
         contentContainerStyle={{ flex: 1, backgroundColor: "#fff" }}
       >
         <View style={{ flex: 1 }}>
-          <View style={MyStyles.row}>
+          <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
             <IconButton icon="chevron-left" size={30} color="black" onPress={onClose} />
-            <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Select Products</Text>
-            <Button
-              mode="text"
-              compact
-              uppercase={false}
-              color="blue"
-              style={{ marginRight: 5 }}
-              onPress={() => {
-                const selected = listData.filter((item) => item.selected);
-                onDone(selected);
-                onClose();
-              }}
-            >
-              Done
-            </Button>
+
+            {show ? (
+              <TextInput
+                mode="flat"
+                theme={{ colors: { primary: "black" } }}
+                style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
+                left={<TextInput.Icon name="magnify" />}
+                onChangeText={(text) => {}}
+                placeholder="Search"
+              />
+            ) : (
+              <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Select Products</Text>
+            )}
+            <IconButton
+              icon={show ? "close" : "magnify"}
+              size={25}
+              onPress={() => setShow(!show)}
+            />
           </View>
           <FlatList
             style={{ alignSelf: "center" }}
@@ -64,6 +68,8 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   <View
                     key={index}
                     style={{
+                      borderWidth: 0.5,
+                      borderColor: "#000",
                       backgroundColor: "#FFF",
                       marginHorizontal: 5,
                       borderRadius: 10,
@@ -78,9 +84,8 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                     />
 
                     <View style={{ padding: 5 }}>
-                      <Text>
-                        {item.product_name} {item.product_code}
-                      </Text>
+                      <Text numberOfLines={2}>{item.product_name}</Text>
+                      <Text>{item.product_code}</Text>
                     </View>
                   </View>
                 </View>
@@ -90,6 +95,15 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
+        <FAB
+          style={{ position: "absolute", bottom: 20, right: 20 }}
+          icon="check"
+          onPress={() => {
+            const selected = listData.filter((item) => item.selected);
+            onDone(selected);
+            onClose();
+          }}
+        />
       </Modal>
     </Portal>
   );
