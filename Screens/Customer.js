@@ -55,8 +55,8 @@ const CustomerList = (props) => {
                           props.navigation.navigate("Profile", { customer_id: item.customer_id });
                         }}
                       >
-                        <Text style={{ color: "red" }}>
-                          {item.category_name == null ? "" : item.category_name.charAt(0)}
+                        <Text style={{ color: "red", textTransform: 'uppercase' }}>
+                          {item.type == null ? "" : item.type.charAt(0)}
                         </Text>
                       </TouchableRipple>
                     );
@@ -209,7 +209,8 @@ const CustomerForm = (props) => {
           <View style={MyStyles.row}>
             <DatePicker
               label="DOB"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+
               value={param.dob}
               onValueChange={(date) => {
                 setparam({ ...param, dob: date });
@@ -217,7 +218,8 @@ const CustomerForm = (props) => {
             />
             <DatePicker
               label="DOA"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+
               value={param.doa}
               onValueChange={(date) => {
                 setparam({ ...param, doa: date });

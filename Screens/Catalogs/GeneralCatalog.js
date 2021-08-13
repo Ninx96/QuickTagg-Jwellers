@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
+import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity, Alert } from "react-native";
 import {
   Button,
   Text,
@@ -123,7 +123,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -202,6 +202,7 @@ const GeneralCatalog = (props) => {
       );
     }
 
+
     postRequest(
       "transactions/customer/generalsession/preview",
       { tran_id: tran_id },
@@ -212,68 +213,28 @@ const GeneralCatalog = (props) => {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
         } else {
+          param.tran_id = resp.data[0].tran_id;
           param.title = resp.data[0].title;
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
-          // console.log(resp.data);
-          alert(tran_id);
 
           param.customer_session_products = resp.data[0].products;
 
-          let cust = [
-            {
-              customer_id: "192",
-              full_name: "test",
-              mobile: "8978977891",
-              selected: "checked",
-            },
-            {
-              customer_id: "199",
-              full_name: "test",
-              mobile: "3333546985",
-              selected: "checked",
-            },
-          ];
-
-          postRequest(
-            "transactions/customer/customerListMob",
-            { branch_id: branchId },
-            userToken
-          ).then((resp1) => {
-            if (resp1.status == 200) {
-              let data = [];
-
-              resp1.data.map((item1) => {
-                cust.map((item2) => {
-                  console.log(item1.product_id == item2.product_id);
-                  if (item1.product_id == item2.product_id) {
-                    data.push({
-                      customer_id: item.customer_id,
-                      mobile: item.mobile,
-                      full_name: item.full_name,
-                      selected: "checked",
-                    });
-                  } else {
-                    data.push({
-                      customer_id: item.customer_id,
-                      mobile: item.mobile,
-                      full_name: item.full_name,
-                    });
-                  }
-                });
-                console.log("dsgdfgfd " + data);
-              });
-              alert("s");
-              console.log("dsgdfgfd " + data);
-              setCustomerList(data);
-            } else {
-              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+            (items) => {
+              if (items.status == 200) {
+                let listData = [];
+                listData = items.data
+                listData.map((item, index) => {
+                  listData[index].selected = resp.data[0].customers.findIndex(e => e.customer_id === item.customer_id) > -1 ? true : false;
+                });               
+                setCustomerList(listData);
+              } else {
+                Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+              }
             }
-          });
-
-          setparam({ ...param, customers: resp.data[0].customers });
-
+          );
           selectedProducts.push({
             data: resp.data[0].products,
           });
@@ -489,8 +450,7 @@ const GeneralCatalog = (props) => {
                   <Button
                     mode="contained"
                     uppercase={false}
-                    onPress={() => {
-                      //console.log(param);
+                    onPress={() => {                    
                       setLoading(true);
                       postRequest(
                         "transactions/customer/generalsession/insert",

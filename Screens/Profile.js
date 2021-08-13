@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Image, ImageBackground, ScrollView, View } from "react-native";
-import {
-  Button,
-  Text,
-  List,
-  FAB,
-  TextInput,
-  Avatar,
-  Card,
-} from "react-native-paper";
-
+import { Button, Text, List, FAB, TextInput, Avatar, Card, } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
 import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { postRequest } from "../Services/RequestServices";
-
+import LottieView from 'lottie-react-native';
+import MaleAvatar from "../assets/Animations/42842-male-avatar.json";
+import FemaleAvatar from "../assets/Animations/50019-female-avatar.json";
 const ProfileList = (props) => {
   return (
     <View style={MyStyles.container}>
@@ -44,15 +37,13 @@ const ProfileList = (props) => {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-
-      {/* Bhai isme lists mai Flatlist lagao direct loop ka hisab mat bithao */}
     </View>
   );
 };
 
 const Profile = (props) => {
   const Tab = createMaterialTopTabNavigator();
-  const { userToken, customer_id } = props.route.params; //ye hai token
+  const { userToken, customer_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
     customer_id: "",
@@ -78,6 +69,7 @@ const Profile = (props) => {
   });
 
   React.useEffect(() => {
+
     let data = { customer_id: customer_id };
     postRequest("customers/customer/profile", data, userToken).then((resp) => {
       if (resp.status == 200) {
@@ -120,8 +112,9 @@ const Profile = (props) => {
           { justifyContent: "space-evenly", marginTop: 10 },
         ]}
       >
-        <Avatar.Icon icon="account" size={80} />
-        <View style={MyStyles.row}>
+        {param.gender === 'male' ? <LottieView source={MaleAvatar} autoPlay loop height={90} width={90} /> : <LottieView source={FemaleAvatar} autoPlay loop height={90} width={90} />}
+
+        <View style={MyStyles.profile_row}>
           <View style={{ alignItems: "center", paddingHorizontal: 10 }}>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>
               {param.totalwishlist}
@@ -255,25 +248,25 @@ const Wishlist = (props) => {
     <View style={MyStyles.container}>
       {wishlist.length > 0
         ? wishlist.map((resp, index) => {
-            return (
-              <>
-                <Text>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Image
-                      key={item.product_id}
-                      source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
-                    />
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </>
-            );
-          })
+          return (
+            <>
+              <Text>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Image
+                    key={item.product_id}
+                    source={{ uri: item.urlImage + "" + item.image_path }}
+                    style={{ width: 120, height: 120, margin: 2 }}
+                  />
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </>
+          );
+        })
         : null}
     </View>
   );
@@ -306,25 +299,25 @@ const Uploaded = (props) => {
     <View style={MyStyles.container}>
       {uploadlist.length > 0
         ? uploadlist.map((resp, index) => {
-            return (
-              <>
-                <Text>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Image
-                      key={item.product_id}
-                      source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
-                    />
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </>
-            );
-          })
+          return (
+            <>
+              <Text>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Image
+                    key={item.product_id}
+                    source={{ uri: item.urlImage + "" + item.image_path }}
+                    style={{ width: 120, height: 120, margin: 2 }}
+                  />
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </>
+          );
+        })
         : null}
     </View>
   );
@@ -356,25 +349,25 @@ const Exhibition = (props) => {
     <View style={MyStyles.container}>
       {exhibitionlist.length > 0
         ? exhibitionlist.map((resp, index) => {
-            return (
-              <>
-                <Text>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Image
-                      key={item.product_id}
-                      source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
-                    />
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </>
-            );
-          })
+          return (
+            <>
+              <Text>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Image
+                    key={item.product_id}
+                    source={{ uri: item.urlImage + "" + item.image_path }}
+                    style={{ width: 120, height: 120, margin: 2 }}
+                  />
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </>
+          );
+        })
         : null}
     </View>
   );
@@ -407,59 +400,59 @@ const CallRequest = (props) => {
       <ScrollView>
         {vcallslist.length > 0
           ? vcallslist.map((resp, index) => {
-              return (
-                <Card
-                  style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
-                  key={index}
-                >
-                  <Card.Title
-                    title={resp.status}
-                    right={() => (
-                      <View>
-                        <Text style={{ color: "green" }}>{resp.date}</Text>
-                        <Button mode="contained" compact uppercase={false}>
-                          Accept
-                        </Button>
-                      </View>
-                    )}
-                  />
-                  <View>
-                    <View
-                      style={[MyStyles.row, { justifyContent: "flex-start" }]}
-                    >
-                      <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_date}
-                      </Button>
-                      <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_time}
-                      </Button>
-                    </View>
+            return (
+              <Card
+                style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
+                key={index}
+              >
+                <Card.Title
+                  title={resp.status}
+                  right={() => (
                     <View>
-                      <Text style={{ color: "#888" }}>View All Remarks</Text>
-                      {resp.remarks.length > 0
-                        ? resp.remarks.map((item) => {
-                            <Text style={{ color: "#888" }}>
-                              {item.remarks}
-                            </Text>;
-                          })
-                        : null}
+                      <Text style={{ color: "green" }}>{resp.date}</Text>
+                      <Button mode="contained" compact uppercase={false}>
+                        Accept
+                      </Button>
                     </View>
+                  )}
+                />
+                <View>
+                  <View
+                    style={[MyStyles.row, { justifyContent: "flex-start" }]}
+                  >
+                    <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {resp.accept_date}
+                    </Button>
+                    <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {resp.accept_time}
+                    </Button>
                   </View>
-                </Card>
-              );
-            })
+                  <View>
+                    <Text style={{ color: "#888" }}>View All Remarks</Text>
+                    {resp.remarks.length > 0
+                      ? resp.remarks.map((item) => {
+                        <Text style={{ color: "#888" }}>
+                          {item.remarks}
+                        </Text>;
+                      })
+                      : null}
+                  </View>
+                </View>
+              </Card>
+            );
+          })
           : null}
       </ScrollView>
     </View>

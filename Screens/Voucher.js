@@ -316,6 +316,7 @@ const VoucherForm = (props) => {
               source={Image}
               onClearImage={() => {}}
               onUploadImage={(result) => {
+                console.log(result.base64);
                 setImage({ uri: result.uri });
                 setvoucheruploads({ ...voucheruploads, image_base64: result.base64 });
                 setparam({
@@ -364,11 +365,8 @@ const VoucherForm = (props) => {
                         });
                       }
                       if (param.image_path !== "") {
-                        postRequest(
-                          "masters/customer/UploadvoucherBannerMob64",
-                          { base64image: voucheruploads.image_base64, imageName: param.image_path },
-                          userToken
-                        ).then((resp) => {
+                        postRequest("masters/customer/UploadvoucherMob64", { base64image: voucheruploads.image_base64, imageName: param.image_path }, userToken).then((resp) => {
+
                           if (resp.status == 200) {
                             if (resp.data[0].valid) {
                               console.log("image : " + resp.data[0].valid);

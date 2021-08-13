@@ -121,7 +121,7 @@ const CustomerCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -155,7 +155,7 @@ const CustomerCatalogList = (props) => {
 };
 
 const CustomerCatalog = (props) => {
-  const { userToken, branchId } = props.route.params;
+  const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
     subcategory_id: "",
@@ -177,32 +177,59 @@ const CustomerCatalog = (props) => {
   const [subcategorylist, setsubcategorylist] = useState([]);
 
   React.useEffect(() => {
-    postRequest(
-      "transactions/customer/session/getSubcategory",
-      { branch_id: branchId },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
+    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
+      if (resp.status == 200) {      
         setsubcategorylist(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
-
-    postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+    if (tran_id == 0) {
+      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            setCustomerList(resp.data);
+          } else {
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          }
         }
-      }
-    );
+      );
+    }
 
-    postRequest("transactions/customer/session/preview", { tran_id: 0 }, userToken).then((resp) => {
+    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then((resp) => {
       if (resp.status == 200) {
-        param.entry_no = resp.data[0].entry_no;
-        setparam({ ...param });
+        if (tran_id == 0) {
+          param.entry_no = resp.data[0].entry_no;
+          setparam({ ...param });
+        } else {
+          console.log(resp.data[0]);
+          param.tran_id = resp.data[0].tran_id;
+          param.title = resp.data[0].title;
+          param.entry_no = resp.data[0].entry_no;
+          param.remarks = resp.data[0].remarks;
+          param.subcategory_id = resp.data[0].products[0].subcategory_id;
+          param.customer_session_products = resp.data[0].products;
+          setparam({ ...param });
+
+          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+            (items) => {
+              if (items.status == 200) {
+                let listData = [];
+                listData = items.data
+                listData.map((item, index) => {
+                  listData[index].selected = resp.data[0].customers.findIndex(e => e.customer_id === item.customer_id) > -1 ? true : false;
+                });
+                setCustomerList(listData);
+              } else {
+                Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+              }
+            }
+          );
+          selectedProducts.push({
+            data: resp.data[0].products,
+          });
+          setSelectedProducts([...selectedProducts]);
+        }
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
