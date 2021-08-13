@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Image, SafeAreaView, View } from "react-native";
-import { IconButton } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 import { AuthContext } from "./Context";
 import { Button, Menu, Divider, Provider } from 'react-native-paper';
@@ -21,12 +21,7 @@ const CustomHeader = (props) => {
         backgroundColor: MyStyles.primaryColor.backgroundColor,
       }}
     >
-      <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />
-
-      <Image
-        style={{ resizeMode: "contain", width: 200, height: 50 }}
-        source={require("../assets/logo.png")}
-      />
+      <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />     
 
       <Menu
         style={{ marginTop: 40 }}
@@ -37,6 +32,11 @@ const CustomHeader = (props) => {
         <Divider />
         <Menu.Item onPress={() => { }} title="Tab To Scan" />
       </Menu>
+
+      <Text style={{ fontSize: 20, alignSelf: "center", flexGrow: 1, marginLeft: 20 }}>
+        {props.title}
+      </Text>
+      <IconButton icon="dots-vertical" size={25} onPress={() => Alert.alert("Coming Soon...")} />
     </SafeAreaView>
   );
 };

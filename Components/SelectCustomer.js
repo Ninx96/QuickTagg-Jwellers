@@ -9,12 +9,16 @@ import {
   List,
   Checkbox,
   Avatar,
+  FAB,
+  TextInput,
+  TouchableRipple,
 } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
 const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
   const [selectedIndex, setselectedIndex] = useState(null);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     setListData(data);
@@ -28,33 +32,27 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
         contentContainerStyle={{ flex: 1, backgroundColor: "#fff" }}
       >
         <View style={{ flex: 1 }}>
-          <View style={MyStyles.row}>
+          <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
             <IconButton icon="chevron-left" size={30} color="black" onPress={onClose} />
-            <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Select Customers</Text>
-            <Button
-              mode="text"
-              compact
-              uppercase={false}
-              color="blue"
-              style={{ marginRight: 5 }}
-              onPress={
-                multiple
-                  ? () => {
-                      const selectedCustomers = listData.filter((item) => item.selected);
-                      onDone(selectedCustomers);
-                      onClose();
-                    }
-                  : () => {
-                      const selectedCustomer = listData.filter(
-                        (item, index) => index == selectedIndex
-                      );
-                      onDone(selectedCustomer);
-                      onClose();
-                    }
-              }
-            >
-              Done
-            </Button>
+            {show ? (
+              <TextInput
+                mode="flat"
+                theme={{ colors: { primary: "black" } }}
+                style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
+                left={<TextInput.Icon name="magnify" />}
+                onChangeText={(text) => {}}
+                placeholder="Search"
+              />
+            ) : (
+              <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                Select Customers
+              </Text>
+            )}
+            <IconButton
+              icon={show ? "close" : "magnify"}
+              size={25}
+              onPress={() => setShow(!show)}
+            />
           </View>
           <FlatList
             data={listData}
@@ -76,8 +74,16 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                 }
                 title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
-                description={item.mobile}
-                left={(props) => <Avatar.Icon icon="account" />} //iski jagah Avatar.Image use krna jab photu lagani ho
+                description={item.mobile + "          " + item.category_name}
+                left={() => {
+                  return (
+                    <TouchableRipple style={MyStyles.squarefixedRatio}>
+                      <Text style={{ color: "red" }}>
+                        {item.category_name == null ? "" : item.category_name.charAt(0)}
+                      </Text>
+                    </TouchableRipple>
+                  );
+                }}
                 right={() =>
                   multiple ? (
                     <Checkbox status={item.selected ? "checked" : "unchecked"} />
@@ -90,6 +96,23 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
+        <FAB
+          style={{ position: "absolute", bottom: 20, right: 20 }}
+          icon="check"
+          onPress={
+            multiple
+              ? () => {
+                  const selectedCustomers = listData.filter((item) => item.selected);
+                  onDone(selectedCustomers);
+                  onClose();
+                }
+              : () => {
+                  const selectedCustomer = listData.filter((item, index) => index == selectedIndex);
+                  onDone(selectedCustomer);
+                  onClose();
+                }
+          }
+        />
       </Modal>
     </Portal>
   );

@@ -36,7 +36,15 @@ const CustomerList = (props) => {
                 <List.Item
                   key={item.customer_id}
                   style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
-                  title={item.full_name}
+                  title={
+                    <Text
+                      onPress={() => {
+                        props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                      }}
+                    >
+                      {item.full_name}
+                    </Text>
+                  }
                   titleStyle={{ fontWeight: "bold" }}
                   description={item.mobile + "          " + item.category_name}
                   left={() => {
@@ -171,7 +179,6 @@ const CustomerForm = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Full Name"
             placeholder="Full Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.full_name}
@@ -181,7 +188,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Mobile No."
             placeholder="Mobile No."
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             keyboardType={"number-pad"}
@@ -193,7 +199,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Email"
             placeholder="Email"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.email}
@@ -205,6 +210,7 @@ const CustomerForm = (props) => {
             <DatePicker
               label="DOB"
               inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+
               value={param.dob}
               onValueChange={(date) => {
                 setparam({ ...param, dob: date });
@@ -213,6 +219,7 @@ const CustomerForm = (props) => {
             <DatePicker
               label="DOA"
               inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+
               value={param.doa}
               onValueChange={(date) => {
                 setparam({ ...param, doa: date });
@@ -270,7 +277,6 @@ const CustomerForm = (props) => {
           </View>
           <TextInput
             mode="outlined"
-            label="Profession"
             placeholder="Profession"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.profession}
@@ -280,7 +286,6 @@ const CustomerForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Address"
             placeholder="Address"
             multiline
             numberOfLines={3}

@@ -56,25 +56,25 @@ const CategoryList = (props) => {
               marginHorizontal: 20,
               padding: 0,
               borderRadius: 10,
-              marginVertical: 5,
+              marginVertical: 10,
             }}
           >
-            <Card.Cover source={require("../../assets/upload.png")} style={{ height: 150 }} />
+            <Card.Cover source={require("../../assets/upload.png")} style={{ height: 140 }} />
 
             <View style={[MyStyles.row, { marginVertical: 0, paddingHorizontal: 10 }]}>
               <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.category_name}</Text>
               <Image
                 source={require("../../assets/upload.png")}
                 style={{
-                  height: 80,
-                  width: 150,
+                  height: 70,
+                  width: 130,
                   marginLeft: "auto",
                   alignSelf: "flex-end",
-                  marginBottom: 5,
+                  marginBottom: 10,
                 }}
               />
               <View>
-                <IconButton icon="pencil" />
+                <IconButton icon="pencil" color="#aaa" />
                 <TouchableRipple
                   style={{ zIndex: 0 }}
                   onPress={() => {
@@ -93,7 +93,7 @@ const CategoryList = (props) => {
                     ]);
                   }}
                 >
-                  <List.Icon {...props} icon="delete" />
+                  <List.Icon {...props} icon="delete" color="#aaa" />
                 </TouchableRipple>
               </View>
             </View>
@@ -129,10 +129,9 @@ const CategoryForm = (props) => {
   });
   return (
     <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
-      <View style={MyStyles.cover}>
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <TextInput
           mode="outlined"
-          label="Category Name"
           placeholder="Category Name"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
           value={param.category_name}
@@ -140,7 +139,7 @@ const CategoryForm = (props) => {
             setparam({ ...param, category_name: text });
           }}
         />
-        <View style={MyStyles.row}>
+        <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>
           <ImageUpload
             label="Choose Image :"
             source={require("../../assets/upload.png")}

@@ -977,4 +977,5 @@ const CartGraphView = ({ visible = false, data }) => {
 
     return null;
 };
+
 export default Home;

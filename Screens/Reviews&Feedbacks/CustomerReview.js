@@ -151,7 +151,6 @@ const CustomerReview = (props) => {
       <View style={MyStyles.cover}>
         <TextInput
           mode="outlined"
-          label="Customer Name"
           placeholder="Customer Name"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
           value={param.customer_name}
@@ -161,7 +160,6 @@ const CustomerReview = (props) => {
         />
         <TextInput
           mode="outlined"
-          label="Customer Review"
           placeholder="Customer Review"
           multiline
           numberOfLines={3}

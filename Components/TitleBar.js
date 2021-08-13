@@ -37,10 +37,24 @@ const TitleBar = (props) => {
           placeholder="Search"
         />
       ) : (
-        <Text style={{ fontSize: 20, alignSelf: "center" }}>{props.title}</Text>
+        <Text
+          style={{
+            fontSize: 20,
+            alignSelf: "center",
+            flexGrow: 1,
+            //marginLeft: 20,
+            textAlign: "center",
+          }}
+        >
+          {props.title}
+        </Text>
       )}
 
-      <IconButton icon={show ? "close" : "magnify"} size={25} onPress={() => setShow(!show)} />
+      {!props.disableSearch ? (
+        <IconButton icon={show ? "close" : "magnify"} size={25} onPress={() => setShow(!show)} />
+      ) : (
+        <IconButton size={25} />
+      )}
     </SafeAreaView>
   );
 };

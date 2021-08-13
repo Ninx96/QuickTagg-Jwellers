@@ -1,37 +1,52 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Text, View, Dimensions, Image, Animated, StyleSheet } from "react-native";
+import MyStyles from "../Styles/MyStyles";
 
-export default function BadgeRibbon(props) {
+export default function BadgeRibbon({ text, position = "right", color = "#ffba3c" }) {
   return (
     <View>
       <View
-        style={{
-          width: 120,
-          padding: 10,
-          paddingLeft: 20,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#1CCD75",
-          height: 40,
-          borderTopRightRadius: 3,
-          borderBottomRightRadius: 3,
-        }}
+        style={[
+          {
+            width: 0,
+            height: 0,
+            borderWidth: 24,
+            borderColor: "transparent",
+            borderBottomColor: color,
+            position: "absolute",
+          },
+          positionStyles[position],
+        ]}
       >
-        <Text style={{ color: "#FFF", fontWeight: "bold" }}>{props.text}</Text>
+        <Text
+          style={[
+            {
+              color: "#FFF",
+              fontWeight: "bold",
+              position: "absolute",
+              top: 5,
+              left: -5,
+              transform: [position == "right" ? { rotate: "-45deg" } : { rotate: "45deg" }],
+            },
+          ]}
+        >
+          {text}
+        </Text>
       </View>
-      <View
-        style={{
-          width: 0,
-          height: 0,
-          backgroundColor: "transparent",
-          borderStyle: "solid",
-          borderRightWidth: 20,
-          borderTopWidth: 20,
-          borderRightColor: "transparent",
-          borderTopColor: "#232F3B",
-          transform: [{ rotate: "90deg" }],
-        }}
-      />
     </View>
   );
 }
+
+const positionStyles = StyleSheet.create({
+  right: {
+    top: -25,
+    left: 96,
+    transform: [{ rotate: "45deg" }],
+  },
+
+  left: {
+    top: -25,
+    left: -25,
+    transform: [{ rotate: "-45deg" }],
+  },
+});

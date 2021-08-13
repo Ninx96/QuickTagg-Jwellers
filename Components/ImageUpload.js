@@ -1,22 +1,9 @@
 import React from "react";
 import { View, Image, Alert, TouchableHighlight } from "react-native";
-import {
-  Button,
-  Portal,
-  Subheading,
-  Modal,
-  IconButton,
-} from "react-native-paper";
+import { Button, Portal, Subheading, Modal, IconButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
-const ImageUpload = ({
-  source,
-  onUploadImage,
-  onClearImage,
-  label,
-  disabled,
-  imageStyle,
-}) => {
+const ImageUpload = ({ source, onUploadImage, onClearImage, label, disabled, imageStyle }) => {
   const [modal, setModal] = React.useState(false);
   const [viewImage, setViewImage] = React.useState(source);
 
@@ -107,16 +94,13 @@ const ImageUpload = ({
       </Portal>
       <Subheading>{label}</Subheading>
 
-      <TouchableHighlight
-        style={{ width: "100%" }}
-        onPress={() => setModal(true)}
-      >
+      <TouchableHighlight style={{ width: "100%" }} onPress={() => setModal(true)}>
         <Image
           source={viewImage}
           style={[
             {
-              height: 120,
-              width: "100%",
+              height: 100,
+              width: "90%",
               borderRadius: 5,
               borderColor: "#555",
               borderWidth: 1,
@@ -140,7 +124,7 @@ const ImageUpload = ({
           color="#FFF"
           uppercase={false}
         >
-          Choose Files
+          Browse
         </Button>
         <Button
           compact

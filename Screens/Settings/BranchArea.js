@@ -59,7 +59,7 @@ const BranchAreaList = (props) => {
                       });
                     }}
                   >
-                    <List.Icon {...props} icon="pencil" />
+                    <List.Icon {...props} icon="pencil" color="#AAA" />
                   </TouchableRipple>
                   <TouchableRipple
                     style={{ zIndex: 0 }}
@@ -79,7 +79,7 @@ const BranchAreaList = (props) => {
                       ]);
                     }}
                   >
-                    <List.Icon {...props} icon="delete" />
+                    <List.Icon {...props} icon="delete" color="#AAA" />
                   </TouchableRipple>
                 </>
               );
@@ -136,7 +136,6 @@ const BranchArea = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Branch Area"
             placeholder="Branch Area"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.area_name}

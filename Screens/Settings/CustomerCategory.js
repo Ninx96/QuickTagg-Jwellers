@@ -58,7 +58,7 @@ const CustomerCategoryList = (props) => {
                       });
                     }}
                   >
-                    <List.Icon {...props} icon="pencil" />
+                    <List.Icon {...props} icon="pencil" color="#AAA" />
                   </TouchableRipple>
                   <TouchableRipple
                     style={{ zIndex: 0 }}
@@ -78,7 +78,7 @@ const CustomerCategoryList = (props) => {
                       ]);
                     }}
                   >
-                    <List.Icon {...props} icon="delete" />
+                    <List.Icon {...props} icon="delete" color="#AAA" />
                   </TouchableRipple>
                 </>
               );
@@ -131,40 +131,37 @@ const CustomerCategory = (props) => {
 
   return (
     <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
-      <ScrollView>
-        <View style={MyStyles.cover}>
-          <TextInput
-            mode="outlined"
-            label="Customer Category"
-            placeholder="Customer Category"
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.category_name}
-            onChangeText={(text) => {
-              setparam({ ...param, category_name: text });
-            }}
-          />
-          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
-            <Button
-              mode="contained"
-              uppercase={false}
-              onPress={() => {
-                setLoading(true);
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+        <TextInput
+          mode="outlined"
+          placeholder="Customer Category"
+          style={{ backgroundColor: "rgba(0,0,0,0)" }}
+          value={param.category_name}
+          onChangeText={(text) => {
+            setparam({ ...param, category_name: text });
+          }}
+        />
+        <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+          <Button
+            mode="contained"
+            uppercase={false}
+            onPress={() => {
+              setLoading(true);
 
-                postRequest("masters/customer/category/insert", param, userToken).then((resp) => {
-                  if (resp.status == 200) {
-                    if (resp.data[0].valid) {
-                      props.navigation.navigate("CustomerCategoryList");
-                    }
-                    setLoading(false);
+              postRequest("masters/customer/category/insert", param, userToken).then((resp) => {
+                if (resp.status == 200) {
+                  if (resp.data[0].valid) {
+                    props.navigation.navigate("CustomerCategoryList");
                   }
-                });
-              }}
-            >
-              Submit
-            </Button>
-          </View>
+                  setLoading(false);
+                }
+              });
+            }}
+          >
+            Submit
+          </Button>
         </View>
-      </ScrollView>
+      </View>
     </ImageBackground>
   );
 };

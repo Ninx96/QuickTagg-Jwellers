@@ -62,7 +62,7 @@ const BranchStaffList = (props) => {
                       });
                     }}
                   >
-                    <List.Icon {...props} icon="pencil" />
+                    <List.Icon {...props} icon="pencil" color="#AAA" />
                   </TouchableRipple>
                   <TouchableRipple
                     style={{ zIndex: 0 }}
@@ -82,7 +82,7 @@ const BranchStaffList = (props) => {
                       ]);
                     }}
                   >
-                    <List.Icon {...props} icon="delete" />
+                    <List.Icon {...props} icon="delete" color="#AAA" />
                   </TouchableRipple>
                 </>
               );
@@ -141,7 +141,6 @@ const BranchStaff = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Staff Name"
             placeholder="Staff Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.name}
@@ -151,7 +150,6 @@ const BranchStaff = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Staff Mobile"
             placeholder="Staff Mobile"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.mobile}

@@ -7,6 +7,8 @@ import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import { postRequest } from "../../Services/RequestServices";
+import BadgeRibbon from "../../Components/BadgeRibbon";
+
 const ProductsList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -41,12 +43,15 @@ const ProductsList = (props) => {
               props.navigation.navigate("ProductsPreview", { product_id: item.product_id })
             }
           >
-            <Card.Cover
+            <BadgeRibbon text="E" />
+            <BadgeRibbon text="T" position="left" />
+            <Image
               source={{ uri: item.url_image + "" + item.image_path }}
-              style={{ width: 120, height: 120 }}
+              style={{ width: 120, height: 120, zIndex: -50 }}
             />
+
             <View style={{ padding: 5, paddingVertical: 10 }}>
-              <Text>{item.product_name}</Text>
+              <Text numberOfLines={2}>{item.product_name}</Text>
               <Text>{item.product_code}</Text>
             </View>
           </Card>
@@ -150,6 +155,7 @@ const ProductsPreview = (props) => {
             Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text> {"      "}
             <Text
               style={{
+                fontSize: 14,
                 color: "red",
                 textDecorationLine: "line-through",
               }}
@@ -180,40 +186,40 @@ const ProductsPreview = (props) => {
           </Swiper>
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Availablity :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Availablity :</Text>
             <Text>{param.available}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Metal :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Metal :</Text>
             <Text>{param.Metal}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Material :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Material :</Text>
             <Text>{param.material}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Disable :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Disable :</Text>
             <Text>{param.disable}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Exhibition :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Exhibition :</Text>
             <Text>{param.exhibition}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Weight :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Weight :</Text>
             <Text>{param.weight}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Size/Length :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Size/Length :</Text>
             <Text>{param.size_length}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Gender :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Gender :</Text>
             <Text>{param.gender}</Text>
           </View>
-          <View style={MyStyles.row}>
-            <Text style={{ fontWeight: "bold" }}>Description :</Text>
+          <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Description :</Text>
             <Text>{param.product_code}</Text>
           </View>
         </View>
@@ -293,7 +299,6 @@ const ProductsForm = (props) => {
         <View style={MyStyles.cover}>
           <TextInput
             mode="outlined"
-            label="Product Name"
             placeholder="Product Name"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.product_name}
@@ -303,7 +308,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Product Code"
             placeholder="Product Code"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.product_code}
@@ -344,7 +348,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Price"
             placeholder="Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.price}
@@ -354,7 +357,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Discoounted Price"
             placeholder="Discoounted Price"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.discounted_price}
@@ -364,7 +366,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Weight"
             placeholder="Weight"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.weight}
@@ -374,7 +375,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Size/Length"
             placeholder="Size/Length"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.size_length}
@@ -384,7 +384,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Metal"
             placeholder="Metal"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.metal}
@@ -394,7 +393,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Material"
             placeholder="Material"
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             value={param.material}
@@ -414,7 +412,6 @@ const ProductsForm = (props) => {
           />
           <TextInput
             mode="outlined"
-            label="Remarks"
             placeholder="Remarks"
             multiline
             numberOfLines={3}
@@ -426,6 +423,7 @@ const ProductsForm = (props) => {
           />
           <Checkbox.Item
             label="Exhibition"
+            labelStyle={{ color: "#000" }}
             status={param.exhibition ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, exhibition: !param.exhibition });
@@ -433,6 +431,7 @@ const ProductsForm = (props) => {
           />
           <Checkbox.Item
             label="Business"
+            labelStyle={{ color: "#000" }}
             status={param.businesses ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, businesses: !param.businesses });
@@ -440,6 +439,7 @@ const ProductsForm = (props) => {
           />
           <Checkbox.Item
             label="Trial at Home"
+            labelStyle={{ color: "#000" }}
             status={param.trial ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, trial: !param.trial });
@@ -447,6 +447,7 @@ const ProductsForm = (props) => {
           />
           <Checkbox.Item
             label="Disable"
+            labelStyle={{ color: "#000" }}
             status={param.disable ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, disable: !param.disable });

@@ -32,6 +32,8 @@ import ReviewTabs from "../Screens/ReviewTabs";
 import Greetings from "../Screens/Dashboard/Greetings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RecentActivity from "../Screens/Dashboard/RecentActivity";
+import Catalogs from "../Screens/Catalogs";
+
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
 
@@ -65,7 +67,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customers" />,
+          header: (props) => <TitleBar {...props} title="Add Customer" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -120,7 +122,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Products" />,
+          header: (props) => <TitleBar {...props} title="Add Products" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -129,7 +131,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Products" />,
+          header: (props) => <TitleBar {...props} title="Product Details" disableSearch />,
         }}
       />
       <Drawer.Screen component={ProductsList} name="ProductsList" initialParams={userDetails} />
@@ -139,7 +141,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Category" />,
+          header: (props) => <TitleBar {...props} title="Add Category" disableSearch />,
         }}
       />
       <Drawer.Screen component={CategoryList} name="CategoryList" initialParams={userDetails} />
@@ -149,7 +151,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Subcategory" />,
+          header: (props) => <TitleBar {...props} title="Add Subcategory" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -159,6 +161,16 @@ const DrawerComponent = ({ userDetails }) => {
       />
 
       {/* --------------------- Catalogs------------------- */}
+      <Drawer.Screen
+        component={Catalogs}
+        name="Catalogs"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Catalog" disableSearch />,
+        }}
+      />
+
       <Drawer.Screen
         component={GeneralCatalogList}
         name="GeneralCatalogList"
@@ -174,7 +186,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="General Catalog" />,
+          header: (props) => <TitleBar {...props} title="General Catalog" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -192,7 +204,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Exhibition Catalog" />,
+          header: (props) => <TitleBar {...props} title="Exhibition Catalog" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -201,7 +213,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Catalog" />,
+          header: (props) => <TitleBar {...props} title="Customer Catalog" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -210,7 +222,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Catalog" />,
+          header: (props) => <TitleBar {...props} title="Customer Catalog" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -228,7 +240,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Try and Buy Catalog" />,
+          header: (props) => <TitleBar {...props} title="Try and Buy Catalog" disableSearch />,
         }}
       />
       {/* ----------------------Review & FeedBack----------- */}
@@ -239,7 +251,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Review" />,
+          header: (props) => <TitleBar {...props} title="Customer Review" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -258,7 +270,7 @@ const DrawerComponent = ({ userDetails }) => {
         name="SettingsMenu"
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Settings" />,
+          header: (props) => <TitleBar {...props} title="Settings" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -267,7 +279,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Category" />,
+          header: (props) => <TitleBar {...props} title="Customer Category" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -276,7 +288,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Category" />,
+          header: (props) => <TitleBar {...props} title="Customer Category" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -285,7 +297,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Area" />,
+          header: (props) => <TitleBar {...props} title="Branch Area" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -294,7 +306,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Area" />,
+          header: (props) => <TitleBar {...props} title="Branch Area" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -303,7 +315,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Staff" />,
+          header: (props) => <TitleBar {...props} title="Branch Staff" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -312,7 +324,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Staff" />,
+          header: (props) => <TitleBar {...props} title="Branch Staff" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -320,7 +332,7 @@ const DrawerComponent = ({ userDetails }) => {
         name="TabToScan"
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Tab to Scan" />,
+          header: (props) => <TitleBar {...props} title="Tab to Scan" disableSearch />,
         }}
       />
 
@@ -355,7 +367,7 @@ const DrawerContent = (props) => {
       <Drawer.Section>
         <Image
           source={{ uri: "https://picsum.photos/200/300" }}
-          style={{ width: "100%", height: 200 }}
+          style={{ width: "100%", height: 150 }}
         />
       </Drawer.Section>
 
@@ -380,27 +392,9 @@ const DrawerContent = (props) => {
         />
 
         <Drawer.Item
-          label="General Catalogs"
+          label="Catalogs"
           onPress={() => {
-            props.navigation.navigate("GeneralCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="ExhibitionCatalog"
-          onPress={() => {
-            props.navigation.navigate("ExhibitionCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="CustomerCatalog"
-          onPress={() => {
-            props.navigation.navigate("CustomerCatalogList");
-          }}
-        />
-        <Drawer.Item
-          label="TryAndBuyCatalog"
-          onPress={() => {
-            props.navigation.navigate("TryAndBuyCatalogList");
+            props.navigation.navigate("Catalogs");
           }}
         />
 
@@ -444,6 +438,11 @@ const DrawerContent = (props) => {
         <Divider />
         <Drawer.Item
           icon="phone"
+          // label="Log Out"
+          onPress={() => Linking.openURL("tel:9874561230")}
+        />
+        <Drawer.Item
+          icon="whatsapp"
           // label="Log Out"
           onPress={() => Linking.openURL("tel:9874561230")}
         />

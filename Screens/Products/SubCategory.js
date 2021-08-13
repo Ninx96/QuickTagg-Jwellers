@@ -58,7 +58,7 @@ const SubCategoryList = (props) => {
         renderItem={({ item, index }) => (
           <List.Item
             key={index}
-            style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
+            style={{ borderBottomWidth: 0.5, borderBottomColor: "#AAA" }}
             title={item.subcategory_name}
             titleStyle={{ fontWeight: "bold" }}
             description={item.subcategory_name}
@@ -73,7 +73,7 @@ const SubCategoryList = (props) => {
                       });
                     }}
                   >
-                    <List.Icon {...props} icon="pencil" />
+                    <List.Icon {...props} icon="pencil" color="#AAA" />
                   </TouchableRipple>
                   <TouchableRipple
                     style={{ zIndex: 0 }}
@@ -93,7 +93,7 @@ const SubCategoryList = (props) => {
                       ]);
                     }}
                   >
-                    <List.Icon {...props} icon="delete" />
+                    <List.Icon {...props} icon="delete" color="#AAA" />
                   </TouchableRipple>
                 </>
               );
@@ -157,7 +157,7 @@ const SubCategoryForm = (props) => {
 
   return (
     <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
-      <View style={MyStyles.cover}>
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <DropDown
           data={categorylist}
           ext_val="category_id"
@@ -170,9 +170,8 @@ const SubCategoryForm = (props) => {
         />
         <TextInput
           mode="outlined"
-          label="SubCategory Name"
           placeholder="SubCategory Name"
-          style={{ backgroundColor: "rgba(0,0,0,0)" }}
+          style={{ backgroundColor: "rgba(0,0,0,0)", marginTop: 20 }}
           value={param.subcategory_name}
           onChangeText={(text) => {
             setparam({ ...param, subcategory_name: text });

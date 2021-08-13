@@ -58,7 +58,7 @@ const CustomerCatalogList = (props) => {
         data={griddata}
         renderItem={({ item, index }) => (
           <Card
-            key={item.tran_id}
+            key={item.voucher_id}
             style={{
               marginHorizontal: 20,
               padding: 0,
@@ -66,19 +66,28 @@ const CustomerCatalogList = (props) => {
               marginVertical: 5,
             }}
           >
-            <Card.Title
-              style={{
-                backgroundColor: "pink",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-              }}
-              title={item.title}
-              titleStyle={{
-                textAlign: "center",
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            />
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  backgroundColor: "pink",
+                  borderTopRightRadius: 10,
+                  borderTopLeftRadius: 10,
+                  margin: 0,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.title}
+              </Text>
+            </View>
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
@@ -262,7 +271,6 @@ const CustomerCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.min_amount}
@@ -274,7 +282,6 @@ const CustomerCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.max_amount}

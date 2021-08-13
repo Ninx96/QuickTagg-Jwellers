@@ -60,7 +60,7 @@ const GeneralCatalogList = (props) => {
         data={griddata}
         renderItem={({ item, index }) => (
           <Card
-            key={item.tran_id}
+            key={item.voucher_id}
             style={{
               marginHorizontal: 20,
               padding: 0,
@@ -68,19 +68,28 @@ const GeneralCatalogList = (props) => {
               marginVertical: 5,
             }}
           >
-            <Card.Title
-              style={{
-                backgroundColor: "pink",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-              }}
-              title={item.title}
-              titleStyle={{
-                textAlign: "center",
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            />
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  backgroundColor: "pink",
+                  borderTopRightRadius: 10,
+                  borderTopLeftRadius: 10,
+                  margin: 0,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.title}
+              </Text>
+            </View>
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
@@ -274,7 +283,6 @@ const GeneralCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Min. Amount"
               placeholder="Min. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.min_amount}
@@ -286,7 +294,6 @@ const GeneralCatalog = (props) => {
             />
             <TextInput
               mode="outlined"
-              label="Max. Amount"
               placeholder="Max. Amount"
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={param.max_amount}
@@ -399,7 +406,7 @@ const GeneralCatalog = (props) => {
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
           <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
             <View style={{ flex: 1 }}>
-              <View style={MyStyles.row}>
+              <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
                 <IconButton
                   icon="chevron-left"
                   size={30}
@@ -409,11 +416,11 @@ const GeneralCatalog = (props) => {
                     setRemarks(false);
                   }}
                 />
+                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Enter Remarks</Text>
               </View>
-              <View style={MyStyles.cover}>
+              <View style={[MyStyles.cover, { backgroundColor: "" }]}>
                 <TextInput
                   mode="outlined"
-                  label="Entry No"
                   placeholder="Entry No"
                   value={param.entry_no}
                   disabled={true}
@@ -421,7 +428,6 @@ const GeneralCatalog = (props) => {
                 />
                 <TextInput
                   mode="outlined"
-                  label="Title"
                   placeholder="Title"
                   value={param.title}
                   onChangeText={(text) => {
@@ -431,7 +437,6 @@ const GeneralCatalog = (props) => {
                 />
                 <TextInput
                   mode="outlined"
-                  label="Remarks"
                   placeholder="Remarks"
                   multiline
                   numberOfLines={3}
