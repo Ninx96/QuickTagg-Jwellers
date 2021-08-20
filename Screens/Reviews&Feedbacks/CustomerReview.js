@@ -202,7 +202,7 @@ const CustomerReview = (props) => {
                           }
                         });
                       }
-                      props.navigation.navigate("CustomerReviewList");
+                      props.navigation.navigate("ReviewFeedback");
                     }
                     setLoading(false);
                   }

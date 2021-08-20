@@ -10,7 +10,7 @@ import moment from "moment";
 import { postRequest } from "../Services/RequestServices";
 
 const VoucherList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
@@ -18,9 +18,8 @@ const VoucherList = (props) => {
     Browse();
   }, []);
 
-  const Browse = (id) => {
-    let param = {};
-    postRequest("masters/customer/voucher/browse", param, userToken).then((resp) => {
+  const Browse = () => {
+    postRequest("masters/customer/voucher/browse", { "search": search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -106,7 +105,7 @@ const VoucherList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -140,7 +139,7 @@ const VoucherList = (props) => {
 };
 
 const VoucherForm = (props) => {
-  const { customer_id } = props.route.params;
+  const { voucher_id } = props.route.params;
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [vouchersession, setvouchersession] = useState(null);
@@ -183,6 +182,37 @@ const VoucherForm = (props) => {
 
   const template =
     "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
+
+  React.useEffect(() => {
+    if (voucher_id != 0) {
+      postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            param.voucher_id = resp.data.voucher_id;
+            param.voucher_session_type = resp.data.voucher_session_type;
+            param.duration = resp.data.duration;
+            param.banner_image = resp.data.banner_image;
+            param.disable = resp.data.disable;
+            param.end_date = resp.data.end_date;
+            param.image_path = resp.data.image_path;
+            param.redeem_end_date = resp.data.redeem_end_date;
+            param.redeem_start_date = resp.data.redeem_start_date;
+            param.start_date = resp.data.start_date;
+            param.voucher_heading = resp.data.voucher_heading;
+            param.voucher_name = resp.data.voucher_name;
+            param.voucher_sms = resp.data.voucher_sms;
+            param.voucher_type = resp.data.voucher_type;
+            param.voucher_value = resp.data.voucher_value;
+            setparam({ ...param });
+          } else {
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          }
+        }
+      );
+    }
+    setLoading(false);
+  }, []);
+
   return (
     <ImageBackground source={require("../assets/login-bg.jpg")} style={MyStyles.container}>
       <ScrollView>
@@ -314,7 +344,7 @@ const VoucherForm = (props) => {
             <ImageUpload
               label="Voucher Image :"
               source={Image}
-              onClearImage={() => {}}
+              onClearImage={() => { }}
               onUploadImage={(result) => {
                 console.log(result.base64);
                 setImage({ uri: result.uri });
@@ -328,7 +358,7 @@ const VoucherForm = (props) => {
             <ImageUpload
               label="Voucher Banner :"
               source={Banner}
-              onClearImage={() => {}}
+              onClearImage={() => { }}
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
                 setvoucheruploads({ ...voucheruploads, banner_base64: result.base64 });

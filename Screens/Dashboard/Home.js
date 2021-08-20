@@ -4,11 +4,20 @@ import { Button, Card, DataTable, IconButton, Text, List } from "react-native-pa
 import { FlatList } from "react-native-gesture-handler";
 import MyStyles from "../../Styles/MyStyles";
 import { LineChart, PieChart } from "react-native-chart-kit";
+import DatePicker from "../../Components/DatePicker";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { postRequest } from "../../Services/RequestServices";
+import moment from "moment";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Home = (props) => {
     const { userToken, branchId } = props.route.params;
     const [loading, setLoading] = useState(true);
+    const [param, setparam] = useState({
+        from_date: moment(),
+        to_date: moment(),
+    });
     const [visible, setVisible] = useState({
         customers_graph: false,
         new_customer_chart: false,
@@ -64,19 +73,42 @@ const Home = (props) => {
         chartDataUploads: [0],
         chartDataExhibition: [0],
     });
-
+    const [chartData3, setChartData3] = React.useState({
+        chartDataLabels: [0],
+        chartDataActive: [0],
+        chartDataRedeem: [0],
+        chartDataExpired: [0],
+    });
+    const [chartData4, setChartData4] = React.useState({
+        chartDataLabels: [0],
+        chartDataRequest: [0],
+        chartDataAccept: [0],
+        chartDataDone: [0],
+    });
+    const [chartData5, setChartData5] = React.useState({
+        chartDataLabels: [0],
+        chartDataRequest: [0],
+        chartDataAccept: [0],
+        chartDataDone: [0],
+    });
     React.useEffect(() => {
+        Refresh();
+    }, []);
+    const Refresh = () => {
         AllFigures();
         CustomersGraphFigures();
         CartGraphFigures();
+        VoucherGraphFigures();
+        VideoGraphFigures();
+        MissedGraphFigures();
         ProductCategorysCountList();
         setLoading(false);
-    }, []);
+    }
 
     const AllFigures = () => {
-        postRequest("masters/dashboard/figures", { branch_id: branchId, from_date: '2020/01/01', to_date: '2021/08/30' }, userToken).then((resp) => {
+        postRequest("masters/dashboard/figures", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
             if (resp.status == 200) {
-                //console.log(resp.data[0]);
+                // console.log(resp.data[0]);
                 figures.total_customers = resp.data[0].total_customers;
                 figures.total_customer_visits = resp.data[0].total_customer_visits;
                 figures.total_customer_estore = resp.data[0].total_customer_estore;
@@ -125,7 +157,7 @@ const Home = (props) => {
     }
 
     const ProductCategorysCountList = () => {
-        postRequest("masters/dashboard/productCategorysCountList?", { branch_id: branchId, from_date: '2020/01/01', to_date: '2021/08/30' }, userToken).then((resp) => {
+        postRequest("masters/dashboard/productCategorysCountList?", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
             if (resp.status == 200) {
                 setcategoryscountlist(resp.data);
             } else {
@@ -138,7 +170,7 @@ const Home = (props) => {
     }
     //---------------Customer Graph Data--------------------------//
     const CustomersGraphFigures = () => {
-        postRequest("masters/dashboard/customer_graph", { branch_id: branchId, from_date: '2020/01/01', to_date: '2021/08/30' }, userToken).then((resp) => {
+        postRequest("masters/dashboard/customer_graph", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
             if (resp.status == 200) {
                 chartData1.chartDataLabels = [0];
                 chartData1.chartDataEstore = [0];
@@ -182,10 +214,9 @@ const Home = (props) => {
     };
     //-------------------------End--------------------------------//
 
-
     //---------------Cart Graph Data--------------------------//
     const CartGraphFigures = () => {
-        postRequest("masters/dashboard/cart_graph", { branch_id: branchId, from_date: '2020/01/01', to_date: '2021/08/30' }, userToken).then((resp) => {
+        postRequest("masters/dashboard/cart_graph", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
             if (resp.status == 200) {
                 chartData2.chartDataLabels = [0];
                 chartData2.chartDataWishlist = [0];
@@ -228,6 +259,146 @@ const Home = (props) => {
         legend: ["Wishlist", "Uploads", "Exhibition"], // optional
     };
     //-------------------------End--------------------------------//
+
+    //---------------Voucher Graph Data--------------------------//
+    const VoucherGraphFigures = () => {
+        postRequest("masters/dashboard/voucher_graph", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
+            if (resp.status == 200) {
+                chartData3.chartDataLabels = [0];
+                chartData3.chartDataActive = [0];
+                chartData3.chartDataRedeem = [0];
+                chartData3.chartDataExpired = [0];
+                for (const itemObj of resp.data) {
+                    chartData3.chartDataLabels.push(itemObj.date);
+                    chartData3.chartDataActive.push(itemObj.active);
+                    chartData3.chartDataRedeem.push(itemObj.redeem);
+                    chartData3.chartDataExpired.push(itemObj.expired);
+                }
+
+            } else {
+                Alert.alert(
+                    "Error !",
+                    "Oops! \nSeems like we run into some Server Error"
+                );
+            }
+        });
+    }
+
+    const vouchergraphdata = {
+        labels: chartData3.chartDataLabels,
+        datasets: [
+            {
+                data: chartData3.chartDataActive,
+                color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData3.chartDataRedeem,
+                color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData3.chartDataExpired,
+                color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+        ],
+        legend: ["Active", "Redeem", "Expired"], // optional
+    };
+    //-------------------------End--------------------------------//
+
+    //---------------Video Call Graph Data--------------------------//
+    const VideoGraphFigures = () => {
+        postRequest("masters/dashboard/video_call_graph", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
+            if (resp.status == 200) {
+                chartData4.chartDataLabels = [0];
+                chartData4.chartDataRequest = [0];
+                chartData4.chartDataAccept = [0];
+                chartData4.chartDataDone = [0];
+                for (const itemObj of resp.data) {
+                    chartData4.chartDataLabels.push(itemObj.date);
+                    chartData4.chartDataRequest.push(itemObj.active);
+                    chartData4.chartDataAccept.push(itemObj.accept);
+                    chartData4.chartDataDone.push(itemObj.done);
+                }
+
+            } else {
+                Alert.alert(
+                    "Error !",
+                    "Oops! \nSeems like we run into some Server Error"
+                );
+            }
+        });
+    }
+
+    const videocallgraphdata = {
+        labels: chartData4.chartDataLabels,
+        datasets: [
+            {
+                data: chartData4.chartDataRequest,
+                color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData4.chartDataAccept,
+                color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData4.chartDataDone,
+                color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+        ],
+        legend: ["Request", "Accept", "Done"], // optional
+    };
+    //-------------------------End--------------------------------//
+    //---------------Missed Call Graph Data--------------------------//
+    const MissedGraphFigures = () => {
+        postRequest("masters/dashboard/miss_call_graph", { branch_id: branchId, from_date: param.from_date, to_date: param.to_date }, userToken).then((resp) => {
+            if (resp.status == 200) {
+                chartData5.chartDataLabels = [0];
+                chartData5.chartDataRequest = [0];
+                chartData5.chartDataAccept = [0];
+                chartData5.chartDataDone = [0];
+                for (const itemObj of resp.data) {
+                    chartData5.chartDataLabels.push(itemObj.date);
+                    chartData5.chartDataRequest.push(itemObj.active);
+                    chartData5.chartDataAccept.push(itemObj.accept);
+                    chartData5.chartDataDone.push(itemObj.done);
+                }
+
+            } else {
+                Alert.alert(
+                    "Error !",
+                    "Oops! \nSeems like we run into some Server Error"
+                );
+            }
+        });
+    }
+
+    const missedcallgraphdata = {
+        labels: chartData5.chartDataLabels,
+        datasets: [
+            {
+                data: chartData5.chartDataRequest,
+                color: (opacity = 1) => `rgba(122, 30, 120, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData5.chartDataAccept,
+                color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+            {
+                data: chartData5.chartDataDone,
+                color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+                strokeWidth: 1, // optional
+            },
+        ],
+        legend: ["Request", "Accept", "Done"], // optional
+    };
+    //-------------------------End--------------------------------//
     //---------------New Cusomer Chart Data--------------------------//
     const newcustomerchartdata = [
         {
@@ -253,6 +424,7 @@ const Home = (props) => {
         }
     ];
     //------------------------End--------------------------------//
+
     //---------------New Cusomer Chart Data--------------------------//
     const notresponsecustomerchartdata = [
         {
@@ -280,16 +452,42 @@ const Home = (props) => {
     //------------------------End--------------------------------//
     return (
         <View style={MyStyles.container}>
-            <ScrollView>
-                <Card
+            <View style={MyStyles.row}>
+                <DatePicker mode="text" value={param.from_date}
+                    onValueChange={(date) => {
+                        param.from_date = date;
+                        setparam({ ...param });
+                        Refresh();
+                    }} />
+                <DatePicker mode="text" value={param.to_date}
+                    onValueChange={(date) => {
+                        param.to_date = date;
+                        setparam({ ...param });
+                        Refresh();
+                    }} />
+                <TouchableOpacity
                     style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
+                        flexDirection: "row",
+                        paddingHorizontal: 20,
                         borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
+                        backgroundColor: "orange",
+
+                        marginRight: 10,
                     }}
+                    onPress={() => { props.navigation.navigate("RecentActivity"); }}
                 >
+                    <Icon name="circle-medium" color="red" size={20} />
+                    <Text style={{ color: "#FFF" }}>Live</Text>
+                </TouchableOpacity>
+            </View>
+            <ScrollView>
+
+                <LinearGradient colors={['#F6356F', '#FF5F50']} start={{x: 0.0, y: 0.50}} end={{x: 0.5, y: 1.0}}  locations={[0,0.5,0.6]} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -317,7 +515,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1,
@@ -350,14 +548,15 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
+
 
                 <CustomerGraphView visible={visible.customers_graph} data={customergraphdata} />
 
                 <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
                     <Button
                         mode="contained"
-                        color="#DC143C"
+                        color="#F6356F"
                         uppercase={false}
                         style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
                         onPress={() => setVisible({ ...visible, new_customer_chart: !visible.new_customer_chart, not_response_chart: false })}
@@ -366,7 +565,7 @@ const Home = (props) => {
                     </Button>
                     <Button
                         mode="contained"
-                        color="#DC143C"
+                        color="#F6356F"
                         uppercase={false}
                         style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
                         onPress={() => setVisible({ ...visible, new_customer_chart: false, not_response_chart: !visible.not_response_chart })}
@@ -377,15 +576,12 @@ const Home = (props) => {
                 <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
                 <NotResposeCustomersChartView visible={visible.not_response_chart} data={notresponsecustomerchartdata} />
 
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -413,7 +609,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -446,19 +642,16 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
                 <CartGraphView visible={visible.cart_graph} data={cartgraphdata} />
 
 
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -486,7 +679,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -519,17 +712,15 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
+                <VoucherGraphView visible={visible.voucher_graph} data={vouchergraphdata} />
 
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -557,7 +748,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -574,7 +765,7 @@ const Home = (props) => {
                                     <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
                                 </DataTable.Cell>
                                 <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Complete</Text>
+                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
                                 </DataTable.Cell>
                             </DataTable.Row>
                             <DataTable.Row>
@@ -590,17 +781,15 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
+                <VideoCallGraphView visible={visible.video_call_graph} data={videocallgraphdata} />
 
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -628,7 +817,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -645,7 +834,7 @@ const Home = (props) => {
                                     <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
                                 </DataTable.Cell>
                                 <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Complete</Text>
+                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
                                 </DataTable.Cell>
                             </DataTable.Row>
                             <DataTable.Row>
@@ -661,17 +850,15 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
+                <MissedCallGraphView visible={visible.missed_call_graph} data={missedcallgraphdata} />
 
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -699,7 +886,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -726,7 +913,7 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
+                </LinearGradient>
 
                 <List.Section>
                     <List.Accordion title={"Products      (" + figures.total_products_count + ")"}>
@@ -752,16 +939,12 @@ const Home = (props) => {
                     </List.Accordion>
                 </List.Section>
 
-
-                <Card
-                    style={{
-                        backgroundColor: "#dc3545",
-                        marginHorizontal: 15,
-                        borderRadius: 10,
-                        padding: 0,
-                        marginVertical: 10,
-                    }}
-                >
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}>
                     <View>
                         <View
                             style={[
@@ -789,7 +972,7 @@ const Home = (props) => {
                                 icon="trending-up"
                                 color="white"
                                 style={{
-                                    backgroundColor: "#DC143C",
+                                    backgroundColor: "#F6356F",
                                     flex: 1,
                                     borderColor: "#FFF",
                                     borderWidth: 1
@@ -816,9 +999,7 @@ const Home = (props) => {
                             </DataTable.Row>
                         </DataTable>
                     </View>
-                </Card>
-
-
+                </LinearGradient>
 
             </ScrollView>
         </View>
@@ -946,6 +1127,106 @@ const NotResposeCustomersChartView = ({ visible = false, data }) => {
     return null;
 };
 const CartGraphView = ({ visible = false, data }) => {
+    const screenWidth = Dimensions.get("window").width - 60;
+
+    const chartConfig = {
+        backgroundGradientFrom: "#000",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "#000",
+        backgroundGradientToOpacity: 0,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: true, // optional
+    };
+
+    if (visible) {
+        return (
+            <View
+                style={{
+                    backgroundColor: "#f0f0f0",
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 10,
+                    marginVertical: 10,
+                }}
+            >
+                <LineChart data={data} width={screenWidth} height={220} verticalLabelRotation={30} segments={4} chartConfig={chartConfig} bezier />
+            </View>
+        );
+    }
+
+    return null;
+};
+
+const VoucherGraphView = ({ visible = false, data }) => {
+    const screenWidth = Dimensions.get("window").width - 60;
+
+    const chartConfig = {
+        backgroundGradientFrom: "#000",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "#000",
+        backgroundGradientToOpacity: 0,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: true, // optional
+    };
+
+    if (visible) {
+        return (
+            <View
+                style={{
+                    backgroundColor: "#f0f0f0",
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 10,
+                    marginVertical: 10,
+                }}
+            >
+                <LineChart data={data} width={screenWidth} height={220} verticalLabelRotation={30} segments={4} chartConfig={chartConfig} bezier />
+            </View>
+        );
+    }
+
+    return null;
+};
+
+const VideoCallGraphView = ({ visible = false, data }) => {
+
+    const screenWidth = Dimensions.get("window").width - 60;
+
+    const chartConfig = {
+        backgroundGradientFrom: "#000",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "#000",
+        backgroundGradientToOpacity: 0,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: true, // optional
+    };
+
+    if (visible) {
+        return (
+            <View
+                style={{
+                    backgroundColor: "#f0f0f0",
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 10,
+                    marginVertical: 10,
+                }}
+            >
+                <LineChart data={data} width={screenWidth} height={220} verticalLabelRotation={30} segments={4} chartConfig={chartConfig} bezier />
+            </View>
+        );
+    }
+
+    return null;
+};
+
+const MissedCallGraphView = ({ visible = false, data }) => {
     const screenWidth = Dimensions.get("window").width - 60;
 
     const chartConfig = {

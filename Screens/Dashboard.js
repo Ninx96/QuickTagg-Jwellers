@@ -7,11 +7,13 @@ import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import Home from "./Dashboard/Home";
 import Wishlist from "./Dashboard/Wishlist";
-import Notification from "./Dashboard/Notification";
 import DatePicker from "../Components/DatePicker";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { postRequest } from "../Services/RequestServices";
 import moment from "moment";
+import TrialList from "./Dashboard/TrialList";
+import Stock from "./Dashboard/Stock";
+import Calls from "./Dashboard/Calls";
 const Dashboard = (props) => {
   const { userToken, branchId } = props.route.params;
   const Tab = createMaterialBottomTabNavigator();
@@ -101,23 +103,6 @@ const Dashboard = (props) => {
           </View>
         </Modal>
       </Portal>
-      <View style={MyStyles.row}>
-        <DatePicker mode="text" />
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 20,
-            borderRadius: 10,
-            backgroundColor: "orange",
-
-            marginRight: 10,
-          }}
-          onPress={() => { props.navigation.navigate("RecentActivity"); }}
-        >
-          <Icon name="circle-medium" color="red" size={20} />
-          <Text style={{ color: "#FFF" }}>Live</Text>
-        </TouchableOpacity>
-      </View>
       <Tab.Navigator barStyle={MyStyles.primaryColor}>
         <Tab.Screen
           name="Home"
@@ -146,7 +131,7 @@ const Dashboard = (props) => {
               <Icon name="podcast" color={focused ? "red" : "white"} size={25} />
             ),
           }}
-          component={Notification}
+          component={TrialList}
           initialParams={props.route.params}
         />
         <Tab.Screen
@@ -156,7 +141,7 @@ const Dashboard = (props) => {
               <Icon name="transit-connection-variant" color={focused ? "red" : "white"} size={25} />
             ),
           }}
-          component={Notification}
+          component={Stock}
           initialParams={props.route.params}
         />
         <Tab.Screen
@@ -166,7 +151,7 @@ const Dashboard = (props) => {
               <Icon name="call-made" color={focused ? "red" : "white"} size={25} />
             ),
           }}
-          component={Notification}
+          component={Calls}
           initialParams={props.route.params}
         />
       </Tab.Navigator>

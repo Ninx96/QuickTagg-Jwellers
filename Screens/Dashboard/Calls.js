@@ -5,7 +5,7 @@ import MyStyles from "../../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { postRequest } from "../../Services/RequestServices";
 
-const Wishlist = (props) => {
+const Calls = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
@@ -15,7 +15,7 @@ const Wishlist = (props) => {
   }, []);
 
   const Refresh = () => {
-    postRequest("masters/dashboard/app_wish_list", { branch_id: branchId, from_date: "2020-01-01", to_date: "2021-09-01" }, userToken).then((resp) => {
+    postRequest("masters/dashboard/app_call_list", { branch_id: branchId, from_date: "2020-01-01", to_date: "2021-09-01" }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -38,7 +38,7 @@ const Wishlist = (props) => {
             <List.Section>
               <List.Accordion
                 title={item.customer_name}
-                description={item.mobile + "          " + item.customer_category}
+                description={item.mobile + "         " + item.customer_category + "         " + item.type}
                 left={() => {
                   return (
                     <TouchableRipple
@@ -57,7 +57,8 @@ const Wishlist = (props) => {
                   key={item.customer_id}
                   style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC", backgroundColor: "#f0f0f0" }}
                   descriptionStyle={{ fontWeight: "bold" }}
-                  description={"Interested in a " + item.category_name + " from " + item.subcategory_name}
+                  //description={"" + item.status + "  " + item.platform}
+                  description={item.status == 'request' ? "Requested a " + item.type + " from " + item.platform : item.status == 'accept' ? "Accept " + item.type + " from " + item.platform : "Done " + item.type + " from " + item.platform}
                 />
               </List.Accordion>
             </List.Section>
@@ -70,4 +71,5 @@ const Wishlist = (props) => {
   );
 };
 
-export default Wishlist;
+
+export default Calls;

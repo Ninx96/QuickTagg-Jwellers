@@ -28,6 +28,7 @@ const Greetings = (props) => {
         <View>
             <FlatList
                 data={recentdobdoa}
+                initialNumToRender={10}
                 renderItem={({ item, index }) => (
                     <List.Item
                         style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}

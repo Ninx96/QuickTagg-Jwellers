@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Alert, FlatList, Image } from "react-native";
+import { ImageBackground, ScrollView, View, Alert, FlatList, Image, Share } from "react-native";
 import { Button, Text, FAB, TextInput, Checkbox, Card, IconButton } from "react-native-paper";
 import Swiper from "react-native-swiper";
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
@@ -43,8 +43,8 @@ const ProductsList = (props) => {
               props.navigation.navigate("ProductsPreview", { product_id: item.product_id })
             }
           >
-            <BadgeRibbon text="E" />
-            <BadgeRibbon text="T" position="left" />
+            {item.exhibition ? <BadgeRibbon text="E" position="left"/> : null}
+            {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
             <Image
               source={{ uri: item.url_image + "" + item.image_path }}
               style={{ width: 120, height: 120, zIndex: -50 }}
@@ -95,8 +95,14 @@ const ProductsPreview = (props) => {
     available: "",
     qty: "",
   });
+  const [productImages, setProductImages] = useState([]);
+  const [shareOptions, setshareOptions] = useState({
+    title: '',
+    message: '',
+    url: '',
+    subject: ''
+  });
 
-  const [productImages, setProductImages] = useState([{}, {}, {}]);
   React.useEffect(() => {
     let data = { product_id: product_id };
     postRequest("masters/product/preview", data, userToken).then((resp) => {
@@ -170,11 +176,26 @@ const ProductsPreview = (props) => {
             {productImages.length > 0 ? (
               productImages.map((resp, index) => {
                 return (
-                  <Image
-                    key={resp.image_id}
-                    source={{ uri: resp.url + "" + resp.image_path }}
-                    style={[{ height: 250, width: "100%" }]}
-                  />
+                  <>
+                    <Image
+                      key={resp.image_id}
+                      source={{ uri: resp.url + "" + resp.image_path }}
+                      style={[{ height: 250, width: "100%" }]}
+                    />
+                    <Icon
+                      name="whatsapp"
+                      size={40}
+                      style={{ marginHorizontal: 0, color: 'green', textAlign: "right", marginRight: 10 }}
+                      onPress={() => {
+                        shareOptions.title = param.product_name;
+                        shareOptions.message = param.product_name;
+                        shareOptions.url = resp.url + "" + resp.image_path;
+                        setshareOptions({ ...shareOptions });
+                        //console.log(shareOptions);
+                        Share.share(shareOptions);
+                      }}
+                    />
+                  </>
                 );
               })
             ) : (
@@ -184,6 +205,7 @@ const ProductsPreview = (props) => {
               />
             )}
           </Swiper>
+
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
@@ -457,11 +479,11 @@ const ProductsForm = (props) => {
           <MultipleImages data={[]} onSelect={(fileArray) => {
             console.log(fileArray);
             let imagesname = [], imagesdata = [];
-            fileArray.map((resp, index) => {             
-              imagesname.push(resp.name);                       
-              imagesdata.push({ "base64image": resp.uri, "base64image": resp.name });            
+            fileArray.map((resp, index) => {
+              imagesname.push(resp.name);
+              imagesdata.push({ "base64image": resp.uri, "base64image": resp.name });
             });
-            setparam({ ...param, product_images: imagesname });   
+            setparam({ ...param, product_images: imagesname });
             setproductsuploads(imagesdata);
             console.log(imagesname);
             console.log(imagesdata);

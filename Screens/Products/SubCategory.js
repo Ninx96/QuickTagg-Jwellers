@@ -183,7 +183,7 @@ const SubCategoryForm = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/product/category/insert", param, userToken).then((resp) => {
+              postRequest("masters/product/subcategory/insert", param, userToken).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
                     props.navigation.navigate("ProductTabs");
