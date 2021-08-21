@@ -482,527 +482,533 @@ const Home = (props) => {
             </View>
             <ScrollView>
 
-                <LinearGradient colors={['#F6356F', '#FF5F50']} start={{x: 0.0, y: 0.50}} end={{x: 0.5, y: 1.0}}  locations={[0,0.5,0.6]} style={{
+                {/* <LinearGradient colors={['#F6356F', '#FF5F50']} start={{x: 0.0, y: 0.50}} end={{x: 0.5, y: 1.0}}  locations={[0,0.5,0.6]} style={{
+                    marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                }}> */}
+                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
                     marginHorizontal: 15,
                     borderRadius: 10,
                     padding: 0,
                     marginVertical: 5,
                 }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Total Customers
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1,
-                                }}
-                                onPress={() => setVisible({ ...visible, customers_graph: !visible.customers_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>E-Store</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Visits</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Exhibition</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_estore}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_visits}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_exhibition}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-
-
-                <CustomerGraphView visible={visible.customers_graph} data={customergraphdata} />
-
-                <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
-                    <Button
-                        mode="contained"
-                        color="#F6356F"
-                        uppercase={false}
-                        style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
-                        onPress={() => setVisible({ ...visible, new_customer_chart: !visible.new_customer_chart, not_response_chart: false })}
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
                     >
-                        New
-                    </Button>
-                    <Button
-                        mode="contained"
-                        color="#F6356F"
-                        uppercase={false}
-                        style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
-                        onPress={() => setVisible({ ...visible, new_customer_chart: false, not_response_chart: !visible.not_response_chart })}
-                    >
-                        No Res.
-                    </Button>
-                </View>
-                <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
-                <NotResposeCustomersChartView visible={visible.not_response_chart} data={notresponsecustomerchartdata} />
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
                         >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Cart
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, cart_graph: !visible.cart_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Wish List</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Uploads</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Exhibition</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_exhibition}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-                <CartGraphView visible={visible.cart_graph} data={cartgraphdata} />
-
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Voucher
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, voucher_graph: !visible.voucher_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Active</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Redeem</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Expired</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_active}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_redeem}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_expired}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-                <VoucherGraphView visible={visible.voucher_graph} data={vouchergraphdata} />
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Video Call
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, video_call_graph: !visible.video_call_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_request}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_accept}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_done}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-                <VideoCallGraphView visible={visible.video_call_graph} data={videocallgraphdata} />
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Missed Call
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, missed_call_graph: !visible.missed_call_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_request}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_accept}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_done}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-                <MissedCallGraphView visible={visible.missed_call_graph} data={missedcallgraphdata} />
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                Stock
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, stock_graph: !visible.stock_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Transfer</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                </LinearGradient>
-
-                <List.Section>
-                    <List.Accordion title={"Products      (" + figures.total_products_count + ")"}>
-                        <FlatList
-                            data={categoryscountlist}
-                            renderItem={({ item, index }) =>
-                            (
-                                <List.Section>
-                                    <List.Accordion title={item.category_name + "     (" + item.product + ")"} style={{ backgroundColor: "#fff", }}>
-                                        {item.innerTable.length > 0
-                                            ? item.innerTable.map((item2, index) => {
-                                                return (
-                                                    <List.Item title={item2.subcategory_name + "      (" + item.product + ")"} style={{ backgroundColor: "#f0f0f0", }} />
-                                                )
-                                            }) : null}
-                                    </List.Accordion>
-                                </List.Section>
-
-                            )
-                            }
-                            keyExtractor={(item, index) => index.toString()}
+                            Total Customers
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1,
+                            }}
+                            onPress={() => setVisible({ ...visible, customers_graph: !visible.customers_graph })}
                         />
-                    </List.Accordion>
-                </List.Section>
-
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}>
-                    <View>
-                        <View
-                            style={[
-                                MyStyles.row,
-                                {
-                                    justifyContent: "center",
-                                    borderBottomColor: "#FFF",
-                                    borderBottomWidth: 1,
-                                },
-                            ]}
-                        >
-                            <View style={{ flexGrow: 1 }}></View>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    color: "#FFF",
-                                    fontSize: 20,
-                                    marginVertical: 5,
-                                    width: "50%"
-                                }}
-                            >
-                                SMS
-                            </Text>
-                            <IconButton
-                                icon="trending-up"
-                                color="white"
-                                style={{
-                                    backgroundColor: "#F6356F",
-                                    flex: 1,
-                                    borderColor: "#FFF",
-                                    borderWidth: 1
-                                }}
-                                onPress={() => setVisible({ ...visible, stock_graph: !visible.stock_graph })}
-                            />
-                        </View>
-                        <DataTable>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Daily</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>Total</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                            <DataTable.Row>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_sms_count}</Text>
-                                </DataTable.Cell>
-                                <DataTable.Cell style={{ justifyContent: "center" }}>
-                                    <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.today_sms_count}</Text>
-                                </DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
                     </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>E-Store</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Visits</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Exhibition</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_estore}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_visits}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_exhibition}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
                 </LinearGradient>
+
+
+            <CustomerGraphView visible={visible.customers_graph} data={customergraphdata} />
+
+            <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
+                <Button
+                    mode="contained"
+                    color="#F6356F"
+                    uppercase={false}
+                    style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
+                    onPress={() => setVisible({ ...visible, new_customer_chart: !visible.new_customer_chart, not_response_chart: false })}
+                >
+                    New
+                </Button>
+                <Button
+                    mode="contained"
+                    color="#F6356F"
+                    uppercase={false}
+                    style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
+                    onPress={() => setVisible({ ...visible, new_customer_chart: false, not_response_chart: !visible.not_response_chart })}
+                >
+                    No Res.
+                </Button>
+            </View>
+            <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
+            <NotResposeCustomersChartView visible={visible.not_response_chart} data={notresponsecustomerchartdata} />
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            Cart
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, cart_graph: !visible.cart_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Wish List</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Uploads</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Exhibition</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_exhibition}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
+            <CartGraphView visible={visible.cart_graph} data={cartgraphdata} />
+
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            Voucher
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, voucher_graph: !visible.voucher_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Active</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Redeem</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Expired</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_active}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_redeem}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_expired}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
+            <VoucherGraphView visible={visible.voucher_graph} data={vouchergraphdata} />
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            Video Call
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, video_call_graph: !visible.video_call_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_request}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_accept}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_done}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
+            <VideoCallGraphView visible={visible.video_call_graph} data={videocallgraphdata} />
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            Missed Call
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, missed_call_graph: !visible.missed_call_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_request}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_accept}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_done}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
+            <MissedCallGraphView visible={visible.missed_call_graph} data={missedcallgraphdata} />
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            Stock
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, stock_graph: !visible.stock_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Transfer</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
+
+            <List.Section>
+                <List.Accordion title={"Products      (" + figures.total_products_count + ")"}>
+                    <FlatList
+                        data={categoryscountlist}
+                        renderItem={({ item, index }) =>
+                        (
+                            <List.Section>
+                                <List.Accordion title={item.category_name + "     (" + item.product + ")"} style={{ backgroundColor: "#fff", }}>
+                                    {item.innerTable.length > 0
+                                        ? item.innerTable.map((item2, index) => {
+                                            return (
+                                                <List.Item title={item2.subcategory_name + "      (" + item.product + ")"} style={{ backgroundColor: "#f0f0f0", }} />
+                                            )
+                                        }) : null}
+                                </List.Accordion>
+                            </List.Section>
+
+                        )
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </List.Accordion>
+            </List.Section>
+
+            <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                marginHorizontal: 15,
+                borderRadius: 10,
+                padding: 0,
+                marginVertical: 5,
+            }}>
+                <View>
+                    <View
+                        style={[
+                            MyStyles.row,
+                            {
+                                justifyContent: "center",
+                                borderBottomColor: "#FFF",
+                                borderBottomWidth: 1,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexGrow: 1 }}></View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "50%"
+                            }}
+                        >
+                            SMS
+                        </Text>
+                        <IconButton
+                            icon="trending-up"
+                            color="white"
+                            style={{
+                                backgroundColor: "#F6356F",
+                                flex: 1,
+                                borderColor: "#FFF",
+                                borderWidth: 1
+                            }}
+                            onPress={() => setVisible({ ...visible, stock_graph: !visible.stock_graph })}
+                        />
+                    </View>
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Daily</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>Total</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_sms_count}</Text>
+                            </DataTable.Cell>
+                            <DataTable.Cell style={{ justifyContent: "center" }}>
+                                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.today_sms_count}</Text>
+                            </DataTable.Cell>
+                        </DataTable.Row>
+                    </DataTable>
+                </View>
+            </LinearGradient>
 
             </ScrollView>
-        </View>
+        </View >
     );
 };
 
