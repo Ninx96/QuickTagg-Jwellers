@@ -28,6 +28,7 @@ const RecentActivity = (props) => {
         <View>
              <FlatList
               data={recentactivity}
+              initialNumToRender={10}
               renderItem={({ item, index }) => (
                 <List.Item
                   style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}

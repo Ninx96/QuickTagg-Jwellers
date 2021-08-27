@@ -85,7 +85,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Vouchers" />,
+          header: (props) => <TitleBar {...props} title="Add Vouchers" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -94,7 +94,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="SMS" />,
+          header: (props) => <TitleBar {...props} title="SMS" disableSearch/>,
         }}
       />
       <Drawer.Screen
@@ -260,7 +260,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Reviews" />,
+          header: (props) => <TitleBar {...props} title="Reviews" disableSearch/>,
         }}
       />
 
@@ -438,13 +438,16 @@ const DrawerContent = (props) => {
         <Divider />
         <Drawer.Item
           icon="phone"
-          // label="Log Out"
+          label="9874561230"
           onPress={() => Linking.openURL("tel:9874561230")}
+          active
         />
         <Drawer.Item
           icon="whatsapp"
-          // label="Log Out"
-          onPress={() => Linking.openURL("tel:9874561230")}
+          label="9874561230"
+          onPress={() => Linking.openURL('whatsapp://send?text=&phone=91' + "9874561230")}
+          active
+          
         />
       </Drawer.Section>
     </View>

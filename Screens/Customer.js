@@ -11,13 +11,10 @@ import { postRequest } from "../Services/RequestServices";
 const CustomerList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
-  const [griddata, setgriddata] = useState([]);
+  const [griddata, setgriddata] = useState([]); 
 
-  //console.log(search);
-
-  React.useEffect(() => {
-    let param = {};
-    postRequest("masters/customer/browse", param, userToken).then((resp) => {
+  React.useEffect(() => {    
+    postRequest("masters/customer/browse", { "search": search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -32,52 +29,52 @@ const CustomerList = (props) => {
       <ScrollView>
         {griddata.length > 0
           ? griddata.map((item, index) => {
-              return (
-                <List.Item
-                  key={item.customer_id}
-                  style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
-                  title={
-                    <Text
+            return (
+              <List.Item
+                key={item.customer_id}
+                style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
+                title={
+                  <Text
+                    onPress={() => {
+                      props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                    }}
+                  >
+                    {item.full_name}
+                  </Text>
+                }
+                titleStyle={{ fontWeight: "bold" }}
+                description={item.mobile + "          " + item.category_name}
+                left={() => {
+                  return (
+                    <TouchableRipple
+                      style={MyStyles.squarefixedRatio}
                       onPress={() => {
                         props.navigation.navigate("Profile", { customer_id: item.customer_id });
                       }}
                     >
-                      {item.full_name}
-                    </Text>
-                  }
-                  titleStyle={{ fontWeight: "bold" }}
-                  description={item.mobile + "          " + item.category_name}
-                  left={() => {
-                    return (
-                      <TouchableRipple
-                        style={MyStyles.squarefixedRatio}
-                        onPress={() => {
-                          props.navigation.navigate("Profile", { customer_id: item.customer_id });
-                        }}
-                      >
-                        <Text style={{ color: "red", textTransform: 'uppercase' }}>
-                          {item.type == null ? "" : item.type.charAt(0)}
-                        </Text>
-                      </TouchableRipple>
-                    );
-                  }}
-                  right={() => {
-                    return (
-                      <TouchableRipple
-                        style={{ zIndex: 0 }}
-                        onPress={() => {
-                          props.navigation.navigate("CustomerForm", {
-                            customer_id: item.customer_id,
-                          });
-                        }}
-                      >
-                        <List.Icon {...props} icon="pencil" color="#aaa" />
-                      </TouchableRipple>
-                    );
-                  }}
-                />
-              );
-            })
+                      <Text style={{ color: "red", textTransform: 'uppercase' }}>
+                        {item.type == null ? "" : item.type.charAt(0)}
+                      </Text>
+                    </TouchableRipple>
+                  );
+                }}
+                right={() => {
+                  return (
+                    <TouchableRipple
+                      style={{ zIndex: 0 }}
+                      onPress={() => {
+                        props.navigation.navigate("CustomerForm", {
+                          customer_id: item.customer_id,
+                        });
+                      }}
+                    >
+                      <List.Icon {...props} icon="pencil" color="#aaa" />
+                    </TouchableRipple>
+                  );
+                }}
+              />
+            );
+          })
           : null}
       </ScrollView>
       <FAB

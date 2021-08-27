@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import { View, ScrollView, Dimensions, Alert, Button } from "react-native";
+import MyStyles from "../../Styles/MyStyles";
+import { FlatList } from "react-native-gesture-handler";
 const Live = (props) => {
   return (
     <View style={[MyStyles.container, { backgroundColor: "#FFF" }]}>

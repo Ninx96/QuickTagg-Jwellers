@@ -21,8 +21,13 @@ const CustomHeader = (props) => {
         backgroundColor: MyStyles.primaryColor.backgroundColor,
       }}
     >
-      <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />     
+      <IconButton icon="menu" size={25} onPress={() => props.navigation.openDrawer()} />
 
+
+
+      <Text style={{ fontSize: 20, alignSelf: "center", flexGrow: 1, marginLeft: 20 }}>
+        {props.title}
+      </Text>
       <Menu
         style={{ marginTop: 40 }}
         visible={visible}
@@ -32,11 +37,6 @@ const CustomHeader = (props) => {
         <Divider />
         <Menu.Item onPress={() => { }} title="Tab To Scan" />
       </Menu>
-
-      <Text style={{ fontSize: 20, alignSelf: "center", flexGrow: 1, marginLeft: 20 }}>
-        {props.title}
-      </Text>
-      <IconButton icon="dots-vertical" size={25} onPress={() => Alert.alert("Coming Soon...")} />
     </SafeAreaView>
   );
 };

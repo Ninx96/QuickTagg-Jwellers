@@ -25,7 +25,7 @@ const CategoryList = (props) => {
   }, []);
   const Browse = () => {
     let param = {};
-    postRequest("masters/product/subcategory/getCategory", param, userToken).then((resp) => {
+    postRequest("masters/product/category/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
