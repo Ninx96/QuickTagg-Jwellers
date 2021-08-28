@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Image } from "react-native";
-import { Portal, Modal, IconButton, Button, Text, Card, FAB, TextInput } from "react-native-paper";
+import {
+  Portal,
+  Modal,
+  IconButton,
+  Button,
+  Text,
+  Card,
+  FAB,
+  TextInput,
+  Avatar,
+} from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
+import BadgeRibbon from "./BadgeRibbon";
 
 const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
   const [show, setShow] = useState(false);
@@ -17,20 +28,33 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
         contentContainerStyle={{ flex: 1, backgroundColor: "#fff" }}
       >
         <View style={{ flex: 1 }}>
-          <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
-            <IconButton icon="chevron-left" size={30} color="black" onPress={onClose} />
+          <View
+            style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}
+          >
+            <IconButton
+              icon="chevron-left"
+              size={30}
+              color="black"
+              onPress={onClose}
+            />
 
             {show ? (
               <TextInput
                 mode="flat"
                 theme={{ colors: { primary: "black" } }}
-                style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
+                style={{
+                  backgroundColor: "rgba(0,0,0,0)",
+                  height: 45,
+                  width: "60%",
+                }}
                 left={<TextInput.Icon name="magnify" />}
                 onChangeText={(text) => {}}
                 placeholder="Search"
               />
             ) : (
-              <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Select Products</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                Select Products
+              </Text>
             )}
             <IconButton
               icon={show ? "close" : "magnify"}
@@ -42,54 +66,46 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             style={{ alignSelf: "center" }}
             data={listData}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
+              <Card
+                style={{
+                  margin: 5,
+                  borderRadius: 10,
+                  width: 120,
+                  alignItems: "center",
+                }}
                 onPress={() => {
                   item.selected = !item.selected;
                   setListData([...listData]);
                 }}
               >
-                <View>
-                  {item.selected ? (
-                    <IconButton
-                      icon="check"
-                      style={{
-                        backgroundColor: "blue",
-                        position: "relative",
-                        left: 85,
-                        top: 18,
-                        zIndex: 10,
-                      }}
-                      color="#FFF"
-                      size={10}
-                    />
-                  ) : (
-                    <View style={{ height: 27 }}></View>
-                  )}
-                  <View
-                    key={index}
+                {item.selected && (
+                  <Avatar.Icon
+                    icon="check"
                     style={{
-                      borderWidth: 0.5,
-                      borderColor: "#000",
-                      backgroundColor: "#FFF",
-                      marginHorizontal: 5,
-                      borderRadius: 10,
-                      width: 100,
-                      alignItems: "center",
-                      zIndex: 1,
+                      backgroundColor: "blue",
+                      position: "absolute",
+                      right: 5,
+                      top: 5,
+                      zIndex: 10,
                     }}
-                  >
-                    <Card.Cover
-                      source={{ uri: item.url_image + "" + item.image_path }}
-                      style={{ width: 98, height: 80, borderRadius: 10 }}
-                    />
+                    color="#FFF"
+                    size={15}
+                  />
+                )}
+                {item.exhibition ? (
+                  <BadgeRibbon text="E" position="left" />
+                ) : null}
+                {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
+                <Image
+                  source={{ uri: item.url_image + "" + item.image_path }}
+                  style={{ width: 120, height: 120, zIndex: -50 }}
+                />
 
-                    <View style={{ padding: 5 }}>
-                      <Text numberOfLines={2}>{item.product_name}</Text>
-                      <Text>{item.product_code}</Text>
-                    </View>
-                  </View>
+                <View style={{ padding: 5, paddingVertical: 10 }}>
+                  <Text numberOfLines={2}>{item.product_name}</Text>
+                  <Text>{item.product_code}</Text>
                 </View>
-              </TouchableOpacity>
+              </Card>
             )}
             numColumns={3}
             keyExtractor={(item, index) => index.toString()}
