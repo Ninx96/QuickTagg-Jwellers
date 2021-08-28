@@ -1,6 +1,22 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Alert, FlatList, Image, Share } from "react-native";
-import { Button, Text, FAB, TextInput, Checkbox, Card, IconButton } from "react-native-paper";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Alert,
+  FlatList,
+  Image,
+  Share,
+} from "react-native";
+import {
+  Button,
+  Text,
+  FAB,
+  TextInput,
+  Checkbox,
+  Card,
+  IconButton,
+} from "react-native-paper";
 import Swiper from "react-native-swiper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MyStyles from "../../Styles/MyStyles";
@@ -19,8 +35,12 @@ const ProductsList = (props) => {
     postRequest("masters/product/browse", param, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
+        console.log(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -40,11 +60,14 @@ const ProductsList = (props) => {
               alignItems: "center",
             }}
             onPress={() =>
-              props.navigation.navigate("ProductsPreview", { product_id: item.product_id })
+              props.navigation.navigate("ProductsPreview", {
+                product_id: item.product_id,
+              })
             }
           >
-            {item.exhibition ? <BadgeRibbon text="E" position="left"/> : null}
-            {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
+
+            {item.exhibition ? <BadgeRibbon text="E" position="left" /> : null}
+            {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
             <Image
               source={{ uri: item.url_image + "" + item.image_path }}
               style={{ width: 120, height: 120, zIndex: -50 }}
@@ -65,7 +88,9 @@ const ProductsList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("ProductsForm", { product_id: 0 })}
+        onPress={() =>
+          props.navigation.navigate("ProductsForm", { product_id: 0 })
+        }
       />
     </View>
   );
@@ -97,10 +122,10 @@ const ProductsPreview = (props) => {
   });
   const [productImages, setProductImages] = useState([]);
   const [shareOptions, setshareOptions] = useState({
-    title: '',
-    message: '',
-    url: '',
-    subject: ''
+    title: "",
+    message: "",
+    url: "",
+    subject: "",
   });
 
   React.useEffect(() => {
@@ -131,7 +156,10 @@ const ProductsPreview = (props) => {
         ImagesList = resp.data[0].images;
         setProductImages(ImagesList);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -155,10 +183,15 @@ const ProductsPreview = (props) => {
           />
         </View> */}
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
-          <Text style={{ fontWeight: "bold", fontSize: 22 }}>{param.product_name}</Text>
-          <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: {param.product_code}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 22 }}>
+            {param.product_name}
+          </Text>
+          <Text style={{ fontSize: 18, marginVertical: 10 }}>
+            SKU: {param.product_code}
+          </Text>
           <Text style={{ fontSize: 18 }}>
-            Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text> {"      "}
+            Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text>{" "}
+            {"      "}
             <Text
               style={{
                 fontSize: 14,
@@ -185,7 +218,12 @@ const ProductsPreview = (props) => {
                     <Icon
                       name="whatsapp"
                       size={40}
-                      style={{ marginHorizontal: 0, color: 'green', textAlign: "right", marginRight: 10 }}
+                      style={{
+                        marginHorizontal: 0,
+                        color: "green",
+                        textAlign: "right",
+                        marginRight: 10,
+                      }}
                       onPress={() => {
                         shareOptions.title = param.product_name;
                         shareOptions.message = param.product_name;
@@ -205,43 +243,60 @@ const ProductsPreview = (props) => {
               />
             )}
           </Swiper>
-
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Availablity :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Availablity :
+            </Text>
             <Text>{param.available}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Metal :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Metal :
+            </Text>
             <Text>{param.Metal}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Material :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Material :
+            </Text>
             <Text>{param.material}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Disable :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Disable :
+            </Text>
             <Text>{param.disable}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Exhibition :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Exhibition :
+            </Text>
             <Text>{param.exhibition}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Weight :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Weight :
+            </Text>
             <Text>{param.weight}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Size/Length :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Size/Length :
+            </Text>
             <Text>{param.size_length}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Gender :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Gender :
+            </Text>
             <Text>{param.gender}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Description :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Description :
+            </Text>
             <Text>{param.product_code}</Text>
           </View>
         </View>
@@ -291,13 +346,18 @@ const ProductsForm = (props) => {
   const [productsuploads, setproductsuploads] = useState([]);
 
   React.useEffect(() => {
-    postRequest("masters/product/subcategory/getCategory", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
-        setcategorylist(resp.data);
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+    postRequest("masters/product/subcategory/getCategory", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setcategorylist(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
+    );
 
     setLoading(false);
   }, []);
@@ -311,12 +371,18 @@ const ProductsForm = (props) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
   };
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
@@ -476,18 +542,25 @@ const ProductsForm = (props) => {
             }}
           />
 
-          <MultipleImages data={[]} onSelect={(fileArray) => {
-            console.log(fileArray);
-            let imagesname = [], imagesdata = [];
-            fileArray.map((resp, index) => {
-              imagesname.push(resp.name);
-              imagesdata.push({ "base64image": resp.uri, "base64image": resp.name });
-            });
-            setparam({ ...param, product_images: imagesname });
-            setproductsuploads(imagesdata);
-            console.log(imagesname);
-            console.log(imagesdata);
-          }} />
+          <MultipleImages
+            data={[]}
+            onSelect={(fileArray) => {
+              console.log(fileArray);
+              let imagesname = [],
+                imagesdata = [];
+              fileArray.map((resp, index) => {
+                imagesname.push(resp.name);
+                imagesdata.push({
+                  base64image: resp.uri,
+                  base64image: resp.name,
+                });
+              });
+              setparam({ ...param, product_images: imagesname });
+              setproductsuploads(imagesdata);
+              console.log(imagesname);
+              console.log(imagesdata);
+            }}
+          />
 
           <Button
             mode="contained"
@@ -495,19 +568,24 @@ const ProductsForm = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/product/insert", param, userToken).then((resp) => {
-                console.log(resp);
-                if (resp.status == 200) {
-                  if (resp.data[0].valid) {
-                    props.navigation.navigate("ProductTabs");
+              postRequest("masters/product/insert", param, userToken).then(
+                (resp) => {
+                  console.log(resp);
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      props.navigation.navigate("ProductTabs");
+                    } else {
+                      Alert.alert("Error !", resp.error);
+                    }
                   } else {
-                    Alert.alert("Error !", resp.error);
+                    Alert.alert(
+                      "Error !",
+                      "Oops! \nSeems like we run into some Server Error"
+                    );
                   }
-                } else {
-                  Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+                  setLoading(false);
                 }
-                setLoading(false);
-              });
+              );
             }}
           >
             Submit
