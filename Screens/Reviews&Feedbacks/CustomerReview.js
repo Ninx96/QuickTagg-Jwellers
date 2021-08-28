@@ -136,7 +136,7 @@ const CustomerReview = (props) => {
             param.image_path = resp.data.image_path;
             setparam({ ...param });
 
-            
+            setImage({ uri: `${resp.data.url + "" + resp.data.image_path}` });         
           } else {
             Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }

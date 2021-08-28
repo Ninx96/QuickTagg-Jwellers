@@ -65,6 +65,7 @@ const ProductsList = (props) => {
               })
             }
           >
+
             {item.exhibition ? <BadgeRibbon text="E" position="left" /> : null}
             {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
             <Image
