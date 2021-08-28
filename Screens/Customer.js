@@ -7,14 +7,14 @@ import DatePicker from "../Components/DatePicker";
 import DropDown from "../Components/DropDown";
 import MyStyles from "../Styles/MyStyles";
 import { postRequest } from "../Services/RequestServices";
-
+import { FlatList } from "react-native-gesture-handler";
 const CustomerList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
-  const [griddata, setgriddata] = useState([]); 
-
-  React.useEffect(() => {    
-    postRequest("masters/customer/browse", { "search": search }, userToken).then((resp) => {
+  const [griddata, setgriddata] = useState([]);
+  
+  React.useEffect(() => {
+    postRequest("masters/customer/browse", {}, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -24,58 +24,63 @@ const CustomerList = (props) => {
     setLoading(false);
   }, []);
 
+
+
   return (
     <View style={MyStyles.container}>
-      <ScrollView>
-        {griddata.length > 0
-          ? griddata.map((item, index) => {
-            return (
-              <List.Item
-                key={item.customer_id}
-                style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
-                title={
-                  <Text
+      <ScrollView>      
+        <FlatList
+          data={griddata}
+          initialNumToRender={10}
+          renderItem={({ item, index }) =>
+          (
+            <List.Item
+              key={item.customer_id}
+              style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
+              title={
+                <Text
+                  onPress={() => {
+                    props.navigation.navigate("Profile", { customer_id: item.customer_id });
+                  }}
+                >
+                  {item.full_name}
+                </Text>
+              }
+              titleStyle={{ fontWeight: "bold" }}
+              description={item.mobile + "          " + item.category_name}
+              left={() => {
+                return (
+                  <TouchableRipple
+                    style={MyStyles.squarefixedRatio}
                     onPress={() => {
                       props.navigation.navigate("Profile", { customer_id: item.customer_id });
                     }}
                   >
-                    {item.full_name}
-                  </Text>
-                }
-                titleStyle={{ fontWeight: "bold" }}
-                description={item.mobile + "          " + item.category_name}
-                left={() => {
-                  return (
-                    <TouchableRipple
-                      style={MyStyles.squarefixedRatio}
-                      onPress={() => {
-                        props.navigation.navigate("Profile", { customer_id: item.customer_id });
-                      }}
-                    >
-                      <Text style={{ color: "red", textTransform: 'uppercase' }}>
-                        {item.type == null ? "" : item.type.charAt(0)}
-                      </Text>
-                    </TouchableRipple>
-                  );
-                }}
-                right={() => {
-                  return (
-                    <TouchableRipple
-                      style={{ zIndex: 0 }}
-                      onPress={() => {
-                        props.navigation.navigate("CustomerForm", {
-                          customer_id: item.customer_id,
-                        });
-                      }}
-                    >
-                      <List.Icon {...props} icon="pencil" color="#aaa" />
-                    </TouchableRipple>
-                  );
-                }}
-              />
-            );
-          })
-          : null}
+                    <Text style={{ color: "red", textTransform: 'uppercase' }}>
+                      {item.type == null ? "" : item.type.charAt(0)}
+                    </Text>
+                  </TouchableRipple>
+                );
+              }}
+              right={() => {
+                return (
+                  <TouchableRipple
+                    style={{ zIndex: 0 }}
+                    onPress={() => {
+                      props.navigation.navigate("CustomerForm", {
+                        customer_id: item.customer_id,
+                      });
+                    }}
+                  >
+                    <List.Icon {...props} icon="pencil" color="#aaa" />
+                  </TouchableRipple>
+                );
+              }}
+            />
+          )
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
       </ScrollView>
       <FAB
         style={{
@@ -206,7 +211,7 @@ const CustomerForm = (props) => {
           <View style={MyStyles.row}>
             <DatePicker
               label="DOB"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
 
               value={param.dob}
               onValueChange={(date) => {
@@ -215,7 +220,7 @@ const CustomerForm = (props) => {
             />
             <DatePicker
               label="DOA"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "45%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
 
               value={param.doa}
               onValueChange={(date) => {
@@ -234,7 +239,7 @@ const CustomerForm = (props) => {
                 setparam({ ...param, gender: val });
               }}
               placeholder="Gender"
-              style={{ width: "35%" }}
+              style={{ width: "36%" }}
             />
             <DropDown
               data={categorylist}
@@ -258,7 +263,7 @@ const CustomerForm = (props) => {
                 setparam({ ...param, staff_id: val });
               }}
               placeholder="Staff"
-              style={{ width: "45%" }}
+              style={{ width: "48%" }}
             />
             <DropDown
               data={arealist}
@@ -269,7 +274,7 @@ const CustomerForm = (props) => {
                 setparam({ ...param, area_id: val });
               }}
               placeholder="Area"
-              style={{ width: "45%" }}
+              style={{ width: "48%" }}
             />
           </View>
           <TextInput

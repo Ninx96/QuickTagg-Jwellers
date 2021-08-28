@@ -87,7 +87,7 @@ const VoucherList = (props) => {
                   </Text>
                   <Text>
                     {"Red. End Date => "}
-                    {item.voucher_value}
+                    {moment(item.end_date).format("DD MMM YYYY")}
                   </Text>
                 </View>
                 <View>
@@ -144,14 +144,14 @@ const VoucherForm = (props) => {
   const [loading, setLoading] = useState(true);
   const [vouchersession, setvouchersession] = useState(null);
   const [vouchersessionlist, setvouchersessionlist] = useState([
-    { label: "Duration in Days", value: "Duration in Days" },
-    { label: "Date Time", value: "Date Time" },
+    { label: "duration in days", value: "duration in days" },
+    { label: "datetime", value: "datetime" },
   ]);
   const [vouchertypelist, setvouchertypelist] = useState([
-    { label: "First Time", value: "First Time" },
-    { label: "Referral", value: "Referral" },
-    { label: "Upload Design", value: "Upload Design" },
-    { label: "Other", value: "Other" },
+    { label: "first Time", value: "first Time" },
+    { label: "referral", value: "referral" },
+    { label: "upload design", value: "upload design" },
+    { label: "other", value: "other" },
   ]);
   const [param, setparam] = useState({
     voucher_id: "0",
@@ -187,6 +187,7 @@ const VoucherForm = (props) => {
     if (voucher_id != 0) {
       postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
         (resp) => {
+       
           if (resp.status == 200) {
             param.voucher_id = resp.data.voucher_id;
             param.voucher_session_type = resp.data.voucher_session_type;
@@ -203,7 +204,19 @@ const VoucherForm = (props) => {
             param.voucher_sms = resp.data.voucher_sms;
             param.voucher_type = resp.data.voucher_type;
             param.voucher_value = resp.data.voucher_value;
+
+            if (resp.data.voucher_session_type === "duration in days") {
+              setvouchersession(true);
+              param.redeem_end_date = "";
+              param.redeem_start_date = "";
+            } else if (val === "datetime") {
+              setvouchersession(false);
+              param.duration = "";
+            }
+
             setparam({ ...param });
+            setImage({ uri: `${resp.data.image_url + "" + resp.data.image_path}` });
+            setBanner({ uri: `${resp.data.banner_url + "" + resp.data.banner_image}` });
           } else {
             Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }
@@ -279,7 +292,7 @@ const VoucherForm = (props) => {
           <View style={MyStyles.row}>
             <DatePicker
               label="Start Date"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
               value={param.start_date}
               onValueChange={(date) => {
                 setparam({ ...param, start_date: date });
@@ -287,7 +300,7 @@ const VoucherForm = (props) => {
             />
             <DatePicker
               label="End Date"
-              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
+              inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
               value={param.end_date}
               onValueChange={(date) => {
                 setparam({ ...param, end_date: date });
@@ -298,7 +311,7 @@ const VoucherForm = (props) => {
             <View style={MyStyles.row}>
               <DatePicker
                 label="Red. Start Date"
-                inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
+                inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
                 value={param.redeem_start_date}
                 onValueChange={(date) => {
                   setparam({ ...param, redeem_start_date: date });
@@ -306,7 +319,7 @@ const VoucherForm = (props) => {
               />
               <DatePicker
                 label="Red. End Date"
-                inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "40%" }}
+                inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
                 value={param.redeem_end_date}
                 onValueChange={(date) => {
                   setparam({ ...param, redeem_end_date: date });
@@ -344,7 +357,13 @@ const VoucherForm = (props) => {
             <ImageUpload
               label="Voucher Image :"
               source={Image}
-              onClearImage={() => { }}
+              onClearImage={() => {
+                setImage({ uri: "" });
+                setparam({
+                  ...param,
+                  image_path: "",
+                });
+              }}
               onUploadImage={(result) => {
                 console.log(result.base64);
                 setImage({ uri: result.uri });
@@ -358,7 +377,13 @@ const VoucherForm = (props) => {
             <ImageUpload
               label="Voucher Banner :"
               source={Banner}
-              onClearImage={() => { }}
+              onClearImage={() => {
+                setBanner({ uri: "" });
+                setparam({
+                  ...param,
+                  banner_image: "",
+                });
+              }}
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
                 setvoucheruploads({ ...voucheruploads, banner_base64: result.base64 });

@@ -482,13 +482,14 @@ const Home = (props) => {
             </View>
             <ScrollView>
 
-                {/* <LinearGradient colors={['#F6356F', '#FF5F50']} start={{x: 0.0, y: 0.50}} end={{x: 0.5, y: 1.0}}  locations={[0,0.5,0.6]} style={{
+                {/* <LinearGradient colors={['#F6356F', '#FF5F50']}   start={{x: 0, y: 0.5}}
+                end={{x: 1, y: 1}}  locations={[0,0.5,0.6]} style={{
                     marginHorizontal: 15,
                     borderRadius: 10,
                     padding: 0,
                     marginVertical: 5,
                 }}> */}
-                <LinearGradient colors={['#F6356F', '#FF5F50']} style={{
+                <LinearGradient colors={['#F6356F', '#FF5F50']}  style={{
                     marginHorizontal: 15,
                     borderRadius: 10,
                     padding: 0,

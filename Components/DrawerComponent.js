@@ -10,7 +10,7 @@ import * as Linking from "expo-linking";
 import Dashboard from "../Screens/Dashboard";
 import { CustomerForm, CustomerList } from "../Screens/Customer";
 import { VoucherList, VoucherForm } from "../Screens/Voucher";
-import { Profile } from "../Screens/Profile";
+import { CustomerVoucherList, Profile } from "../Screens/Profile";
 import { ProductsForm, ProductsPreview, ProductsList } from "../Screens/Products/Products";
 import { CategoryForm, CategoryList } from "../Screens/Products/Category";
 import { SubCategoryForm, SubCategoryList } from "../Screens/Products/SubCategory";
@@ -103,7 +103,16 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails} // aise krke bhejna hai ok
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="User Profile" />,
+          header: (props) => <TitleBar {...props} title="User Profile" disableSearch/>,
+        }}
+      />
+         <Drawer.Screen
+        component={CustomerVoucherList}
+        name="CustomerVoucherList"
+        initialParams={userDetails} // aise krke bhejna hai ok
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Voucher List" disableSearch/>,
         }}
       />
       {/* --------------------- Products------------------- */}
@@ -213,7 +222,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Catalog" disableSearch />,
+          header: (props) => <TitleBar {...props} title="Customer Catalog" />,
         }}
       />
       <Drawer.Screen
@@ -342,7 +351,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Greetings" />,
+          header: (props) => <TitleBar {...props} title="Greetings" disableSearch/>,
         }}
       />
 

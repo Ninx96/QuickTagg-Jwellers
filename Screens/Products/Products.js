@@ -44,7 +44,7 @@ const ProductsList = (props) => {
             }
           >
             {item.exhibition ? <BadgeRibbon text="E" position="left"/> : null}
-            {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
+            {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
             <Image
               source={{ uri: item.url_image + "" + item.image_path }}
               style={{ width: 120, height: 120, zIndex: -50 }}
