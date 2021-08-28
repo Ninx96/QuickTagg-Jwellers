@@ -24,6 +24,7 @@ import ImageUpload from "../Components/ImageUpload";
 import MyStyles from "../Styles/MyStyles";
 import moment from "moment";
 import { postRequest } from "../Services/RequestServices";
+import { serviceUrl } from "../Services/Constants";
 
 const VoucherList = (props) => {
   const { userToken, search } = props.route.params;
@@ -383,12 +384,11 @@ const VoucherForm = (props) => {
               source={Image}
               onClearImage={() => {}}
               onUploadImage={(result) => {
-                console.log(result.base64);
                 setImage({ uri: result.uri });
-                setvoucheruploads({
-                  ...voucheruploads,
-                  image_base64: result.base64,
-                });
+                // setvoucheruploads({
+                //   ...voucheruploads,
+                //   image_base64: result.base64,
+                // });
                 setparam({
                   ...param,
                   image_path:
@@ -402,10 +402,10 @@ const VoucherForm = (props) => {
               onClearImage={() => {}}
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
-                setvoucheruploads({
-                  ...voucheruploads,
-                  banner_base64: result.base64,
-                });
+                // setvoucheruploads({
+                //   ...voucheruploads,
+                //   banner_base64: result.base64,
+                // });
                 setparam({
                   ...param,
                   banner_image:
@@ -432,37 +432,96 @@ const VoucherForm = (props) => {
                 ).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
-                      if (param.banner_image !== "") {
-                        postRequest(
-                          "masters/customer/UploadvoucherBannerMob64",
-                          {
-                            base64image: voucheruploads.banner_base64,
-                            imageName: param.banner_image,
-                          },
-                          userToken
-                        ).then((resp) => {
+                      if (Banner.uri) {
+                        const form_data = new FormData();
+                        form_data.append("files", {
+                          uri: Banner.uri,
+                          type: "image/jpeg",
+                          name: Date.now() + ".jpg",
+                        });
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open(
+                          "POST",
+                          serviceUrl +
+                            "masters/customer/UploadvoucherBannerMob",
+                          true
+                        );
+                        xhr.setRequestHeader("Accept", "application/json");
+                        xhr.setRequestHeader(
+                          "Content-Type",
+                          "multipart/form-data"
+                        );
+
+                        xhr.onload = function (e) {
+                          const resp = xhr.response;
                           if (resp.status == 200) {
                             if (resp.data[0].valid) {
                               console.log("banner : " + resp.data[0].valid);
                             }
                           }
-                        });
+                        };
+                        xhr.send(form_data);
+
+                        // postRequest(
+                        //   "masters/customer/UploadvoucherBannerMob64",
+                        //   {
+                        //     base64image: voucheruploads.banner_base64,
+                        //     imageName: param.banner_image,
+                        //   },
+                        //   userToken
+                        // ).then((resp) => {
+                        //   if (resp.status == 200) {
+                        //     if (resp.data[0].valid) {
+                        //       console.log("banner : " + resp.data[0].valid);
+                        //     }
+                        //   }
+                        // });
                       }
-                      if (param.image_path !== "") {
-                        postRequest(
-                          "masters/customer/UploadvoucherMob64",
-                          {
-                            base64image: voucheruploads.image_base64,
-                            imageName: param.image_path,
-                          },
-                          userToken
-                        ).then((resp) => {
+                      if (Image.uri) {
+                        const form_data = new FormData();
+                        form_data.append("files", {
+                          uri: Image.uri,
+                          type: "image/jpeg",
+                          name: Date.now() + ".jpg",
+                        });
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open(
+                          "POST",
+                          serviceUrl + "masters/customer/UploadvoucherMob",
+                          true
+                        );
+                        xhr.setRequestHeader("Accept", "application/json");
+                        xhr.setRequestHeader(
+                          "Content-Type",
+                          "multipart/form-data"
+                        );
+
+                        xhr.onload = function (e) {
+                          const resp = xhr.response;
                           if (resp.status == 200) {
                             if (resp.data[0].valid) {
                               console.log("image : " + resp.data[0].valid);
                             }
                           }
-                        });
+                        };
+                        xhr.send(form_data);
+
+                        //   postRequest(
+                        //     "masters/customer/UploadvoucherMob64",
+                        //     {
+                        //       base64image: voucheruploads.image_base64,
+                        //       imageName: param.image_path,
+                        //     },
+                        //     userToken
+                        //   ).then((resp) => {
+                        //     if (resp.status == 200) {
+                        //       if (resp.data[0].valid) {
+                        //         console.log("image : " + resp.data[0].valid);
+                        //       }
+                        //     }
+                        //   });
                       }
                       props.navigation.navigate("VoucherList");
                     }
@@ -477,7 +536,7 @@ const VoucherForm = (props) => {
         </View>
       </ScrollView>
       <MessageTemplate
-        visible={true}
+        visible={false}
         onDone={(vars) => {
           console.log(vars);
         }}
@@ -496,7 +555,7 @@ const MessageTemplate = ({ visible, onDone }) => {
             MyStyles.row,
             MyStyles.primaryColor,
             {
-              marginTop: 0,
+              marginVertical: 0,
             },
           ]}
         >
