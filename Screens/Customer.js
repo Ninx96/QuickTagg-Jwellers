@@ -12,7 +12,7 @@ const CustomerList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
-  
+
   React.useEffect(() => {
     postRequest("masters/customer/browse", {}, userToken).then((resp) => {
       if (resp.status == 200) {
@@ -24,16 +24,13 @@ const CustomerList = (props) => {
     setLoading(false);
   }, []);
 
-
-
   return (
     <View style={MyStyles.container}>
-      <ScrollView>      
+      <ScrollView>
         <FlatList
           data={griddata}
           initialNumToRender={10}
-          renderItem={({ item, index }) =>
-          (
+          renderItem={({ item, index }) => (
             <List.Item
               key={item.customer_id}
               style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
@@ -56,7 +53,7 @@ const CustomerList = (props) => {
                       props.navigation.navigate("Profile", { customer_id: item.customer_id });
                     }}
                   >
-                    <Text style={{ color: "red", textTransform: 'uppercase' }}>
+                    <Text style={{ color: "red", textTransform: "uppercase" }}>
                       {item.type == null ? "" : item.type.charAt(0)}
                     </Text>
                   </TouchableRipple>
@@ -77,8 +74,7 @@ const CustomerList = (props) => {
                 );
               }}
             />
-          )
-          }
+          )}
           keyExtractor={(item, index) => index.toString()}
         />
       </ScrollView>
@@ -89,6 +85,7 @@ const CustomerList = (props) => {
           right: 50,
           zIndex: 100,
         }}
+        color="#000"
         icon="plus"
         onPress={() => props.navigation.navigate("CustomerForm", { customer_id: 0 })}
       />
@@ -212,7 +209,6 @@ const CustomerForm = (props) => {
             <DatePicker
               label="DOB"
               inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
-
               value={param.dob}
               onValueChange={(date) => {
                 setparam({ ...param, dob: date });
@@ -221,7 +217,6 @@ const CustomerForm = (props) => {
             <DatePicker
               label="DOA"
               inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
-
               value={param.doa}
               onValueChange={(date) => {
                 setparam({ ...param, doa: date });

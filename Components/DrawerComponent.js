@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, ScrollView } from "react-native";
-import { Drawer, Divider } from "react-native-paper";
+import { Drawer, Divider, IconButton, Avatar } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -33,6 +33,7 @@ import Greetings from "../Screens/Dashboard/Greetings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RecentActivity from "../Screens/Dashboard/RecentActivity";
 import Catalogs from "../Screens/Catalogs";
+import MyStyles from "../Styles/MyStyles";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -94,7 +95,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="SMS" disableSearch/>,
+          header: (props) => <TitleBar {...props} title="SMS" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -103,16 +104,16 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails} // aise krke bhejna hai ok
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="User Profile" disableSearch/>,
+          header: (props) => <TitleBar {...props} title="User Profile" disableSearch />,
         }}
       />
-         <Drawer.Screen
+      <Drawer.Screen
         component={CustomerVoucherList}
         name="CustomerVoucherList"
         initialParams={userDetails} // aise krke bhejna hai ok
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Voucher List" disableSearch/>,
+          header: (props) => <TitleBar {...props} title="Voucher List" disableSearch />,
         }}
       />
       {/* --------------------- Products------------------- */}
@@ -269,7 +270,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Reviews" disableSearch/>,
+          header: (props) => <TitleBar {...props} title="Reviews" disableSearch />,
         }}
       />
 
@@ -351,7 +352,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Greetings" disableSearch/>,
+          header: (props) => <TitleBar {...props} title="Greetings" disableSearch />,
         }}
       />
 
@@ -373,7 +374,7 @@ const DrawerContent = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Drawer.Section>
+      <Drawer.Section style={{ marginBottom: 20 }}>
         <Image
           source={{ uri: "https://picsum.photos/200/300" }}
           style={{ width: "100%", height: 150 }}
@@ -445,19 +446,10 @@ const DrawerContent = (props) => {
 
       <Drawer.Section title="Quicktagg (1.0.0)">
         <Divider />
-        <Drawer.Item
-          icon="phone"
-          label="9874561230"
-          onPress={() => Linking.openURL("tel:9874561230")}
-          active
-        />
-        <Drawer.Item
-          icon="whatsapp"
-          label="9874561230"
-          onPress={() => Linking.openURL('whatsapp://send?text=&phone=91' + "9874561230")}
-          active
-          
-        />
+        <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>
+          <Avatar.Icon icon="phone" size={40} style={{ backgroundColor: "#2E86C1" }} />
+          <Avatar.Icon icon="whatsapp" size={40} style={{ backgroundColor: "green" }} />
+        </View>
       </Drawer.Section>
     </View>
   );
