@@ -133,7 +133,7 @@ const VoucherList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -217,7 +217,7 @@ const VoucherForm = (props) => {
     if (voucher_id != 0) {
       postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
         (resp) => {
-       
+
           if (resp.status == 200) {
             param.voucher_id = resp.data.voucher_id;
             param.voucher_session_type = resp.data.voucher_session_type;
@@ -251,9 +251,9 @@ const VoucherForm = (props) => {
             Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }
 
-        }
-      });
-    }
+        });
+      }
+
     setLoading(false);
   }, []);
 
@@ -467,7 +467,7 @@ const VoucherForm = (props) => {
                         xhr.open(
                           "POST",
                           serviceUrl +
-                            "masters/customer/UploadvoucherBannerMob",
+                          "masters/customer/UploadvoucherBannerMob",
                           true
                         );
                         xhr.setRequestHeader("Accept", "application/json");
