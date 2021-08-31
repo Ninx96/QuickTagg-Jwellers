@@ -98,6 +98,9 @@ const Home = (props) => {
     chartDataAccept: [0],
     chartDataDone: [0],
   });
+
+  const [showProducts, setShowProducts] = useState(false);
+
   React.useEffect(() => {
     Refresh();
   }, []);
@@ -1140,40 +1143,127 @@ const Home = (props) => {
           </View>
         </LinearGradient>
 
-        <List.Section>
-          <List.Accordion
-            title={"Products      (" + figures.total_products_count + ")"}
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 5,
+          }}
+        >
+          <View
+            style={[
+              MyStyles.row,
+              {
+                justifyContent: "center",
+              },
+            ]}
           >
-            <FlatList
-              data={categoryscountlist}
-              renderItem={({ item, index }) => (
-                <List.Section>
-                  <List.Accordion
-                    title={item.category_name + "     (" + item.product + ")"}
-                    style={{ backgroundColor: "#fff" }}
-                  >
-                    {item.innerTable.length > 0
-                      ? item.innerTable.map((item2, index) => {
-                          return (
-                            <List.Item
-                              title={
-                                item2.subcategory_name +
-                                "      (" +
-                                item.product +
-                                ")"
-                              }
-                              style={{ backgroundColor: "#f0f0f0" }}
-                            />
-                          );
-                        })
-                      : null}
-                  </List.Accordion>
-                </List.Section>
-              )}
-              keyExtractor={(item, index) => index.toString()}
+            <View style={{ flexGrow: 1 }}></View>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFF",
+                fontSize: 20,
+                marginVertical: 5,
+                width: "50%",
+              }}
+            >
+              Products({figures.total_products_count})
+            </Text>
+            <IconButton
+              icon={showProducts ? "chevron-down" : "chevron-right"}
+              color="white"
+              style={{
+                flex: 1,
+              }}
+              onPress={() => setShowProducts(!showProducts)}
             />
-          </List.Accordion>
-        </List.Section>
+          </View>
+        </LinearGradient>
+
+        {showProducts
+          ? categoryscountlist.map((item, index) => (
+              <LinearGradient
+                key={index}
+                colors={["#F6356F", "#FF5F50"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  marginHorizontal: 15,
+                  borderRadius: 10,
+                  padding: 0,
+                  marginVertical: 5,
+                }}
+              >
+                <View
+                  style={[
+                    MyStyles.row,
+                    {
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <View style={{ flexGrow: 1 }}></View>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#FFF",
+                      fontSize: 20,
+                      marginVertical: 5,
+                      width: "50%",
+                    }}
+                  >
+                    {item.category_name + "(" + item.product + ")"}
+                  </Text>
+                  <IconButton
+                    icon="chevron-right"
+                    color="white"
+                    style={{
+                      flex: 1,
+                    }}
+                    onPress={() => {
+                      item.show = !item.show;
+                      setcategoryscountlist([...categoryscountlist]);
+                    }}
+                  />
+                </View>
+                <View style={item.show ? null : { display: "none" }}>
+                  {item.innerTable.length > 0
+                    ? item.innerTable.map((item2, index) => (
+                        <View
+                          key={index}
+                          style={[
+                            MyStyles.row,
+                            {
+                              justifyContent: "center",
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#FFF",
+                              fontSize: 20,
+                              marginVertical: 5,
+                              width: "80%",
+                            }}
+                          >
+                            {item2.subcategory_name +
+                              "      (" +
+                              item.product +
+                              ")"}
+                          </Text>
+                        </View>
+                      ))
+                    : null}
+                </View>
+              </LinearGradient>
+            ))
+          : null}
 
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
