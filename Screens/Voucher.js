@@ -244,15 +244,17 @@ const VoucherForm = (props) => {
               param.duration = "";
             }
 
-            setparam({ ...param });
-            setImage({ uri: `${resp.data.image_url + "" + resp.data.image_path}` });
-            setBanner({ uri: `${resp.data.banner_url + "" + resp.data.banner_image}` });
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+            if (resp.data.voucher_session_type === "duration in days") {
+              setvouchersession(true);
+              param.redeem_end_date = "";
+              param.redeem_start_date = "";
+            } else if (val === "datetime") {
+              setvouchersession(false);
+              param.duration = "";
+            }
           }
-
         });
-      }
+    }
 
     setLoading(false);
   }, []);
@@ -398,7 +400,6 @@ const VoucherForm = (props) => {
                   image_path: "",
                 });
               }}
-
               onUploadImage={(result) => {
                 setImage({ uri: result.uri });
                 // setvoucheruploads({
@@ -422,7 +423,6 @@ const VoucherForm = (props) => {
                   banner_image: "",
                 });
               }}
-
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
                 // setvoucheruploads({
@@ -475,6 +475,7 @@ const VoucherForm = (props) => {
                           "Content-Type",
                           "multipart/form-data"
                         );
+                        xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
                           const resp = xhr.response;
@@ -520,6 +521,7 @@ const VoucherForm = (props) => {
                           "Content-Type",
                           "multipart/form-data"
                         );
+                        xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
                           const resp = xhr.response;
