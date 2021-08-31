@@ -215,42 +215,49 @@ const VoucherForm = (props) => {
 
   React.useEffect(() => {
     if (voucher_id != 0) {
-      postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
-        (resp) => {
-       
-          if (resp.status == 200) {
-            param.voucher_id = resp.data.voucher_id;
-            param.voucher_session_type = resp.data.voucher_session_type;
-            param.duration = resp.data.duration;
-            param.banner_image = resp.data.banner_image;
-            param.disable = resp.data.disable;
-            param.end_date = resp.data.end_date;
-            param.image_path = resp.data.image_path;
-            param.redeem_end_date = resp.data.redeem_end_date;
-            param.redeem_start_date = resp.data.redeem_start_date;
-            param.start_date = resp.data.start_date;
-            param.voucher_heading = resp.data.voucher_heading;
-            param.voucher_name = resp.data.voucher_name;
-            param.voucher_sms = resp.data.voucher_sms;
-            param.voucher_type = resp.data.voucher_type;
-            param.voucher_value = resp.data.voucher_value;
+      postRequest(
+        "masters/customer/voucher/preview",
+        { voucher_id: voucher_id },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          param.voucher_id = resp.data.voucher_id;
+          param.voucher_session_type = resp.data.voucher_session_type;
+          param.duration = resp.data.duration;
+          param.banner_image = resp.data.banner_image;
+          param.disable = resp.data.disable;
+          param.end_date = resp.data.end_date;
+          param.image_path = resp.data.image_path;
+          param.redeem_end_date = resp.data.redeem_end_date;
+          param.redeem_start_date = resp.data.redeem_start_date;
+          param.start_date = resp.data.start_date;
+          param.voucher_heading = resp.data.voucher_heading;
+          param.voucher_name = resp.data.voucher_name;
+          param.voucher_sms = resp.data.voucher_sms;
+          param.voucher_type = resp.data.voucher_type;
+          param.voucher_value = resp.data.voucher_value;
 
-            if (resp.data.voucher_session_type === "duration in days") {
-              setvouchersession(true);
-              param.redeem_end_date = "";
-              param.redeem_start_date = "";
-            } else if (val === "datetime") {
-              setvouchersession(false);
-              param.duration = "";
-            }
-
-            setparam({ ...param });
-            setImage({ uri: `${resp.data.image_url + "" + resp.data.image_path}` });
-            setBanner({ uri: `${resp.data.banner_url + "" + resp.data.banner_image}` });
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          if (resp.data.voucher_session_type === "duration in days") {
+            setvouchersession(true);
+            param.redeem_end_date = "";
+            param.redeem_start_date = "";
+          } else if (val === "datetime") {
+            setvouchersession(false);
+            param.duration = "";
           }
 
+          setparam({ ...param });
+          setImage({
+            uri: `${resp.data.image_url + "" + resp.data.image_path}`,
+          });
+          setBanner({
+            uri: `${resp.data.banner_url + "" + resp.data.banner_image}`,
+          });
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
       });
     }
@@ -398,7 +405,6 @@ const VoucherForm = (props) => {
                   image_path: "",
                 });
               }}
-
               onUploadImage={(result) => {
                 setImage({ uri: result.uri });
                 // setvoucheruploads({
@@ -422,7 +428,6 @@ const VoucherForm = (props) => {
                   banner_image: "",
                 });
               }}
-
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
                 // setvoucheruploads({
@@ -475,6 +480,7 @@ const VoucherForm = (props) => {
                           "Content-Type",
                           "multipart/form-data"
                         );
+                        xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
                           const resp = xhr.response;
@@ -520,6 +526,7 @@ const VoucherForm = (props) => {
                           "Content-Type",
                           "multipart/form-data"
                         );
+                        xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
                           const resp = xhr.response;
