@@ -24,10 +24,7 @@ const Wishlist = (props) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -72,15 +69,14 @@ const Wishlist = (props) => {
               }}
               right={() => (
                 <Text style={{ color: "#999", alignSelf: "center" }}>
-                  {moment().format("DD/MM/YYY")}
+                  {/* {moment().format("DD/MM/YYY")} */}
+                  {moment().fromNow(true)}
                 </Text>
               )}
             />
             <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>
               Interested in a {item.category_name} from{" "}
-              <Text style={{ fontWeight: "bold" }}>
-                {item.subcategory_name}
-              </Text>
+              <Text style={{ fontWeight: "bold" }}>{item.subcategory_name}</Text>
             </Text>
           </View>
         )}

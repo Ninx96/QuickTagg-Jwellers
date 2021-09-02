@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import { View, ScrollView, Dimensions, Alert } from "react-native";
 import { Button, Card, DataTable, IconButton, Text, List } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
@@ -10,6 +11,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { postRequest } from "../../Services/RequestServices";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
+import TitleBar from "../../Components/TitleBar";
+import RecentActivity from "./RecentActivity";
+import CustomHeader from "../../Components/CustomHeader";
 
 const Home = (props) => {
   const { userToken, branchId } = props.route.params;
@@ -1045,28 +1049,29 @@ const Home = (props) => {
                     style={[
                       MyStyles.row,
                       {
-                        //justifyContent: "center",
+                        justifyContent: "space-between",
                       },
                     ]}
                   >
-                    <View style={{ flexGrow: 1 }}></View>
                     <Text
                       style={{
                         //textAlign: "center",
                         color: "#FFF",
                         fontSize: 20,
                         marginVertical: 5,
-                        width: "50%",
+                        marginLeft: 30,
                       }}
                     >
                       {item.category_name + "(" + item.product + ")"}
                     </Text>
                     <IconButton
-                      icon="chevron-right"
+                      icon={item.show ? "chevron-down" : "chevron-right"}
                       color="white"
-                      style={{
-                        flex: 1,
-                      }}
+                      style={
+                        {
+                          //flex: 1,
+                        }
+                      }
                       onPress={() => {
                         item.show = !item.show;
                         setcategoryscountlist([...categoryscountlist]);
@@ -1087,11 +1092,11 @@ const Home = (props) => {
                           >
                             <Text
                               style={{
-                                textAlign: "center",
                                 color: "#FFF",
                                 fontSize: 20,
                                 marginVertical: 5,
                                 width: "80%",
+                                marginLeft: 40,
                               }}
                             >
                               {item2.subcategory_name + "      (" + item.product + ")"}
@@ -1521,4 +1526,31 @@ const MissedCallGraphView = ({ visible = false, data }) => {
   return null;
 };
 
-export default Home;
+const HomeStack = (props) => {
+  const Stack = createStackNavigator();
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        initialParams={props.route.params}
+        options={{
+          headerShown: true,
+          header: (props) => <CustomHeader title="QuickTag" {...props} />,
+        }}
+      />
+      <Stack.Screen
+        component={RecentActivity}
+        name="RecentActivity"
+        initialParams={props.route.params}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Recent Activity" />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export default HomeStack;
