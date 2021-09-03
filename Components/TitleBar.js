@@ -23,13 +23,22 @@ const TitleBar = (props) => {
         backgroundColor: MyStyles.primaryColor.backgroundColor,
       }}
     >
-      <IconButton icon="arrow-left" size={25} onPress={() => navigation.goBack()} />
+      <IconButton
+        icon="arrow-left"
+        size={25}
+        onPress={() => navigation.goBack()}
+      />
 
       {show ? (
         <TextInput
           mode="flat"
           theme={{ colors: { primary: "black" } }}
-          style={{ backgroundColor: "rgba(0,0,0,0)", height: 40, width: "60%", marginBottom: 10 }}
+          style={{
+            backgroundColor: "rgba(0,0,0,0)",
+            height: 40,
+            width: "60%",
+            marginBottom: 10,
+          }}
           left={<TextInput.Icon name="magnify" />}
           onChangeText={(text) => {
             navigation.setParams({ search: text });
@@ -51,7 +60,16 @@ const TitleBar = (props) => {
       )}
 
       {!props.disableSearch ? (
-        <IconButton icon={show ? "close" : "magnify"} size={25} onPress={() => setShow(!show)} />
+        <IconButton
+          icon={show ? "close" : "magnify"}
+          size={25}
+          onPress={() => {
+            if (show) {
+              navigation.setParams({ search: "" });
+            }
+            setShow(!show);
+          }}
+        />
       ) : (
         <IconButton size={25} />
       )}
