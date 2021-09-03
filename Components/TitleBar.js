@@ -29,7 +29,7 @@ const TitleBar = (props) => {
         <TextInput
           mode="flat"
           theme={{ colors: { primary: "black" } }}
-          style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
+          style={{ backgroundColor: "rgba(0,0,0,0)", height: 40, width: "60%", marginBottom: 10 }}
           left={<TextInput.Icon name="magnify" />}
           onChangeText={(text) => {
             navigation.setParams({ search: text });

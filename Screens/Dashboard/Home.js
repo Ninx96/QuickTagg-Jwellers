@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import { View, ScrollView, Dimensions, Alert } from "react-native";
-import {
-  Button,
-  Card,
-  DataTable,
-  IconButton,
-  Text,
-  List,
-} from "react-native-paper";
+import { Button, Card, DataTable, IconButton, Text, List } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import MyStyles from "../../Styles/MyStyles";
 import { LineChart, PieChart } from "react-native-chart-kit";
@@ -17,6 +11,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { postRequest } from "../../Services/RequestServices";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
+import TitleBar from "../../Components/TitleBar";
+import RecentActivity from "./RecentActivity";
+import CustomHeader from "../../Components/CustomHeader";
 
 const Home = (props) => {
   const { userToken, branchId } = props.route.params;
@@ -130,8 +127,7 @@ const Home = (props) => {
         figures.total_customers = resp.data[0].total_customers;
         figures.total_customer_visits = resp.data[0].total_customer_visits;
         figures.total_customer_estore = resp.data[0].total_customer_estore;
-        figures.total_customer_exhibition =
-          resp.data[0].total_customer_exhibition;
+        figures.total_customer_exhibition = resp.data[0].total_customer_exhibition;
 
         figures.new_customers = resp.data[0].new_customers;
 
@@ -145,12 +141,9 @@ const Home = (props) => {
         figures.new_customer_estore = resp.data[0].new_customer_estore;
         figures.new_customer_visits = resp.data[0].new_customer_visits;
         figures.new_customer_exhibition = resp.data[0].new_customer_exhibition;
-        figures.total_notVisitCustomer_estore =
-          resp.data[0].total_notVisitCustomer_estore;
-        figures.total_notVisitCustomer_visits =
-          resp.data[0].total_notVisitCustomer_visits;
-        figures.total_notVisitCustomer_exhibition =
-          resp.data[0].total_notVisitCustomer_exhibition;
+        figures.total_notVisitCustomer_estore = resp.data[0].total_notVisitCustomer_estore;
+        figures.total_notVisitCustomer_visits = resp.data[0].total_notVisitCustomer_visits;
+        figures.total_notVisitCustomer_exhibition = resp.data[0].total_notVisitCustomer_exhibition;
 
         figures.total_voucher_active = resp.data[0].total_voucher_active;
         figures.total_voucher_redeem = resp.data[0].total_voucher_redeem;
@@ -166,14 +159,10 @@ const Home = (props) => {
         figures.missedCall_done = resp.data[0].missedCall_done;
 
         figures.total_products_count = resp.data[0].total_products_count;
-        figures.total_products_qty_count =
-          resp.data[0].total_products_qty_count;
+        figures.total_products_qty_count = resp.data[0].total_products_qty_count;
         setfigures({ ...figures });
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -191,10 +180,7 @@ const Home = (props) => {
       if (resp.status == 200) {
         setcategoryscountlist(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -221,10 +207,7 @@ const Home = (props) => {
           chartData1.chartDataExhibition.push(itemObj.exhibitions);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -275,10 +258,7 @@ const Home = (props) => {
           chartData2.chartDataExhibition.push(itemObj.exhibition);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -329,10 +309,7 @@ const Home = (props) => {
           chartData3.chartDataExpired.push(itemObj.expired);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -383,10 +360,7 @@ const Home = (props) => {
           chartData4.chartDataDone.push(itemObj.done);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -436,10 +410,7 @@ const Home = (props) => {
           chartData5.chartDataDone.push(itemObj.done);
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
   };
@@ -617,16 +588,12 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>E-Store</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_customer_estore}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_estore}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Visits</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_customer_visits}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_customer_visits}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
@@ -639,10 +606,7 @@ const Home = (props) => {
           </View>
         </LinearGradient>
 
-        <CustomerGraphView
-          visible={visible.customers_graph}
-          data={customergraphdata}
-        />
+        <CustomerGraphView visible={visible.customers_graph} data={customergraphdata} />
 
         <View style={[MyStyles.row, { paddingHorizontal: 20 }]}>
           <Button
@@ -676,10 +640,7 @@ const Home = (props) => {
             No Res.
           </Button>
         </View>
-        <NewCustomersChartView
-          visible={visible.new_customer_chart}
-          data={newcustomerchartdata}
-        />
+        <NewCustomersChartView visible={visible.new_customer_chart} data={newcustomerchartdata} />
         <NotResposeCustomersChartView
           visible={visible.not_response_chart}
           data={notresponsecustomerchartdata}
@@ -729,9 +690,7 @@ const Home = (props) => {
                   borderColor: "#FFF",
                   borderWidth: 1,
                 }}
-                onPress={() =>
-                  setVisible({ ...visible, cart_graph: !visible.cart_graph })
-                }
+                onPress={() => setVisible({ ...visible, cart_graph: !visible.cart_graph })}
               />
             </View>
             <View
@@ -743,23 +702,17 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Wish List</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_cart_wishlist}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Uploads</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_cart_upload}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Exhibition</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_cart_exhibition}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_exhibition}</Text>
               </View>
             </View>
           </View>
@@ -828,31 +781,22 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Active</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_voucher_active}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_active}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Redeem</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_voucher_redeem}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_redeem}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Expired</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_voucher_expired}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_voucher_expired}</Text>
               </View>
             </View>
           </View>
         </LinearGradient>
-        <VoucherGraphView
-          visible={visible.voucher_graph}
-          data={vouchergraphdata}
-        />
+        <VoucherGraphView visible={visible.voucher_graph} data={vouchergraphdata} />
 
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
@@ -916,31 +860,22 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.vCall_request}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_request}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.vCall_accept}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_accept}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.vCall_done}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.vCall_done}</Text>
               </View>
             </View>
           </View>
         </LinearGradient>
-        <VideoCallGraphView
-          visible={visible.video_call_graph}
-          data={videocallgraphdata}
-        />
+        <VideoCallGraphView visible={visible.video_call_graph} data={videocallgraphdata} />
 
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
@@ -1004,33 +939,208 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Request</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.missedCall_request}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_request}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.missedCall_accept}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_accept}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Done</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.missedCall_done}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.missedCall_done}</Text>
               </View>
             </View>
           </View>
         </LinearGradient>
-        <MissedCallGraphView
-          visible={visible.missed_call_graph}
-          data={missedcallgraphdata}
-        />
+        <MissedCallGraphView visible={visible.missed_call_graph} data={missedcallgraphdata} />
 
-<LinearGradient
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          //colors={["#FF5F50", "#FF9F90"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 5,
+          }}
+        >
+          <View
+            style={[
+              MyStyles.row,
+              {
+                justifyContent: "space-between",
+              },
+            ]}
+          >
+            <Text
+              style={{
+                color: "#FFF",
+                fontSize: 20,
+                marginVertical: 5,
+                marginLeft: 20,
+              }}
+            >
+              Products {"  "}({figures.total_products_count})
+            </Text>
+            <IconButton
+              icon={showProducts ? "chevron-down" : "chevron-right"}
+              color="white"
+              onPress={() => setShowProducts(!showProducts)}
+            />
+          </View>
+          {showProducts
+            ? categoryscountlist.map((item, index) => (
+                <LinearGradient
+                  key={index}
+                  colors={["#FF5F50", "#FF7F70"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    //marginHorizontal: 15,
+                    borderRadius: 10,
+                    padding: 0,
+                    marginVertical: 5,
+                  }}
+                >
+                  <View
+                    style={[
+                      MyStyles.row,
+                      {
+                        justifyContent: "space-between",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        //textAlign: "center",
+                        color: "#FFF",
+                        fontSize: 20,
+                        marginVertical: 5,
+                        marginLeft: 30,
+                      }}
+                    >
+                      {item.category_name + "(" + item.product + ")"}
+                    </Text>
+                    <IconButton
+                      icon={item.show ? "chevron-down" : "chevron-right"}
+                      color="white"
+                      style={
+                        {
+                          //flex: 1,
+                        }
+                      }
+                      onPress={() => {
+                        item.show = !item.show;
+                        setcategoryscountlist([...categoryscountlist]);
+                      }}
+                    />
+                  </View>
+                  <View style={item.show ? null : { display: "none" }}>
+                    {item.innerTable.length > 0
+                      ? item.innerTable.map((item2, index) => (
+                          <View
+                            key={index}
+                            style={[
+                              MyStyles.row,
+                              {
+                                //justifyContent: "center",
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={{
+                                color: "#FFF",
+                                fontSize: 20,
+                                marginVertical: 5,
+                                width: "80%",
+                                marginLeft: 40,
+                              }}
+                            >
+                              {item2.subcategory_name + "      (" + item.product + ")"}
+                            </Text>
+                          </View>
+                        ))
+                      : null}
+                  </View>
+                </LinearGradient>
+              ))
+            : null}
+        </LinearGradient>
+
+
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 5,
+          }}
+        >
+          <View>
+            <View
+              style={[
+                MyStyles.row,
+                {
+                  justifyContent: "center",
+                  borderBottomColor: "#FFF",
+                  borderBottomWidth: 1,
+                  marginHorizontal: 15,
+                },
+              ]}
+            >
+              <View style={{ flexGrow: 1 }}></View>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#FFF",
+                  fontSize: 20,
+                  marginVertical: 5,
+                  width: "50%",
+                }}
+              >
+                Stock
+              </Text>
+              <IconButton
+                icon="trending-up"
+                color="white"
+                style={{
+                  backgroundColor: "#F6356F",
+                  flex: 1,
+                  borderColor: "#FFF",
+                  borderWidth: 1,
+                }}
+                onPress={() => setVisible({ ...visible, stock_graph: !visible.stock_graph })}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: 10,
+              }}
+            >
+              <View style={{ alignItems: "center" }}>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>Transfer</Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_wishlist}</Text>
+              </View>
+
+              <View style={{ alignItems: "center" }}>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_cart_upload}</Text>
+              </View>
+            </View>
+          </View>
+        </LinearGradient>
+
+        <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -1250,31 +1360,16 @@ const Home = (props) => {
                 },
               ]}
             >
-              <View style={{ flexGrow: 1 }}></View>
               <Text
                 style={{
                   textAlign: "center",
                   color: "#FFF",
                   fontSize: 20,
                   marginVertical: 5,
-                  width: "50%",
                 }}
               >
                 SMS
               </Text>
-              <IconButton
-                icon="trending-up"
-                color="white"
-                style={{
-                  backgroundColor: "#F6356F",
-                  flex: 1,
-                  borderColor: "#FFF",
-                  borderWidth: 1,
-                }}
-                onPress={() =>
-                  setVisible({ ...visible, stock_graph: !visible.stock_graph })
-                }
-              />
             </View>
 
             <View
@@ -1286,16 +1381,12 @@ const Home = (props) => {
             >
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Daily</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_sms_count}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.total_sms_count}</Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Total</Text>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.today_sms_count}
-                </Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>{figures.today_sms_count}</Text>
               </View>
             </View>
           </View>
@@ -1593,4 +1684,31 @@ const MissedCallGraphView = ({ visible = false, data }) => {
   return null;
 };
 
-export default Home;
+const HomeStack = (props) => {
+  const Stack = createStackNavigator();
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        initialParams={props.route.params}
+        options={{
+          headerShown: true,
+          header: (props) => <CustomHeader title="QuickTag" {...props} />,
+        }}
+      />
+      <Stack.Screen
+        component={RecentActivity}
+        name="RecentActivity"
+        initialParams={props.route.params}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Recent Activity" />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export default HomeStack;

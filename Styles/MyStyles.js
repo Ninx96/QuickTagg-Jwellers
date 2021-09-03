@@ -65,7 +65,7 @@ const MyStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 8,
+    marginVertical: 5,
   },
   squarefixedRatio: {
     flexDirection: "row",
@@ -85,7 +85,7 @@ const MyStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 8,
-    left:30
+    left: 30,
   },
 });
 
