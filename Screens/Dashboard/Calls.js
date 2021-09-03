@@ -37,16 +37,22 @@ const Calls = (props) => {
         data={griddata}
         initialNumToRender={10}
         renderItem={({ item, index }) => (
-          <List.Section>
-            <List.Accordion
-              title={item.customer_name}
-              description={
-                item.mobile +
-                "         " +
-                item.customer_category +
-                "         " +
-                item.type
+          <View style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}>
+            <List.Item
+              key={item.customer_id}
+              title={
+                <Text
+                  onPress={() => {
+                    props.navigation.navigate("Profile", {
+                      customer_id: item.customer_id,
+                    });
+                  }}
+                >
+                  {item.customer_name}
+                </Text>
               }
+              titleStyle={{ fontWeight: "bold" }}
+              description={item.mobile + "          " + item.customer_category + "          " + item.type}
               left={() => {
                 return (
                   <TouchableRipple
@@ -63,26 +69,20 @@ const Calls = (props) => {
                   </TouchableRipple>
                 );
               }}
-            >
-              <List.Item
-                key={item.customer_id}
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#CCC",
-                  backgroundColor: "#f0f0f0",
-                }}
-                descriptionStyle={{ fontWeight: "bold" }}
-                //description={"" + item.status + "  " + item.platform}
-                description={
-                  item.status == "request"
-                    ? "Requested a " + item.type + " from " + item.platform
-                    : item.status == "accept"
-                    ? "Accept " + item.type + " from " + item.platform
-                    : "Done " + item.type + " from " + item.platform
-                }
-              />
-            </List.Accordion>
-          </List.Section>
+            // right={() => (
+            //   <Text style={{ color: "#999", alignSelf: "center" }}>
+            //     {moment().format("DD/MM/YYY")}
+            //   </Text>
+            // )}
+            />
+            <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>
+              {item.status == "request" ? "Requested a " : item.status == "accept" ? "Accept " : "Done "}
+              {item.type} from{" "}
+              <Text style={{ fontWeight: "bold" }}>
+                {item.platform}
+              </Text>
+            </Text>
+          </View>
         )}
         keyExtractor={(item, index) => index.toString()}
       />

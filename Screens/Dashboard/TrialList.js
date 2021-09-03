@@ -37,44 +37,51 @@ const TrialList = (props) => {
         data={griddata}
         initialNumToRender={10}
         renderItem={({ item, index }) => (
-          <List.Section>
-            <List.Accordion
-              title={item.customer_name}
-              description={item.mobile + "          " + item.customer_category}
-              left={() => {
-                return (
-                  <TouchableRipple
-                    style={MyStyles.squarefixedRatio}
-                    onPress={() => {
-                      props.navigation.navigate("Profile", {
-                        customer_id: item.customer_id,
-                      });
-                    }}
-                  >
-                    <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {item.type == null ? "" : item.type.charAt(0)}
-                    </Text>
-                  </TouchableRipple>
-                );
-              }}
-            >
-              <List.Item
-                key={item.customer_id}
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#CCC",
-                  backgroundColor: "#f0f0f0",
+          <View style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}>
+          <List.Item
+            key={item.customer_id}
+            title={
+              <Text
+                onPress={() => {
+                  props.navigation.navigate("Profile", {
+                    customer_id: item.customer_id,
+                  });
                 }}
-                descriptionStyle={{ fontWeight: "bold" }}
-                description={
-                  "Requested a trial of a " +
-                  item.category_name +
-                  " from " +
-                  item.subcategory_name
-                }
-              />
-            </List.Accordion>
-          </List.Section>
+              >
+                {item.customer_name}
+              </Text>
+            }
+            titleStyle={{ fontWeight: "bold" }}
+            description={item.mobile + "          " + item.customer_category}
+            left={() => {
+              return (
+                <TouchableRipple
+                  style={MyStyles.squarefixedRatio}
+                  onPress={() => {
+                    props.navigation.navigate("Profile", {
+                      customer_id: item.customer_id,
+                    });
+                  }}
+                >
+                  <Text style={{ color: "red", textTransform: "uppercase" }}>
+                    {item.type == null ? "" : item.type.charAt(0)}
+                  </Text>
+                </TouchableRipple>
+              );
+            }}
+            // right={() => (
+            //   <Text style={{ color: "#999", alignSelf: "center" }}>
+            //     {moment().format("DD/MM/YYY")}
+            //   </Text>
+            // )}
+          />
+          <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>
+            Interested a trial of a {item.category_name} from{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              {item.subcategory_name}
+            </Text>
+          </Text>
+        </View>
         )}
         keyExtractor={(item, index) => index.toString()}
       />

@@ -526,14 +526,7 @@ const Home = (props) => {
           <Text style={{ color: "#FFF" }}>Live</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>
-        {/* <LinearGradient colors={['#F6356F', '#FF5F50']}   start={{x: 0, y: 0.5}}
-                end={{x: 1, y: 1}}  locations={[0,0.5,0.6]} style={{
-                    marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                }}> */}
+      <ScrollView>      
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
           start={{ x: 0, y: 0 }}
@@ -609,39 +602,7 @@ const Home = (props) => {
                   {figures.total_customer_exhibition}
                 </Text>
               </View>
-            </View>
-            {/* <DataTable>
-              <DataTable.Row>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>E-Store</Text>
-                </DataTable.Cell>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>Visits</Text>
-                </DataTable.Cell>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>
-                    Exhibition
-                  </Text>
-                </DataTable.Cell>
-              </DataTable.Row>
-              <DataTable.Row>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>
-                    {figures.total_customer_estore}
-                  </Text>
-                </DataTable.Cell>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>
-                    {figures.total_customer_visits}
-                  </Text>
-                </DataTable.Cell>
-                <DataTable.Cell style={{ justifyContent: "center" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20 }}>
-                    {figures.total_customer_exhibition}
-                  </Text>
-                </DataTable.Cell>
-              </DataTable.Row>
-            </DataTable> */}
+            </View>            
           </View>
         </LinearGradient>
 
@@ -652,7 +613,7 @@ const Home = (props) => {
             mode="contained"
             color="#F6356F"
             uppercase={false}
-            style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
+            style={{ borderRadius: 5}}
             onPress={() =>
               setVisible({
                 ...visible,
@@ -667,7 +628,7 @@ const Home = (props) => {
             mode="contained"
             color="#F6356F"
             uppercase={false}
-            style={{ borderRadius: 5, borderColor: "#FFF", borderWidth: 1 }}
+            style={{ borderRadius: 5}}
             onPress={() =>
               setVisible({
                 ...visible,
@@ -1110,6 +1071,7 @@ const Home = (props) => {
             : null}
         </LinearGradient>
 
+
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
           start={{ x: 0, y: 0 }}
@@ -1187,7 +1149,203 @@ const Home = (props) => {
             borderRadius: 10,
             padding: 0,
             marginVertical: 5,
-            marginBottom: 10,
+          }}
+        >
+          <View
+            style={[
+              MyStyles.row,
+              {
+                justifyContent: "center",
+              },
+            ]}
+          >
+            <View style={{ flexGrow: 1 }}></View>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFF",
+                fontSize: 20,
+                marginVertical: 5,
+                width: "50%",
+              }}
+            >
+              Products({figures.total_products_count})
+            </Text>
+            <IconButton
+              icon={showProducts ? "chevron-down" : "chevron-right"}
+              color="white"
+              style={{
+                flex: 1,
+              }}
+              onPress={() => setShowProducts(!showProducts)}
+            />
+          </View>
+        </LinearGradient>
+
+        {showProducts
+          ? categoryscountlist.map((item, index) => (
+              <LinearGradient
+                key={index}
+                colors={["#F6356F", "#FF5F50"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  marginHorizontal: 15,
+                  borderRadius: 10,
+                  padding: 0,
+                  marginVertical: 5,
+                }}
+              >
+                <View
+                  style={[
+                    MyStyles.row,
+                    {
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <View style={{ flexGrow: 1 }}></View>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#FFF",
+                      fontSize: 20,
+                      marginVertical: 5,
+                      width: "50%",
+                    }}
+                  >
+                    {item.category_name + "(" + item.product + ")"}
+                  </Text>
+                  <IconButton
+                    icon="chevron-right"
+                    color="white"
+                    style={{
+                      flex: 1,
+                    }}
+                    onPress={() => {
+                      item.show = !item.show;
+                      setcategoryscountlist([...categoryscountlist]);
+                    }}
+                  />
+                </View>
+                <View style={item.show ? null : { display: "none" }}>
+                  {item.innerTable.length > 0
+                    ? item.innerTable.map((item2, index) => (
+                        <View
+                          key={index}
+                          style={[
+                            MyStyles.row,
+                            {
+                              justifyContent: "center",
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#FFF",
+                              fontSize: 20,
+                              marginVertical: 5,
+                              width: "80%",
+                            }}
+                          >
+                            {item2.subcategory_name +
+                              "      (" +
+                              item.product +
+                              ")"}
+                          </Text>
+                        </View>
+                      ))
+                    : null}
+                </View>
+              </LinearGradient>
+            ))
+          : null}
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 5,
+          }}
+        >
+          <View>
+            <View
+              style={[
+                MyStyles.row,
+                {
+                  justifyContent: "center",
+                  borderBottomColor: "#FFF",
+                  borderBottomWidth: 1,
+                  marginHorizontal: 15,
+                },
+              ]}
+            >
+              <View style={{ flexGrow: 1 }}></View>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#FFF",
+                  fontSize: 20,
+                  marginVertical: 5,
+                  width: "50%",
+                }}
+              >
+                Stock
+              </Text>
+              <IconButton
+                icon="trending-up"
+                color="white"
+                style={{
+                  backgroundColor: "#F6356F",
+                  flex: 1,
+                  borderColor: "#FFF",
+                  borderWidth: 1,
+                }}
+                onPress={() =>
+                  setVisible({ ...visible, stock_graph: !visible.stock_graph })
+                }
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: 10,
+              }}
+            >
+              <View style={{ alignItems: "center" }}>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>Transfer</Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>
+                  {figures.total_cart_wishlist}
+                </Text>
+              </View>
+
+              <View style={{ alignItems: "center" }}>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>
+                  {figures.total_cart_upload}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </LinearGradient>
+
+       
+
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 5,
           }}
         >
           <View>

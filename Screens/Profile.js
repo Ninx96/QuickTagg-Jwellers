@@ -482,7 +482,7 @@ const VideoCallRequest = (props) => {
                       </Button> : null}
                   </View>
                   <View>
-                    <Text style={{ color: "#888" }}>View All Remarks</Text>
+
                     {resp.remarks.length > 0
                       ? resp.remarks.map((item) => {
                         return (<Text style={{ color: "#888" }}>
@@ -490,6 +490,7 @@ const VideoCallRequest = (props) => {
                         </Text>);
                       })
                       : null}
+                    <Text style={{ color: "#888" }}>View All Remarks</Text>
                   </View>
                 </View>
               </Card>
