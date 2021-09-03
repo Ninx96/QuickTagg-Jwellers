@@ -12,10 +12,10 @@ const CustomerList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
-  
+
   React.useEffect(() => {
-    postRequest("masters/customer/browse", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
+    postRequest("masters/customer/browse_app", { "search": search == undefined ? '' : search }, userToken).then((resp) => {
+      if (resp.status == 200) {      
         setgriddata(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -24,11 +24,20 @@ const CustomerList = (props) => {
     setLoading(false);
   }, []);
 
-
+  if (search !== undefined) {
+    postRequest("masters/customer/browse_app", { "search": search == undefined ? '' : search }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        console.log(resp.data);
+        setgriddata(resp.data);
+      } else {
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+      }
+    });
+  }
 
   return (
     <View style={MyStyles.container}>
-      <ScrollView>      
+      <ScrollView>
         <FlatList
           data={griddata}
           initialNumToRender={10}

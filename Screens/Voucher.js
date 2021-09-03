@@ -448,13 +448,10 @@ const VoucherForm = (props) => {
               uppercase={false}
               onPress={() => {
                 setLoading(true);
-                postRequest(
-                  "masters/customer/voucher/insert",
-                  param,
-                  userToken
-                ).then((resp) => {
+                postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
+                     
                       if (Banner.uri) {
                         const form_data = new FormData();
                         form_data.append("files", {
@@ -464,17 +461,9 @@ const VoucherForm = (props) => {
                         });
 
                         var xhr = new XMLHttpRequest();
-                        xhr.open(
-                          "POST",
-                          serviceUrl +
-                          "masters/customer/UploadvoucherBannerMob",
-                          true
-                        );
+                        xhr.open("POST", serviceUrl + "masters/customer/UploadvoucherBannerMob", true);
                         xhr.setRequestHeader("Accept", "application/json");
-                        xhr.setRequestHeader(
-                          "Content-Type",
-                          "multipart/form-data"
-                        );
+                        xhr.setRequestHeader("Content-Type", "multipart/form-data");
                         xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
@@ -511,16 +500,9 @@ const VoucherForm = (props) => {
                         });
 
                         var xhr = new XMLHttpRequest();
-                        xhr.open(
-                          "POST",
-                          serviceUrl + "masters/customer/UploadvoucherMob",
-                          true
-                        );
+                        xhr.open("POST", serviceUrl + "masters/customer/UploadvoucherMob", true);
                         xhr.setRequestHeader("Accept", "application/json");
-                        xhr.setRequestHeader(
-                          "Content-Type",
-                          "multipart/form-data"
-                        );
+                        xhr.setRequestHeader("Content-Type", "multipart/form-data");
                         xhr.setRequestHeader("auth-token", userToken);
 
                         xhr.onload = function (e) {
