@@ -111,6 +111,7 @@ const ExhibitionCatalogList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("ExhibitionCatalog", {
                         tran_id: item.tran_id,
@@ -150,6 +151,7 @@ const ExhibitionCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() => props.navigation.navigate("ExhibitionCatalog", { tran_id: 0 })}
       />
     </View>
@@ -202,7 +204,11 @@ const ExhibitionCatalog = (props) => {
       );
     }
 
-    postRequest("transactions/customer/exhibitionsession/preview-session", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/exhibitionsession/preview-session",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
@@ -214,20 +220,25 @@ const ExhibitionCatalog = (props) => {
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
           setparam({ ...param });
 
-          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-            (items) => {
-              if (items.status == 200) {
-                let listData = [];
-                listData = items.data
-                listData.map((item, index) => {
-                  listData[index].selected = resp.data[0].customers.findIndex(e => e.customer_id === item.customer_id) > -1 ? true : false;
-                });
-                setCustomerList(listData);
-              } else {
-                Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-              }
+          postRequest(
+            "transactions/customer/customerListMob",
+            { branch_id: branchId },
+            userToken
+          ).then((items) => {
+            if (items.status == 200) {
+              let listData = [];
+              listData = items.data;
+              listData.map((item, index) => {
+                listData[index].selected =
+                  resp.data[0].customers.findIndex((e) => e.customer_id === item.customer_id) > -1
+                    ? true
+                    : false;
+              });
+              setCustomerList(listData);
+            } else {
+              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
             }
-          );
+          });
           selectedProducts.push({
             data: resp.data[0].products,
           });

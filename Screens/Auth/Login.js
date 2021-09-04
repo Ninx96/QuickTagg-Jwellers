@@ -26,7 +26,7 @@ const Login = () => {
 
   return (
     <ImageBackground style={{ flex: 1 }} source={require("../../assets/login-bg.jpg")}>
-      <SafeAreaView style={[MyStyles.container, { paddingTop: "40%" }]}>
+      <SafeAreaView style={[MyStyles.container, { paddingTop: "40%", backgroundColor: "" }]}>
         <View style={{ alignContent: "center" }}>
           <Image
             source={require("../../assets/logo.png")}

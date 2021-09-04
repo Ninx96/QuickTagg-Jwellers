@@ -22,7 +22,6 @@ import moment from "moment";
 import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
 
-
 const CustomerCatalogList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -110,6 +109,7 @@ const CustomerCatalogList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("CustomerCatalog", {
                         tran_id: item.tran_id,
@@ -118,11 +118,12 @@ const CustomerCatalogList = (props) => {
                   />
                   <IconButton
                     icon="delete"
+                    color="#AAA"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -149,6 +150,7 @@ const CustomerCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() => props.navigation.navigate("CustomerCatalog", { tran_id: 0 })}
       />
     </View>
@@ -178,8 +180,12 @@ const CustomerCatalog = (props) => {
   const [subcategorylist, setsubcategorylist] = useState([]);
 
   React.useEffect(() => {
-    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
-      if (resp.status == 200) {      
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -197,44 +203,51 @@ const CustomerCatalog = (props) => {
       );
     }
 
-    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then((resp) => {
-      if (resp.status == 200) {
-        if (tran_id == 0) {
-          param.entry_no = resp.data[0].entry_no;
-          setparam({ ...param });
-        } else {
-          console.log(resp.data[0]);
-          param.tran_id = resp.data[0].tran_id;
-          param.title = resp.data[0].title;
-          param.entry_no = resp.data[0].entry_no;
-          param.remarks = resp.data[0].remarks;
-          param.subcategory_id = resp.data[0].products[0].subcategory_id;
-          param.customer_session_products = resp.data[0].products;
-          setparam({ ...param });
+    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          if (tran_id == 0) {
+            param.entry_no = resp.data[0].entry_no;
+            setparam({ ...param });
+          } else {
+            console.log(resp.data[0]);
+            param.tran_id = resp.data[0].tran_id;
+            param.title = resp.data[0].title;
+            param.entry_no = resp.data[0].entry_no;
+            param.remarks = resp.data[0].remarks;
+            param.subcategory_id = resp.data[0].products[0].subcategory_id;
+            param.customer_session_products = resp.data[0].products;
+            setparam({ ...param });
 
-          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-            (items) => {
+            postRequest(
+              "transactions/customer/customerListMob",
+              { branch_id: branchId },
+              userToken
+            ).then((items) => {
               if (items.status == 200) {
                 let listData = [];
-                listData = items.data
+                listData = items.data;
                 listData.map((item, index) => {
-                  listData[index].selected = resp.data[0].customers.findIndex(e => e.customer_id === item.customer_id) > -1 ? true : false;
+                  listData[index].selected =
+                    resp.data[0].customers.findIndex((e) => e.customer_id === item.customer_id) > -1
+                      ? true
+                      : false;
                 });
                 setCustomerList(listData);
               } else {
                 Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
               }
-            }
-          );
-          selectedProducts.push({
-            data: resp.data[0].products,
-          });
-          setSelectedProducts([...selectedProducts]);
+            });
+            selectedProducts.push({
+              data: resp.data[0].products,
+            });
+            setSelectedProducts([...selectedProducts]);
+          }
+        } else {
+          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
         }
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    });
+    );
     setLoading(false);
   }, []);
 

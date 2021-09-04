@@ -88,10 +88,7 @@ export default function App() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(
-    loginReducer,
-    initialLoginState
-  );
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(
     () => ({

@@ -58,6 +58,7 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
             data={listData}
             renderItem={({ item, index }) => (
               <List.Item
+                style={{ borderBottomColor: "#aaa", borderBottomWidth: 0.5 }}
                 onPress={
                   multiple
                     ? () => {
@@ -99,6 +100,7 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
         <FAB
           style={{ position: "absolute", bottom: 20, right: 20 }}
           icon="check"
+          color="#000"
           onPress={
             multiple
               ? () => {

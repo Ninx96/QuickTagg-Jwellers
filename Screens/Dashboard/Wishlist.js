@@ -67,7 +67,6 @@ const Wishlist = (props) => {
                   </TouchableRipple>
                 );
               }}
-
               right={() => (
                 <Text style={{ color: "#999", alignSelf: "center" }}>
                   {/* {moment().format("DD/MM/YYY")} */}

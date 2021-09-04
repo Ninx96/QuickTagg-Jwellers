@@ -49,12 +49,27 @@ const Greetings = (props) => {
             )}
             right={() => (
               <View style={MyStyles.row}>
-                {item.doa == "true" ? (
-                  <Icon name="alpha-a" size={40} style={{ marginHorizontal: 2, color: "gold" }} />
-                ) : null}
-                {item.dob == "true" ? (
-                  <Icon name="alpha-b" size={40} style={{ marginHorizontal: 2, color: "gold" }} />
-                ) : null}
+                {item.doa != "true" ? (
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 25,
+                      color: "gold",
+                      marginHorizontal: 10,
+                    }}
+                  >
+                    A
+                  </Text>
+                ) : // <Icon name="alpha-a" size={40} style={{ marginHorizontal: 2, color: "gold" }} />
+                null}
+                {item.dob != "true" ? (
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 25, color: "red", marginHorizontal: 10 }}
+                  >
+                    B
+                  </Text>
+                ) : // <Icon name="alpha-b" size={40} style={{ marginHorizontal: 2, color: "red" }} />
+                null}
                 <Icon
                   name="whatsapp"
                   size={30}
