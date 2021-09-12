@@ -21,17 +21,19 @@ import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
+import { LinearGradient } from "expo-linear-gradient";
+
 const TryAndBuyCatalogList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/trialsession/browse", {}, userToken).then((resp) => {
+    postRequest("transactions/customer/trialsession/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -65,17 +67,18 @@ const TryAndBuyCatalogList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
               <Text
                 style={{
@@ -86,11 +89,13 @@ const TryAndBuyCatalogList = (props) => {
               >
                 {item.title}
               </Text>
-            </View>
+            </LinearGradient>
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    {item.entry_no} {"                "} {item.date}
+                  </Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.no_of_customer} {"Customers"}
                   </Text>
@@ -113,6 +118,7 @@ const TryAndBuyCatalogList = (props) => {
                         tran_id: item.tran_id,
                       })
                     }
+                    color="#aaa"
                   />
                   {/* <IconButton
                     icon="delete"
@@ -164,7 +170,7 @@ const TryAndBuyCatalog = (props) => {
     entry_no: "",
     remarks: "",
     product_ids: [],
-    session_customers: [],
+    customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -182,7 +188,11 @@ const TryAndBuyCatalog = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
-        setsubcategorylist(resp.data);
+        var _subcategoryList = [];
+        resp.data.map((item, index) => {
+          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+        });
+        setsubcategorylist(_subcategoryList);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
@@ -208,8 +218,7 @@ const TryAndBuyCatalog = (props) => {
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
-          setparam({ ...param });
-          //console.log(resp.data[0].customers);
+          setparam({ ...param });         
           postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
             (items) => {
               if (items.status == 200) {
@@ -225,10 +234,16 @@ const TryAndBuyCatalog = (props) => {
             }
           );
 
-          selectedProducts.push({
-            data: resp.data[0].products,
-          });
-          setSelectedProducts([...selectedProducts]);
+          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
+            if (!acc[item.text]) acc[item.text] = {
+              subcategory_name: item.text,
+              data: []
+            };
+            acc[item.text].data.push(item);
+            return acc;
+          }, {}))
+        
+          setSelectedProducts(tempData);  
         }
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -241,8 +256,8 @@ const TryAndBuyCatalog = (props) => {
   const ProductList = () => {
     let data = {
       subcategory_id: param.subcategory_id,
-      min_amount: param.min_amount,
-      max_amount: param.max_amount,
+      min_amount: param.min_amount == "" ? "0" : param.min_amount,
+      max_amount: param.max_amount == "" ? "0" : param.max_amount,
     };
     postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
       if (resp.status == 200) {
@@ -266,7 +281,8 @@ const TryAndBuyCatalog = (props) => {
               ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                setparam({ ...param, subcategory_id: val });
+                param.subcategory_id= val;
+                setparam({ ...param});
                 ProductList();
               }}
               placeholder="SubCategory"
@@ -312,7 +328,9 @@ const TryAndBuyCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
+              <Subheading style={{ width: "100%", color: "#000" }}>                
+                  {item.subcategory_name}
+                </Subheading>
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -368,19 +386,21 @@ const TryAndBuyCatalog = (props) => {
         visible={product}
         data={productList}
         onDone={(items) => {
-          selectedProducts.push({
-            subCategory: param.subCategory,
-            data: items,
-          });
-          setSelectedProducts([...selectedProducts]);
-          items.map((item, index) => {
-            param.product_ids.push({
-              subcategory_id: item.subcategory_id,
-              category_id: item.category_id,
-              product_id: item.product_id,
-            });
-            setparam({ ...param, product_ids: param.product_ids });
-          });
+          items.map((item, i) => {
+            param.product_ids.push(item);
+          });         
+          setparam({ ...param, product_ids: param.product_ids });
+         
+          let tempData = Object.values(param.product_ids.reduce((acc, item) => {
+            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
+              subcategory_name: item.subcategory_name,
+              data: []
+            };
+            acc[item.subcategory_name].data.push(item);
+            return acc;
+          }, {}))
+        
+          setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
       />
@@ -391,15 +411,15 @@ const TryAndBuyCatalog = (props) => {
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
-            setparam({ ...param, session_customers: [] });
+            setparam({ ...param, customers: [] });
           } else {
             items.map((item, index) => {
-              param.session_customers.push({
+              param.customers.push({
                 customer_id: item.customer_id,
                 mobile: item.mobile,
                 customer_name: item.full_name,
               });
-              setparam({ ...param, session_customers: param.session_customers });
+              setparam({ ...param, customers: param.customers });
             });
           }
         }}
@@ -459,6 +479,7 @@ const TryAndBuyCatalog = (props) => {
                       setLoading(true);
                       postRequest("transactions/customer/trial/insert", param, userToken).then(
                         (resp) => {
+                          console.log(resp);
                           if (resp.status == 200) {
                             props.navigation.navigate("TryAndBuyCatalogList");
                             setLoading(false);

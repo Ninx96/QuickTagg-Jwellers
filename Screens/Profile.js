@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { Image, ImageBackground, ScrollView, View, TouchableHighlight } from "react-native";
-import { Button, Text, List, FAB, TextInput, Avatar, Card, Modal, Portal, } from "react-native-paper";
+import { Image, ImageBackground, ScrollView, View, TouchableHighlight, Alert } from "react-native";
+import { Button, Text, List, FAB, TextInput, Avatar, Card, Modal, Portal, TouchableRipple, } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
@@ -13,7 +14,9 @@ import MaleAvatar from "../assets/Animations/42842-male-avatar.json";
 import FemaleAvatar from "../assets/Animations/50019-female-avatar.json";
 import DropDown from "../Components/DropDown";
 import DatePicker from "../Components/DatePicker";
-
+import { LinearGradient } from "expo-linear-gradient";
+import BadgeRibbon from "../Components/BadgeRibbon";
+import * as Linking from "expo-linking";
 const ProfileList = (props) => {
   return (
     <View style={MyStyles.container}>
@@ -46,7 +49,7 @@ const ProfileList = (props) => {
 
 const Profile = (props) => {
   const Tab = createMaterialTopTabNavigator();
-  const { userToken, customer_id } = props.route.params;
+  const { userToken, customer_id, customer_mobile } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
     customer_id: "",
@@ -149,7 +152,17 @@ const Profile = (props) => {
           {param.full_name} {(true ? "♂️" : "♀️") + "      "}
           <Text style={{ color: "green" }}>{param.category_name}</Text>
         </Text>
-        <Text>{param.mobile}</Text>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableRipple onPress={() => Linking.openURL("tel:9874561230")}><Text>{param.mobile}</Text></TouchableRipple>
+          <Icon2
+            name="whatsapp"
+            size={25}
+            style={{ color: "green", marginHorizontal:5, textAlign:"right" }}
+            onPress={() => {
+              Linking.openURL("whatsapp://send?text=&phone=91" + param.mobile);
+            }}
+          />
+        </View>
         <Text>DOB:{param.dob} </Text>
         <Text>DOA:{param.doa}</Text>
         <Text>{param.area_name}</Text>
@@ -209,7 +222,7 @@ const Profile = (props) => {
           options={{
             tabBarIcon: () => <Icon name="video" size={20} />,
           }}
-          initialParams={{ userToken: userToken, customer_id: customer_id }}
+          initialParams={{ userToken: userToken, customer_id: customer_id, customer_mobile: customer_mobile }}
         />
         <Tab.Screen
           name="CallRequest"
@@ -258,13 +271,39 @@ const Wishlist = (props) => {
                 //key={index}
                 data={resp.products}
                 renderItem={({ item }) => (
-                  <TouchableHighlight onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}>
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate("ProductsPreview", {
+                        product_id: item.product_id,
+                      })
+                    }
+                  >
+                    {item.exhibition ? <BadgeRibbon text="E" position="left" color="red" /> : null}
+                    {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
                     <Image
-                      key={item.product_id}
                       source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
+                      style={{
+                        width: 120,
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      }}
                     />
-                  </TouchableHighlight>
+
+                    <View style={{ padding: 5, paddingVertical: 10 }}>
+                      <Text numberOfLines={2} style={{ color: "#333" }}>
+                        {item.name}
+                      </Text>
+                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                    </View>
+                  </Card>
                 )}
                 numColumns={3}
                 keyExtractor={(item, index) => index.toString()}
@@ -311,13 +350,37 @@ const Uploaded = (props) => {
                 key={index}
                 data={resp.products}
                 renderItem={({ item }) => (
-                  <TouchableHighlight onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}>
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                  // onPress={() =>
+                  //   props.navigation.navigate("ProductsPreview", {
+                  //     product_id: item.product_id,
+                  //   })
+                  // }
+                  >
                     <Image
-                      key={item.product_id}
                       source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
+                      style={{
+                        width: 120,
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      }}
                     />
-                  </TouchableHighlight>
+
+                    {/*<View style={{ padding: 5, paddingVertical: 10 }}>
+                      <Text numberOfLines={2} style={{ color: "#333" }}>
+                        {item.name}
+                      </Text>
+                      <Text style={{ color: "#333" }}>{item.product_code}</Text>
+                    </View> */}
+                  </Card>
                 )}
                 numColumns={3}
                 keyExtractor={(item, index) => index.toString()}
@@ -363,14 +426,39 @@ const Exhibition = (props) => {
                 key={index}
                 data={resp.products}
                 renderItem={({ item }) => (
-                  <TouchableHighlight onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}>
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate("ProductsPreview", {
+                        product_id: item.product_id,
+                      })
+                    }
+                  >
+                    {item.exhibition ? <BadgeRibbon text="E" position="left" color="red" /> : null}
+                    {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
                     <Image
-                      key={item.product_id}
                       source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{ width: 120, height: 120, margin: 2 }}
-                      onPress={() => props.navigation.navigate("ProductsPreview", { product_id: item.product_id })}
+                      style={{
+                        width: 120,
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      }}
                     />
-                  </TouchableHighlight>
+
+                    <View style={{ padding: 5, paddingVertical: 10 }}>
+                      <Text numberOfLines={2} style={{ color: "#333" }}>
+                        {item.name}
+                      </Text>
+                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                    </View>
+                  </Card>
                 )}
                 numColumns={3}
                 keyExtractor={(item, index) => index.toString()}
@@ -384,14 +472,14 @@ const Exhibition = (props) => {
 };
 
 const VideoCallRequest = (props) => {
-  const { userToken, customer_id } = props.route.params;
+  const { userToken, customer_id, customer_mobile } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [vcallslist, setvcallslist] = useState([]);
   const [visible, setVisible] = React.useState(false);
   const [visible2, setVisible2] = React.useState(false);
   const [requestParam, setrequestParam] = useState({
     tran_id: "",
-    status: "",
+    status: "accept",
     accept_date: "",
     accept_time: "",
     remarks: ""
@@ -400,7 +488,7 @@ const VideoCallRequest = (props) => {
     tran_id: "0",
     name: "request",
     visit_type: "video call",
-    mobile: "9654933343",
+    mobile: customer_mobile,
     customer_id: customer_id
   });
   React.useEffect(() => {
@@ -437,81 +525,118 @@ const VideoCallRequest = (props) => {
             )}
           />
         </Card>
-        {vcallslist.length > 0
-          ? vcallslist.map((resp, index) => {
-            return (
-              <Card
-                style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
-                key={index}
-              >
-                <Card.Title
-                  title={resp.status}
-                  right={() => (
-                    <View>
-                      <Text style={{ color: "green" }}>{resp.date}</Text>
-                      <Button mode="contained" compact uppercase={false} onPress={() => { setrequestParam({ ...requestParam, tran_id: resp.tran_id }); setVisible(true) }}>
+        <FlatList
+          data={vcallslist}
+          initialNumToRender={10}
+          renderItem={({ item, index }) => (
+            <Card style={{ borderBottomColor: "black", borderBottomWidth: 1 }} key={index}>
+              <Card.Title
+                title={item.status}
+                right={() => (
+                  <View>
+                    <Text style={{ color: "green" }}>{item.date}</Text>
+                    {item.status == "request" ?
+                      <Button mode="contained" compact uppercase={false} onPress={() => { setrequestParam({ ...requestParam, tran_id: item.tran_id, status: "accept" }); setVisible(true) }}>
                         Accept
                       </Button>
-                    </View>
-                  )}
-                />
-                <View>
-                  <View
-                    style={[MyStyles.row, { justifyContent: "flex-start" }]}
-                  >
-                    {resp.accept_date !== null
-                      ? <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_date}
-                      </Button> : null}
-
-                    {resp.accept_time !== null
-                      ? <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_time}
-                      </Button> : null}
-                  </View>
-                  <View>
-
-                    {resp.remarks.length > 0
-                      ? resp.remarks.map((item) => {
-                        return (<Text style={{ color: "#888" }}>
-                          {item.remarks}
-                        </Text>);
-                      })
                       : null}
-                    <Text style={{ color: "#888" }}>View All Remarks</Text>
-                  </View>
-                </View>
-              </Card>
-            );
-          })
-          : null}
+                    {item.status == "accept" ?
+                      <>
+                        <Button mode="contained" compact uppercase={false} onPress={() => {
+                          Alert.alert("Alert", "You want to delete?", [
+                            {
+                              text: "No",
+                              onPress: () => { },
+                              style: "cancel",
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                setLoading(true);
+                                let done_param = {
+                                  tran_id: item.tran_id,
+                                  status: "done",
+                                  accept_date: moment().format("YYYY-MM-DD"),
+                                  accept_time: moment().format("HH:mm"),
+                                  remarks: ''
+                                }
+                                postRequest("transactions/customer/vcall/update", done_param, userToken).then((resp) => {
+                                  if (resp.status == 200) {
+                                    Refresh();
+                                    setLoading(false);
+                                  }
+                                });
+                              },
+                            },
+                          ]);
 
-      </ScrollView>
+                        }}>
+                          Done
+                        </Button>
+                        <Button mode="contained" compact uppercase={false} onPress={() => {
+                          requestParam.tran_id = item.tran_id;
+                          requestParam.status = "accept";
+                          requestParam.accept_date = item.accept_date;
+                          requestParam.accept_time = item.accept_time;
+                          setrequestParam({ ...requestParam });
+                          setVisible(true);
+                          console.log(requestParam);
+                        }}>
+                          Edit
+                        </Button>
+                      </>
+                      : null}
+
+                  </View>
+                )}
+              />
+              <View>
+                <View
+                  style={[MyStyles.row, { justifyContent: "flex-start" }]}
+                >
+                  {item.accept_date !== null
+                    ? <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {moment(item.accept_date).format("DD-MM-YYYY")}
+                    </Button> : null}
+
+                  {item.accept_time !== null
+                    ? <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {item.accept_time}
+                    </Button> : null}
+                </View>
+                <View>
+
+                  {item.remarks.length > 0
+                    ? item.remarks.map((item) => {
+                      return (<Text style={{ color: "#888" }}>
+                        {item.remarks}
+                      </Text>);
+                    })
+                    : null}
+                  <Text style={{ color: "#888" }}>View All Remarks</Text>
+                </View>
+              </View>
+            </Card >
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+
+      </ScrollView >
       <Portal>
         <Modal visible={visible} contentContainerStyle={{ backgroundColor: 'white', padding: 20, margin: 10 }}>
           <View>
-            <DropDown
-              data={[{ 'label': 'request', 'value': 'request' }, { 'label': 'accept', 'value': 'accept' }, { 'label': 'done', 'value': 'done' }]}
-              ext_val="value"
-              ext_lbl="label"
-              value={requestParam.status}
-              onChange={(val) => {
-                setrequestParam({ ...requestParam, status: val });
-              }}
-              placeholder="Status"
-            />
             <View style={MyStyles.row}>
               <DatePicker
                 label="Accept Date"
@@ -539,6 +664,8 @@ const VideoCallRequest = (props) => {
               onChangeText={(text) => {
                 setrequestParam({ ...requestParam, remarks: text });
               }}
+              multiline
+              numberOfLines={4}
             />
             <View style={MyStyles.row}>
               <Button mode="contained" compact uppercase={false} style={{ backgroundColor: "red", width: "48%" }}
@@ -576,6 +703,7 @@ const VideoCallRequest = (props) => {
               onChangeText={(text) => {
                 setnewrequestParam({ ...newrequestParam, mobile: text });
               }}
+              disabled
             />
             <View style={MyStyles.row}>
               <Button mode="contained" compact uppercase={false} style={{ backgroundColor: "red", width: "48%" }} onPress={() => { setVisible2(false) }}>
@@ -598,13 +726,13 @@ const VideoCallRequest = (props) => {
           </View>
         </Modal>
       </Portal>
-    </View>
+    </View >
   );
 };
 const CallRequest = (props) => {
   const { userToken, customer_id } = props.route.params;
   const [loading, setLoading] = useState(true);
-  const [vcallslist, setvcallslist] = useState([]);
+  const [misscallslist, setmisscallslist] = useState([]);
   const [visible, setVisible] = React.useState(false);
   const [requestParam, setrequestParam] = useState({
     tran_id: "",
@@ -622,7 +750,7 @@ const CallRequest = (props) => {
       if (resp.status == 200) {
         let param = [];
         param = resp.data[0].mcalls;
-        setvcallslist(param);
+        setmisscallslist(param);
       } else {
         Alert.alert(
           "Error !",
@@ -634,79 +762,118 @@ const CallRequest = (props) => {
   return (
     <View style={MyStyles.container}>
       <ScrollView>
-        {vcallslist.length > 0
-          ? vcallslist.map((resp, index) => {
-            return (
-              <Card
-                style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
-                key={index}
-              >
-                <Card.Title
-                  title={resp.status}
-                  right={() => (
-                    <View>
-                      <Text style={{ color: "green" }}>{resp.date}</Text>
-                      <Button mode="contained" compact uppercase={false} onPress={() => { setrequestParam({ ...requestParam, tran_id: resp.tran_id }); setVisible(true) }}>
+        <FlatList
+          data={misscallslist}
+          initialNumToRender={10}
+          renderItem={({ item, index }) => (
+            <Card
+              style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
+              key={index}
+            >
+              <Card.Title
+                title={item.status}
+                right={() => (
+                  <View>
+                    <Text style={{ color: "green" }}>{item.date}</Text>
+                    {item.status == "request" ?
+                      <Button mode="contained" compact uppercase={false} onPress={() => { setrequestParam({ ...requestParam, tran_id: item.tran_id, status: "accept" }); setVisible(true) }}>
                         Accept
                       </Button>
-                    </View>
-                  )}
-                />
-                <View>
-                  <View
-                    style={[MyStyles.row, { justifyContent: "flex-start" }]}
-                  >
-                    {resp.accept_date !== null
-                      ? <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_date}
-                      </Button> : null}
+                      : null}
+                    {item.status == "accept" ?
+                      <>
+                        <Button mode="contained" compact uppercase={false} onPress={() => {
+                          Alert.alert("Alert", "You want to Done Call?", [
+                            {
+                              text: "No",
+                              onPress: () => { },
+                              style: "cancel",
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                setLoading(true);
+                                let done_param = {
+                                  tran_id: item.tran_id,
+                                  status: "done",
+                                  accept_date: moment().format("YYYY-MM-DD"),
+                                  accept_time: moment().format("HH:mm"),
+                                  remarks: ''
+                                }
+                                postRequest("transactions/customer/missCall/update", done_param, userToken).then((resp) => {
+                                  if (resp.status == 200) {
+                                    Refresh();
+                                    setLoading(false);
+                                  }
+                                });
+                              },
+                            },
+                          ]);
 
-                    {resp.accept_time !== null
-                      ? <Button
-                        mode="outlined"
-                        color="black"
-                        compact
-                        uppercase={false}
-                        style={{ marginHorizontal: 5 }}
-                      >
-                        {resp.accept_time}
-                      </Button> : null}
-                  </View>
-                  <View>
-                    <Text style={{ color: "#888" }}>View All Remarks</Text>
-                    {resp.remarks.length > 0
-                      ? resp.remarks.map((item) => {
-                        return (<Text style={{ color: "#888" }}>
-                          {item.remarks}
-                        </Text>);
-                      })
+                        }}>
+                          Done
+                        </Button>
+                        <Button mode="contained" compact uppercase={false} onPress={() => {
+                          requestParam.tran_id = item.tran_id;
+                          requestParam.status = "accept";
+                          requestParam.accept_date = item.accept_date;
+                          requestParam.accept_time = item.accept_time;
+                          setrequestParam({ ...requestParam });
+                          setVisible(true);
+                          console.log(requestParam);
+                        }}>
+                          Edit
+                        </Button>
+                      </>
                       : null}
                   </View>
+                )}
+              />
+              <View>
+                <View
+                  style={[MyStyles.row, { justifyContent: "flex-start" }]}
+                >
+                  {item.accept_date !== null
+                    ? <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {moment(item.accept_date).format("DD-MM-YYYY")}
+                    </Button> : null}
+
+                  {item.accept_time !== null
+                    ? <Button
+                      mode="outlined"
+                      color="black"
+                      compact
+                      uppercase={false}
+                      style={{ marginHorizontal: 5 }}
+                    >
+                      {item.accept_time}
+                    </Button> : null}
                 </View>
-              </Card>
-            );
-          })
-          : null}
+                <View>
+                  {item.remarks.length > 0
+                    ? item.remarks.map((item) => {
+                      return (<Text style={{ color: "#888" }}>
+                        {item.remark}
+                      </Text>);
+                    })
+                    : null}
+                  <Text style={{ color: "#888" }}>View All Remarks</Text>
+                </View>
+              </View>
+            </Card>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </ScrollView>
       <Portal>
         <Modal visible={visible} contentContainerStyle={{ backgroundColor: 'white', padding: 20, margin: 10 }}>
           <View>
-            <DropDown
-              data={[{ 'label': 'request', 'value': 'request' }, { 'label': 'accept', 'value': 'accept' }, { 'label': 'done', 'value': 'done' }]}
-              ext_val="value"
-              ext_lbl="label"
-              value={requestParam.status}
-              onChange={(val) => {
-                setrequestParam({ ...requestParam, status: val });
-              }}
-              placeholder="Status"
-            />
             <View style={MyStyles.row}>
               <DatePicker
                 label="Accept Date"
@@ -734,6 +901,8 @@ const CallRequest = (props) => {
               onChangeText={(text) => {
                 setrequestParam({ ...requestParam, remarks: text });
               }}
+              multiline
+              numberOfLines={4}
             />
             <View style={MyStyles.row}>
               <Button mode="contained" compact uppercase={false} style={{ backgroundColor: "red", width: "48%" }}
@@ -799,17 +968,18 @@ const CustomerVoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
               <Text
                 style={{
@@ -820,7 +990,7 @@ const CustomerVoucherList = (props) => {
               >
                 {item.voucher_name}
               </Text>
-            </View>
+            </LinearGradient>
             <Card.Content>
               <View style={[MyStyles.row, { margin: 0 }]}>
                 <View>

@@ -271,6 +271,7 @@ const Home = (props) => {
       },
       userToken
     ).then((resp) => {
+     
       if (resp.status == 200) {
         chartData2.chartDataLabels = [0];
         chartData2.chartDataWishlist = [0];
@@ -565,9 +566,9 @@ const Home = (props) => {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <IconButton icon="calendar" />
             <Text>
-              {moment(param.from_date).format("DD/MM") +
+              {moment(param.from_date).format("DD/MM/YYYY") +
                 " - " +
-                moment(param.to_date).format("DD/MM")}
+                moment(param.to_date).format("DD/MM/YYYY")}
             </Text>
           </View>
         </TouchableRipple>

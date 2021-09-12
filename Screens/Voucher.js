@@ -4,7 +4,7 @@ import {
   ScrollView,
   View,
   FlatList,
-  Alert,
+  Alert
 } from "react-native";
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   IconButton,
   Portal,
   Modal,
+  TouchableRipple,
 } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
@@ -25,6 +26,7 @@ import MyStyles from "../Styles/MyStyles";
 import moment from "moment";
 import { postRequest } from "../Services/RequestServices";
 import { serviceUrl } from "../Services/Constants";
+import { LinearGradient } from "expo-linear-gradient";
 
 const VoucherList = (props) => {
   const { userToken, search } = props.route.params;
@@ -33,12 +35,12 @@ const VoucherList = (props) => {
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = () => {
     postRequest(
       "masters/customer/voucher/browse",
-      { search: search },
+      { search: search == undefined ? "" : search },
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
@@ -72,6 +74,7 @@ const VoucherList = (props) => {
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
+
           <Card
             key={item.voucher_id}
             style={{
@@ -81,18 +84,20 @@ const VoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
+
               <Text
                 style={{
                   textAlign: "center",
@@ -102,7 +107,9 @@ const VoucherList = (props) => {
               >
                 {item.voucher_name}
               </Text>
-            </View>
+
+            </LinearGradient>
+
             <Card.Content>
               <View style={[MyStyles.row, { margin: 0 }]}>
                 <View>
@@ -126,9 +133,10 @@ const VoucherList = (props) => {
                         voucher_id: item.voucher_id,
                       })
                     }
+                    color="#aaa"
                   />
                   <IconButton
-                    icon="close"
+                    icon="delete"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
@@ -144,6 +152,7 @@ const VoucherList = (props) => {
                         },
                       ]);
                     }}
+                    color="#aaa"
                   />
                 </View>
               </View>
@@ -209,15 +218,14 @@ const VoucherForm = (props) => {
     image_name: "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
     image_base64: "",
   });
-
-  const template =
-    "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
+  const [visibletemp, setvisibletemp] = useState(false);
+  const [template, settemplate] = useState("Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg");
 
   React.useEffect(() => {
     if (voucher_id != 0) {
       postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
         (resp) => {
-
+          console.log(resp);
           if (resp.status == 200) {
             param.voucher_id = resp.data.voucher_id;
             param.voucher_session_type = resp.data.voucher_session_type;
@@ -235,6 +243,8 @@ const VoucherForm = (props) => {
             param.voucher_type = resp.data.voucher_type;
             param.voucher_value = resp.data.voucher_value;
 
+            setImage({ uri: resp.data.image_url + "" + resp.data.image_path });
+            setBanner({ uri: resp.data.banner_url + "" + resp.data.banner_image });
             if (resp.data.voucher_session_type === "duration in days") {
               setvouchersession(true);
               param.redeem_end_date = "";
@@ -258,6 +268,21 @@ const VoucherForm = (props) => {
 
     setLoading(false);
   }, []);
+
+  const SmsTemplete = () => {
+    if (param.voucher_type == "first Time") {    
+      settemplate("you have just got a ("+smsParam.first_time_voucher_1+") gift "+smsParam.fist_time_voucher_2+" from "+companyName.toUpperCase()+". Validity ("+smsParam.fist_time_voucher_3+"). T and C apply.");
+    }
+    else if (param.voucher_type == "referral") {
+      settemplate("");
+    }
+    else if (param.voucher_type == "upload design") {
+      settemplate("");
+    }
+    else if (param.voucher_type == "other") {
+      settemplate("");
+    }
+  }
 
   return (
     <ImageBackground
@@ -293,7 +318,9 @@ const VoucherForm = (props) => {
             ext_lbl="label"
             value={param.voucher_type}
             onChange={(val) => {
-              setparam({ ...param, voucher_type: val });
+              param.voucher_type = val;
+              setparam({ ...param });
+              SmsTemplete();
             }}
             placeholder="Voucher Type"
           />
@@ -374,20 +401,25 @@ const VoucherForm = (props) => {
               }}
             />
           )}
-          <TextInput
-            mode="outlined"
-            multiline
-            numberOfLines={4}
-            editable={false}
-            value={template}
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-          />
+
+          <TouchableRipple onPress={() => { setvisibletemp(true) }}>
+            <TextInput
+              mode="outlined"
+              multiline
+              numberOfLines={4}
+              editable={false}
+              value={template}
+              style={{ backgroundColor: "rgba(0,0,0,0)" }}
+            />
+          </TouchableRipple>
           <Checkbox.Item
             label="Disable"
             status={param.disable ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, disable: !param.disable });
             }}
+            labelStyle={{ color: "#000" }}
+            color="#000"
           />
           <View style={MyStyles.row}>
             <ImageUpload
@@ -409,7 +441,7 @@ const VoucherForm = (props) => {
                 setparam({
                   ...param,
                   image_path:
-                    "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+                    "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
                 });
               }}
             />
@@ -425,6 +457,7 @@ const VoucherForm = (props) => {
               }}
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
+                console.log(result.uri);
                 // setvoucheruploads({
                 //   ...voucheruploads,
                 //   banner_base64: result.base64,
@@ -432,7 +465,7 @@ const VoucherForm = (props) => {
                 setparam({
                   ...param,
                   banner_image:
-                    "banner-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+                    "banner-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
                 });
               }}
             />
@@ -451,13 +484,13 @@ const VoucherForm = (props) => {
                 postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
-                     
+
                       if (Banner.uri) {
                         const form_data = new FormData();
                         form_data.append("files", {
                           uri: Banner.uri,
                           type: "image/jpeg",
-                          name: Date.now() + ".jpg",
+                          name: param.banner_image,
                         });
 
                         var xhr = new XMLHttpRequest();
@@ -475,28 +508,13 @@ const VoucherForm = (props) => {
                           }
                         };
                         xhr.send(form_data);
-
-                        // postRequest(
-                        //   "masters/customer/UploadvoucherBannerMob64",
-                        //   {
-                        //     base64image: voucheruploads.banner_base64,
-                        //     imageName: param.banner_image,
-                        //   },
-                        //   userToken
-                        // ).then((resp) => {
-                        //   if (resp.status == 200) {
-                        //     if (resp.data[0].valid) {
-                        //       console.log("banner : " + resp.data[0].valid);
-                        //     }
-                        //   }
-                        // });
                       }
                       if (Image.uri) {
                         const form_data = new FormData();
                         form_data.append("files", {
                           uri: Image.uri,
                           type: "image/jpeg",
-                          name: Date.now() + ".jpg",
+                          name: param.image_path,
                         });
 
                         var xhr = new XMLHttpRequest();
@@ -514,22 +532,8 @@ const VoucherForm = (props) => {
                           }
                         };
                         xhr.send(form_data);
-
-                        //   postRequest(
-                        //     "masters/customer/UploadvoucherMob64",
-                        //     {
-                        //       base64image: voucheruploads.image_base64,
-                        //       imageName: param.image_path,
-                        //     },
-                        //     userToken
-                        //   ).then((resp) => {
-                        //     if (resp.status == 200) {
-                        //       if (resp.data[0].valid) {
-                        //         console.log("image : " + resp.data[0].valid);
-                        //       }
-                        //     }
-                        //   });
                       }
+
                       props.navigation.navigate("VoucherList");
                     }
                     setLoading(false);
@@ -543,12 +547,15 @@ const VoucherForm = (props) => {
         </View>
       </ScrollView>
       <MessageTemplate
-        visible={false}
+        visible={visibletemp}
         onDone={(vars) => {
+
           console.log(vars);
+          let temp = "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
+          setvisibletemp(false);
         }}
       />
-    </ImageBackground>
+    </ImageBackground >
   );
 };
 

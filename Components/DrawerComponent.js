@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, ScrollView } from "react-native";
-import { Drawer, Divider, IconButton, Avatar } from "react-native-paper";
+import { Drawer, Divider, IconButton, Avatar, TouchableRipple } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { AuthContext } from "./Context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -289,7 +289,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Customer Category" disableSearch />,
+          header: (props) => <TitleBar {...props} title="Customer Category" />,
         }}
       />
       <Drawer.Screen
@@ -316,7 +316,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Area" disableSearch />,
+          header: (props) => <TitleBar {...props} title="Branch Area" />,
         }}
       />
       <Drawer.Screen
@@ -334,7 +334,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Branch Staff" disableSearch />,
+          header: (props) => <TitleBar {...props} title="Branch Staff" />,
         }}
       />
       <Drawer.Screen
@@ -447,8 +447,12 @@ const DrawerContent = (props) => {
       <Drawer.Section title="Quicktagg (1.0.0)">
         <Divider />
         <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>
-          <Avatar.Icon icon="phone" size={40} style={{ backgroundColor: "#2E86C1" }} />
-          <Avatar.Icon icon="whatsapp" size={40} style={{ backgroundColor: "green" }} />
+          <TouchableRipple onPress={() => Linking.openURL("tel:9874561230")}>
+            <Avatar.Icon icon="phone" size={40} style={{ backgroundColor: "#2E86C1" }} />
+          </TouchableRipple>
+          <TouchableRipple onPress={() => Linking.openURL('whatsapp://send?text=&phone=91' + "9874561230")}>
+            <Avatar.Icon icon="whatsapp" size={40} style={{ backgroundColor: "green" }} />
+          </TouchableRipple>
         </View>
       </Drawer.Section>
     </View>

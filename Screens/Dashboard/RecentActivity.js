@@ -97,7 +97,7 @@ const RecentActivity = (props) => {
                       marginLeft: 20,
                     }}
                   >
-                    {moment("item.datetime").format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
+                    {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
                       ? moment(item.datetime).format("hh:mm")
                       : moment(item.datetime).format("DD/MM/YYYY")}
                   </Text>

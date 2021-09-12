@@ -22,6 +22,7 @@ const Wishlist = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
+        //console.log(resp.data);
         setgriddata(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -43,6 +44,7 @@ const Wishlist = (props) => {
                   onPress={() => {
                     props.navigation.navigate("Profile", {
                       customer_id: item.customer_id,
+                      customer_mobile: item.mobile,
                     });
                   }}
                 >
@@ -58,6 +60,7 @@ const Wishlist = (props) => {
                     onPress={() => {
                       props.navigation.navigate("Profile", {
                         customer_id: item.customer_id,
+                        customer_mobile: item.mobile,
                       });
                     }}
                   >
@@ -71,7 +74,10 @@ const Wishlist = (props) => {
               right={() => (
                 <Text style={{ color: "#999", alignSelf: "center" }}>
                   {/* {moment().format("DD/MM/YYY")} */}
-                  {moment().fromNow(true)}
+                  {/* {moment().fromNow(true)} */}
+                  {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
+                    ? moment(item.datetime).format("hh:mm")
+                    : moment(item.datetime).format("DD/MM/YYYY")}
                 </Text>
               )}
             />

@@ -21,7 +21,7 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    setListData(data);
+    setListData(data);  
   }, [data]);
 
   return (
@@ -40,7 +40,7 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                 theme={{ colors: { primary: "black" } }}
                 style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
                 left={<TextInput.Icon name="magnify" />}
-                onChangeText={(text) => {}}
+                onChangeText={(text) => { }}
                 placeholder="Search"
               />
             ) : (
@@ -61,16 +61,16 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                 onPress={
                   multiple
                     ? () => {
-                        item.selected = !item.selected;
-                        setListData([...listData]);
-                      }
+                      item.selected = !item.selected;
+                      setListData([...listData]);
+                    }
                     : () => {
-                        if (selectedIndex == index) {
-                          setselectedIndex(null);
-                        } else {
-                          setselectedIndex(index);
-                        }
+                      if (selectedIndex == index) {
+                        setselectedIndex(null);
+                      } else {
+                        setselectedIndex(index);
                       }
+                    }
                 }
                 title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
@@ -102,16 +102,27 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
           onPress={
             multiple
               ? () => {
-                  const selectedCustomers = listData.filter((item) => item.selected);
-                  onDone(selectedCustomers);
-                  onClose();
-                }
+                const selectedCustomers = listData.filter((item) => item.selected);
+                onDone(selectedCustomers);
+                onClose();
+              }
               : () => {
-                  const selectedCustomer = listData.filter((item, index) => index == selectedIndex);
-                  onDone(selectedCustomer);
-                  onClose();
-                }
+                const selectedCustomer = listData.filter((item, index) => index == selectedIndex);
+                onDone(selectedCustomer);
+                onClose();
+              }
           }
+        />
+        <FAB
+          style={{ position: "absolute", bottom: 20, right: 100 }}
+          icon="select-all"
+          onPress={() => {
+            let _selecteddata = [];
+            listData.map((resp, index) => {            
+              _selecteddata.push({ "category_name": resp.category_name, "customer_id": resp.customer_id, "full_name": resp.full_name, "mobile": resp.mobile, "type": resp.type, "selected": true });
+            });
+            setListData(_selecteddata);           
+          }}
         />
       </Modal>
     </Portal>

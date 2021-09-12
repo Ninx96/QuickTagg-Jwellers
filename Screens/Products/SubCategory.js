@@ -19,15 +19,15 @@ import DropDown from "../../Components/DropDown";
 import { postRequest } from "../../Services/RequestServices";
 
 const SubCategoryList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
   const Browse = () => {
-    postRequest("masters/product/subcategory/browse", { category_id: 4 }, userToken).then(
+    postRequest("masters/product/subcategory/browse_app", { category_id: 4, search: search == undefined ? "" : search }, userToken).then(
       (resp) => {
         if (resp.status == 200) {
           setgriddata(resp.data);
@@ -81,7 +81,7 @@ const SubCategoryList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -115,9 +115,8 @@ const SubCategoryList = (props) => {
   );
 };
 
-const SubCategoryForm = (props) => {
-  const { subcategory_id } = props.route.params;
-  const { userToken } = props.route.params;
+const SubCategoryForm = (props) => { 
+  const { userToken, subcategory_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [categorylist, setcategorylist] = useState([]);
   const [param, setparam] = useState({
@@ -140,12 +139,11 @@ const SubCategoryForm = (props) => {
         "masters/product/subcategory/preview",
         { subcategory_id: subcategory_id },
         userToken
-      ).then((resp) => {
-        console.log(resp);
+      ).then((resp) => {       
         if (resp.status == 200) {
-          param.category_id = resp.data[0].category_id;
-          param.subcategory_id = resp.data[0].subcategory_id;
-          param.subcategory_name = resp.data[0].subcategory_name;
+          param.category_id = resp.data.category_id;
+          param.subcategory_id = resp.data.subcategory_id;
+          param.subcategory_name = resp.data.subcategory_name;
           setparam({ ...param });
         } else {
           Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");

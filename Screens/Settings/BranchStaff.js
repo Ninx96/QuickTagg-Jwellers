@@ -6,17 +6,16 @@ import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 
 const BranchStaffList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken,search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
-  const Browse = (id) => {
-    let param = {};
-    postRequest("masters/staff/browse", param, userToken).then((resp) => {
+  const Browse = (id) => {   
+    postRequest("masters/staff/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {

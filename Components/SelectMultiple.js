@@ -19,6 +19,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
   useEffect(() => {
     setListData(data);
+   
   }, [data]);
   return (
     <Portal>
@@ -48,7 +49,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   width: "60%",
                 }}
                 left={<TextInput.Icon name="magnify" />}
-                onChangeText={(text) => {}}
+                onChangeText={(text) => { }}
                 placeholder="Search"
               />
             ) : (
@@ -93,9 +94,9 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   />
                 )}
                 {item.exhibition ? (
-                  <BadgeRibbon text="E" position="left" />
+                  <BadgeRibbon text="E" position="left" color="red" />
                 ) : null}
-                {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
+                {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
                 <Image
                   source={{ uri: item.url_image + "" + item.image_path }}
                   style={{ width: 120, height: 120, zIndex: -50 }}
@@ -118,6 +119,39 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             const selected = listData.filter((item) => item.selected);
             onDone(selected);
             onClose();
+          }}
+        />
+        <FAB
+          style={{ position: "absolute", bottom: 20, right: 100 }}
+          icon="select-all"
+          onPress={() => {
+            let _selecteddata = [];
+            listData.map((resp, index) => {
+              _selecteddata.push({
+                "Metal": resp.Metal,
+                "category_id": resp.category_id,
+                "category_name": resp.category_name,
+                "discounted_price": resp.discounted_price,
+                "exhibition": resp.exhibition,
+                "gender": resp.gender,
+                "image_path": resp.image_path,
+                "material": resp.material,
+                "on_demand": resp.on_demand,
+                "price": resp.price,
+                "product_code": resp.product_code,
+                "product_id": resp.product_id,
+                "product_name": resp.product_name,
+                "remarks": resp.remarks,
+                "size_length": resp.size_length,
+                "subcategory_id": resp.subcategory_id,
+                "subcategory_name": resp.subcategory_name,
+                "trial": resp.trial,
+                "url_image": resp.url_image,
+                "weight": resp.weight,
+                "selected": true
+              });
+            });
+            setListData(_selecteddata);
           }}
         />
       </Modal>
