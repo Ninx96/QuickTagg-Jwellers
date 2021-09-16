@@ -8,24 +8,24 @@ import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import { postRequest } from "../../Services/RequestServices";
 import BadgeRibbon from "../../Components/BadgeRibbon";
+import { serviceUrl } from "../../Services/Constants";
 
 const ProductsList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
-  React.useEffect(() => {
-    let param = {};
-    postRequest("masters/product/browse", param, userToken).then((resp) => {
+  React.useEffect(() => {  
+    postRequest("masters/product/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
-        console.log(resp.data);
+
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
-  }, []);
+  }, [search]);
 
   return (
     <View style={MyStyles.container}>
@@ -46,8 +46,8 @@ const ProductsList = (props) => {
               })
             }
           >
-            {item.exhibition ? <BadgeRibbon text="E" position="left" /> : null}
-            {item.trial ? <BadgeRibbon text="T" position="left" /> : null}
+            {item.exhibition ? <BadgeRibbon text="E" position="left" color="red" /> : null}
+            {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
             <Image
               source={{ uri: item.url_image + "" + item.image_path }}
               style={{
@@ -194,9 +194,8 @@ const ProductsPreview = (props) => {
               onPress={() => {
                 shareOptions.title = param.product_name;
                 shareOptions.message = param.product_name;
-                shareOptions.url = resp.url + "" + resp.image_path;
-                setshareOptions({ ...shareOptions });
-                //console.log(shareOptions);
+                shareOptions.url = "www.google.com/";
+                setshareOptions({ ...shareOptions });                
                 Share.share(shareOptions);
               }}
             />
@@ -374,7 +373,7 @@ const ProductsForm = (props) => {
             }}
             placeholder="Product Category"
           />
-          <DropDown
+          {/* <DropDown
             data={subcategorylist}
             ext_val="subcategory_id"
             ext_lbl="subcategory_name"
@@ -383,7 +382,7 @@ const ProductsForm = (props) => {
             //   setparam({ ...param, gender: val });
             // }}
             placeholder="Product Sub Category"
-          />
+          /> */}
           <TextInput
             mode="outlined"
             placeholder="Price"
@@ -494,21 +493,18 @@ const ProductsForm = (props) => {
 
           <MultipleImages
             data={[]}
-            onSelect={(fileArray) => {
-              console.log(fileArray);
+            onSelect={(fileArray) => {          
               let imagesname = [],
                 imagesdata = [];
               fileArray.map((resp, index) => {
                 imagesname.push(resp.name);
                 imagesdata.push({
-                  base64image: resp.uri,
-                  base64image: resp.name,
+                  image_path: resp.uri,
+                  image_name: resp.name,
                 });
               });
               setparam({ ...param, product_images: imagesname });
-              setproductsuploads(imagesdata);
-              console.log(imagesname);
-              console.log(imagesdata);
+              setproductsuploads(imagesdata);             
             }}
           />
 
@@ -519,9 +515,39 @@ const ProductsForm = (props) => {
             onPress={() => {
               setLoading(true);
               postRequest("masters/product/insert", param, userToken).then((resp) => {
-                console.log(resp);
+               
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
+                   
+
+                    if (param.product_images.length !== 0) {
+                      productsuploads.map((item, index) => {
+
+                        const form_data = new FormData();
+                        form_data.append("files", {
+                          uri: item.image_path,
+                          type: "image/jpeg",
+                          name: item.image_name
+                        });
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", serviceUrl + "masters/product/uploadImageMob", true);
+                        xhr.setRequestHeader("Accept", "application/json");
+                        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                        xhr.setRequestHeader("auth-token", userToken);
+
+                        xhr.onload = function (e) {
+                          const resp = xhr.response;
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                             // console.log("Images : " + resp.data[0].valid);
+                            }
+                          }
+                        };
+                        xhr.send(form_data);
+                      });
+                    }
+
                     props.navigation.navigate("ProductTabs");
                   } else {
                     Alert.alert("Error !", resp.error);

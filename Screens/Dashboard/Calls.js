@@ -4,6 +4,7 @@ import { List, Text, TouchableRipple } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { postRequest } from "../../Services/RequestServices";
+import moment from "moment";
 
 const Calls = (props) => {
   const { userToken, branchId } = props.route.params;
@@ -45,6 +46,7 @@ const Calls = (props) => {
                   onPress={() => {
                     props.navigation.navigate("Profile", {
                       customer_id: item.customer_id,
+                      customer_mobile: item.mobile,
                     });
                   }}
                 >
@@ -60,6 +62,7 @@ const Calls = (props) => {
                     onPress={() => {
                       props.navigation.navigate("Profile", {
                         customer_id: item.customer_id,
+                        customer_mobile: item.mobile,
                       });
                     }}
                   >
@@ -69,11 +72,13 @@ const Calls = (props) => {
                   </TouchableRipple>
                 );
               }}
-            // right={() => (
-            //   <Text style={{ color: "#999", alignSelf: "center" }}>
-            //     {moment().format("DD/MM/YYY")}
-            //   </Text>
-            // )}
+              right={() => (
+                <Text style={{ color: "#999", alignSelf: "center" }}>
+                  {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
+                    ? moment(item.datetime).format("hh:mm")
+                    : moment(item.datetime).format("DD/MM/YYYY")}
+                </Text>
+              )}
             />
             <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>
               {item.status == "request" ? "Requested a " : item.status == "accept" ? "Accept " : "Done "}

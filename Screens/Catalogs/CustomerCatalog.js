@@ -21,18 +21,20 @@ import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
+import { LinearGradient } from "expo-linear-gradient";
+
 
 const CustomerCatalogList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/session/browse", {}, userToken).then((resp) => {
+    postRequest("transactions/customer/session/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -66,17 +68,18 @@ const CustomerCatalogList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
               <Text
                 style={{
@@ -87,13 +90,15 @@ const CustomerCatalogList = (props) => {
               >
                 {item.title}
               </Text>
-            </View>
+            </LinearGradient>
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.no_of_customer} {"Customers"}
+                    {item.entry_no} {"                "} {item.date}
+                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    {"1 Customers"}
                   </Text>
                   <Text
                     style={{
@@ -115,6 +120,7 @@ const CustomerCatalogList = (props) => {
                         tran_id: item.tran_id,
                       })
                     }
+                    color="#aaa"
                   />
                   <IconButton
                     icon="delete"
@@ -134,6 +140,7 @@ const CustomerCatalogList = (props) => {
                         },
                       ]);
                     }}
+                    color="#aaa"
                   />
                 </View>
               </View>
@@ -161,14 +168,16 @@ const CustomerCatalog = (props) => {
   const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
+    tran_id: "0",
     subcategory_id: "",
     min_amount: "",
     max_amount: "",
+    customer_name: "",
+    customer_id: "",
     title: "",
     entry_no: "",
     remarks: "",
     customer_session_products: [],
-    customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
@@ -180,18 +189,19 @@ const CustomerCatalog = (props) => {
   const [subcategorylist, setsubcategorylist] = useState([]);
 
   React.useEffect(() => {
-    postRequest(
-      "transactions/customer/session/getSubcategory",
-      { branch_id: branchId },
-      userToken
-    ).then((resp) => {
+    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
       if (resp.status == 200) {
-        setsubcategorylist(resp.data);
+        var _subcategoryList = [];
+        resp.data.map((item, index) => {
+          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+        });
+        setsubcategorylist(_subcategoryList);
+
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
-    if (tran_id == 0) {
+    if (tran_id == 0) {     
       postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
         (resp) => {
           if (resp.status == 200) {
@@ -203,21 +213,22 @@ const CustomerCatalog = (props) => {
       );
     }
 
-    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (tran_id == 0) {
-            param.entry_no = resp.data[0].entry_no;
-            setparam({ ...param });
-          } else {
-            console.log(resp.data[0]);
-            param.tran_id = resp.data[0].tran_id;
-            param.title = resp.data[0].title;
-            param.entry_no = resp.data[0].entry_no;
-            param.remarks = resp.data[0].remarks;
-            param.subcategory_id = resp.data[0].products[0].subcategory_id;
-            param.customer_session_products = resp.data[0].products;
-            setparam({ ...param });
+    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        if (tran_id == 0) {
+          param.entry_no = resp.data[0].entry_no;
+          setparam({ ...param });
+        } else {         
+          param.tran_id = resp.data[0].tran_id;
+          param.customer_id = resp.data[0].customer_id;
+          param.customer_name = resp.data[0].customer_name;
+          param.title = resp.data[0].title;
+          param.entry_no = resp.data[0].entry_no;
+          param.remarks = resp.data[0].remarks;
+          param.subcategory_id = resp.data[0].products[0].subcategory_id;
+          param.customer_session_products = resp.data[0].products;
+          setparam({ ...param });
+
 
             postRequest(
               "transactions/customer/customerListMob",
@@ -226,25 +237,30 @@ const CustomerCatalog = (props) => {
             ).then((items) => {
               if (items.status == 200) {
                 let listData = [];
-                listData = items.data;
-                listData.map((item, index) => {
-                  listData[index].selected =
-                    resp.data[0].customers.findIndex((e) => e.customer_id === item.customer_id) > -1
-                      ? true
-                      : false;
+                listData = items.data
+                listData.map((item, index) => {                
+                  listData[index].selected = item.customer_id === resp.data[0].customer_id ? true : false;
+
                 });
                 setCustomerList(listData);
+               
               } else {
                 Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
               }
-            });
-            selectedProducts.push({
-              data: resp.data[0].products,
-            });
-            setSelectedProducts([...selectedProducts]);
-          }
-        } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+            }
+          );
+
+          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
+            if (!acc[item.text]) acc[item.text] = {
+              subcategory_name: item.text,
+              data: []
+            };
+            acc[item.text].data.push(item);
+            return acc;
+          }, {}))
+
+          setSelectedProducts(tempData);
+
         }
       }
     );
@@ -254,8 +270,8 @@ const CustomerCatalog = (props) => {
   const ProductList = () => {
     let data = {
       subcategory_id: param.subcategory_id,
-      min_amount: param.min_amount,
-      max_amount: param.max_amount,
+      min_amount: param.min_amount == "" ? "0" : param.min_amount,
+      max_amount: param.max_amount == "" ? "0" : param.max_amount,
     };
     postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
       if (resp.status == 200) {
@@ -278,7 +294,8 @@ const CustomerCatalog = (props) => {
               ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                setparam({ ...param, subcategory_id: val });
+                param.subcategory_id = val;
+                setparam({ ...param });
                 ProductList();
               }}
               placeholder="SubCategory"
@@ -324,7 +341,9 @@ const CustomerCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>
+                  {item.subcategory_name}
+                </Subheading>
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -374,28 +393,25 @@ const CustomerCatalog = (props) => {
         </View>
       </ScrollView>
 
-      {/* ImagePath change direct Component se kr lena */}
-
       <SelectMultiple
         visible={product}
         data={productList}
         onDone={(items) => {
-          selectedProducts.push({
-            subCategory: param.subCategory,
-            data: items,
+          items.map((item, i) => {
+            param.customer_session_products.push(item);
           });
-          setSelectedProducts([...selectedProducts]);
-          items.map((item, index) => {
-            param.customer_session_products.push({
-              subcategory_id: item.subcategory_id,
-              category_id: item.category_id,
-              product_id: item.product_id,
-            });
-            setparam({
-              ...param,
-              customer_session_products: param.customer_session_products,
-            });
-          });
+          setparam({ ...param, customer_session_products: param.customer_session_products });
+
+          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
+            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
+              subcategory_name: item.subcategory_name,
+              data: []
+            };
+            acc[item.subcategory_name].data.push(item);
+            return acc;
+          }, {}))
+
+          setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
       />
@@ -407,15 +423,14 @@ const CustomerCatalog = (props) => {
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
-            setparam({ ...param, customers: [] });
+            param.customer_id = "";
+            param.customer_name = "";
+            setparam({ ...param });
           } else {
             items.map((item, index) => {
-              param.customers.push({
-                customer_id: item.customer_id,
-                mobile: item.mobile,
-                customer_name: item.full_name,
-              });
-              setparam({ ...param, customers: param.customers });
+              param.customer_id = item.customer_id;
+              param.customer_name = item.full_name;
+              setparam({ ...param });
             });
           }
         }}
@@ -471,8 +486,7 @@ const CustomerCatalog = (props) => {
                   <Button
                     mode="contained"
                     uppercase={false}
-                    onPress={() => {
-                      //console.log(param);
+                    onPress={() => {                   
                       setLoading(true);
                       postRequest("transactions/customer/session/insert", param, userToken).then(
                         (resp) => {

@@ -6,6 +6,8 @@ import ImageUpload from "../../Components/ImageUpload";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import moment from "moment";
+import { LinearGradient } from "expo-linear-gradient";
+
 const CustomerReviewList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -16,8 +18,7 @@ const CustomerReviewList = (props) => {
 
   const Browse = (id) => {
     postRequest("masters/customer/customerreview/browse", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
-        console.log(resp.data);
+      if (resp.status == 200) {      
         setgriddata(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -43,12 +44,15 @@ const CustomerReviewList = (props) => {
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
-          <Card
+          <LinearGradient
+            colors={["#F6356F", "#FF5F50"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={{
               marginHorizontal: 20,
               marginVertical: 10,
               borderRadius: 10,
-              backgroundColor: "#FF3647",
+              //backgroundColor: "#FF3647",
             }}
           >
             <Card.Title
@@ -60,7 +64,7 @@ const CustomerReviewList = (props) => {
                 <>
                   <IconButton
                     icon="pencil"
-                    color="#FFF"
+                    color="#aaa"
                     onPress={() => {
                       props.navigation.navigate("CustomerReview", {
                         tran_id: item.tran_id,
@@ -69,12 +73,12 @@ const CustomerReviewList = (props) => {
                   />
                   <IconButton
                     icon="delete"
-                    color="#FFF"
+                    color="#aaa"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -93,7 +97,7 @@ const CustomerReviewList = (props) => {
             <Card.Content style={{ height: 120, marginTop: 20 }}>
               <Text style={{ color: "#FFF", fontSize: 15 }}>{item.review}</Text>
             </Card.Content>
-          </Card>
+          </LinearGradient>
         )}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -120,7 +124,7 @@ const CustomerReview = (props) => {
     review: "",
   });
   const [Image, setImage] = React.useState(require("../../assets/upload.png"));
-  const [imageuploads, setimageuploads] = useState({  
+  const [imageuploads, setimageuploads] = useState({
     image_name: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png",
     image_base64: "",
   });
@@ -136,7 +140,7 @@ const CustomerReview = (props) => {
             param.image_path = resp.data.image_path;
             setparam({ ...param });
 
-            setImage({ uri: `${resp.data.url + "" + resp.data.image_path}` });         
+            setImage({ uri: `${resp.data.url + "" + resp.data.image_path}` });
           } else {
             Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
           }
@@ -173,7 +177,7 @@ const CustomerReview = (props) => {
           <ImageUpload
             label="Upload Image :"
             source={Image}
-            onClearImage={() => {}}
+            onClearImage={() => { }}
             onUploadImage={(result) => {
               setImage({ uri: result.uri });
               setimageuploads({ ...imageuploads, image_base64: result.base64 });

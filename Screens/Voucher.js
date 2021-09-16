@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { ImageBackground, ScrollView, View, FlatList, Alert } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  FlatList,
+  Alert
+} from "react-native";
+
 import {
   Button,
   Checkbox,
@@ -10,6 +17,7 @@ import {
   IconButton,
   Portal,
   Modal,
+  TouchableRipple,
 } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
@@ -19,6 +27,7 @@ import MyStyles from "../Styles/MyStyles";
 import moment from "moment";
 import { postRequest } from "../Services/RequestServices";
 import { serviceUrl } from "../Services/Constants";
+import { LinearGradient } from "expo-linear-gradient";
 
 const VoucherList = (props) => {
   const { userToken, search } = props.route.params;
@@ -27,10 +36,15 @@ const VoucherList = (props) => {
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = () => {
-    postRequest("masters/customer/voucher/browse", { search: search }, userToken).then((resp) => {
+    postRequest(
+      "masters/customer/voucher/browse",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -57,6 +71,7 @@ const VoucherList = (props) => {
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
+
           <Card
             key={item.voucher_id}
             style={{
@@ -66,18 +81,20 @@ const VoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
+
               <Text
                 style={{
                   textAlign: "center",
@@ -87,7 +104,9 @@ const VoucherList = (props) => {
               >
                 {item.voucher_name}
               </Text>
-            </View>
+
+            </LinearGradient>
+
             <Card.Content>
               <View style={[MyStyles.row, { margin: 0 }]}>
                 <View>
@@ -110,10 +129,11 @@ const VoucherList = (props) => {
                         voucher_id: item.voucher_id,
                       })
                     }
+                    color="#aaa"
                   />
                   <IconButton
-                    icon="close"
-                    color="#AAA"
+                    icon="delete"
+
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
@@ -129,6 +149,7 @@ const VoucherList = (props) => {
                         },
                       ]);
                     }}
+                    color="#aaa"
                   />
                 </View>
               </View>
@@ -153,8 +174,7 @@ const VoucherList = (props) => {
 };
 
 const VoucherForm = (props) => {
-  const { voucher_id } = props.route.params;
-  const { userToken } = props.route.params;
+  const { userToken, userName, voucher_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [vouchersession, setvouchersession] = useState(null);
   const [vouchersessionlist, setvouchersessionlist] = useState([
@@ -162,7 +182,9 @@ const VoucherForm = (props) => {
     { label: "datetime", value: "datetime" },
   ]);
   const [vouchertypelist, setvouchertypelist] = useState([
-    { label: "first Time", value: "first Time" },
+    { label: "first time", value: "first time" },
+    { label: "birthday", value: "birthday" },
+    { label: "anniversary", value: "anniversary" },
     { label: "referral", value: "referral" },
     { label: "upload design", value: "upload design" },
     { label: "other", value: "other" },
@@ -193,14 +215,23 @@ const VoucherForm = (props) => {
     image_name: "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
     image_base64: "",
   });
-
-  const template =
-    "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
-
+  const [visibletemp, setvisibletemp] = useState(false);
+  const [smsparam, setsmsparam] = useState({
+    var1: "",
+    var2: "",
+    var3: "",
+    var4: "",
+    templete: "",
+    var3visible: false,
+    var4visible: false
+  });
+ 
   React.useEffect(() => {
     if (voucher_id != 0) {
       postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
         (resp) => {
+          console.log(resp);
+
           if (resp.status == 200) {
             param.voucher_id = resp.data.voucher_id;
             param.voucher_session_type = resp.data.voucher_session_type;
@@ -218,6 +249,10 @@ const VoucherForm = (props) => {
             param.voucher_type = resp.data.voucher_type;
             param.voucher_value = resp.data.voucher_value;
 
+            smsparam.template = resp.data.voucher_sms;
+
+            setImage({ uri: resp.data.image_url + "" + resp.data.image_path });
+            setBanner({ uri: resp.data.banner_url + "" + resp.data.banner_image });
             if (resp.data.voucher_session_type === "duration in days") {
               setvouchersession(true);
               param.redeem_end_date = "";
@@ -242,6 +277,43 @@ const VoucherForm = (props) => {
 
     setLoading(false);
   }, []);
+
+  const SmsTemplete = () => {
+
+    smsparam.var3visible = false;
+    smsparam.var4visible = false;
+    if (param.voucher_type == "first time") {
+      smsparam.var3visible = true;
+      smsparam.template = "you have just got a " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + " from " + userName.toUpperCase() + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). T and C apply.";
+      param.voucher_sms = "you have just got a " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + " from " + userName.toUpperCase() + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). T and C apply.";
+    }
+    else if (param.voucher_type == "birthday") {
+      smsparam.template = userName.toUpperCase() + " wishes u Happy Birthday. Lets make it special by " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + ". Validity (" + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + "). T and C apply.";
+      param.voucher_sms = userName.toUpperCase() + " wishes u Happy Birthday. Lets make it special by " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + ". Validity (" + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + "). T and C apply.";
+    }
+    else if (param.voucher_type == "anniversary") {
+      smsparam.template = userName.toUpperCase() + " wishes u Happy Anniversary. Lets make it special by " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + ". Validity (" + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + "). T and C apply.";
+      param.voucher_sms = userName.toUpperCase() + " wishes u Happy Anniversary. Lets make it special by " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + ". Validity (" + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + "). T and C apply.";
+    }
+    else if (param.voucher_type == "referral") {
+      smsparam.var3visible = true;
+      smsparam.template = "thanks for referring $$MemberName$$ to " + userName.toUpperCase() + ". To honour, we offer " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). T and C apply.";
+      param.voucher_sms = "thanks for referring $$MemberName$$ to " + userName.toUpperCase() + ". To honour, we offer " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). T and C apply.";
+    }
+    else if (param.voucher_type == "upload design") {
+      smsparam.var3visible = true;
+      smsparam.template = "thanks for sharing designs. We appreciate and offer " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). Team " + userName.toUpperCase() + ".";
+      param.voucher_sms = "thanks for sharing designs. We appreciate and offer " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " gift " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + ". Validity (" + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + "). Team " + userName.toUpperCase() + ".";
+    }
+    else if (param.voucher_type == "other") {
+      smsparam.var3visible = true;
+      smsparam.var4visible = true;
+      smsparam.template = (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " celebrate this special " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + " with " + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + ". Validity (" + (smsparam.var4 == "" ? "#var4" : smsparam.var4) + "). Team " + userName.toUpperCase() + ". T and C apply.";
+      param.voucher_sms = (smsparam.var1 == "" ? "#var1" : smsparam.var1) + " celebrate this special " + (smsparam.var2 == "" ? "#var2" : smsparam.var2) + " with " + (smsparam.var3 == "" ? "#var3" : smsparam.var3) + ". Validity (" + (smsparam.var4 == "" ? "#var4" : smsparam.var4) + "). Team " + userName.toUpperCase() + ". T and C apply.";
+    }
+    setsmsparam({ ...smsparam });
+    setparam({ ...param });
+  }
 
   return (
     <ImageBackground source={require("../assets/login-bg.jpg")} style={MyStyles.container}>
@@ -274,7 +346,9 @@ const VoucherForm = (props) => {
             ext_lbl="label"
             value={param.voucher_type}
             onChange={(val) => {
-              setparam({ ...param, voucher_type: val });
+              param.voucher_type = val;
+              setparam({ ...param });
+              SmsTemplete();
             }}
             placeholder="Voucher Type"
           />
@@ -355,20 +429,25 @@ const VoucherForm = (props) => {
               }}
             />
           )}
-          <TextInput
-            mode="outlined"
-            multiline
-            numberOfLines={4}
-            editable={false}
-            value={template}
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-          />
+
+          <TouchableRipple onPress={() => { setvisibletemp(true) }}>
+            <TextInput
+              mode="outlined"
+              multiline
+              numberOfLines={4}
+              editable={false}
+              value={param.voucher_sms}
+              style={{ backgroundColor: "rgba(0,0,0,0)" }}
+            />
+          </TouchableRipple>
           <Checkbox.Item
             label="Disable"
             status={param.disable ? "checked" : "unchecked"}
             onPress={(e) => {
               setparam({ ...param, disable: !param.disable });
             }}
+            labelStyle={{ color: "#000" }}
+            color="#000"
           />
           <View style={MyStyles.row}>
             <ImageUpload
@@ -389,7 +468,9 @@ const VoucherForm = (props) => {
                 // });
                 setparam({
                   ...param,
-                  image_path: "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+                  image_path:
+                    "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
+
                 });
               }}
             />
@@ -405,13 +486,16 @@ const VoucherForm = (props) => {
               }}
               onUploadImage={(result) => {
                 setBanner({ uri: result.uri });
+                console.log(result.uri);
                 // setvoucheruploads({
                 //   ...voucheruploads,
                 //   banner_base64: result.base64,
                 // });
                 setparam({
                   ...param,
-                  banner_image: "banner-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+                  banner_image:
+                    "banner-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
+
                 });
               }}
             />
@@ -425,12 +509,14 @@ const VoucherForm = (props) => {
                 postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
+
+
                       if (Banner.uri) {
                         const form_data = new FormData();
                         form_data.append("files", {
                           uri: Banner.uri,
                           type: "image/jpeg",
-                          name: Date.now() + ".jpg",
+                          name: param.banner_image,
                         });
 
                         var xhr = new XMLHttpRequest();
@@ -452,28 +538,13 @@ const VoucherForm = (props) => {
                           }
                         };
                         xhr.send(form_data);
-
-                        // postRequest(
-                        //   "masters/customer/UploadvoucherBannerMob64",
-                        //   {
-                        //     base64image: voucheruploads.banner_base64,
-                        //     imageName: param.banner_image,
-                        //   },
-                        //   userToken
-                        // ).then((resp) => {
-                        //   if (resp.status == 200) {
-                        //     if (resp.data[0].valid) {
-                        //       console.log("banner : " + resp.data[0].valid);
-                        //     }
-                        //   }
-                        // });
                       }
                       if (Image.uri) {
                         const form_data = new FormData();
                         form_data.append("files", {
                           uri: Image.uri,
                           type: "image/jpeg",
-                          name: Date.now() + ".jpg",
+                          name: param.image_path,
                         });
 
                         var xhr = new XMLHttpRequest();
@@ -491,22 +562,8 @@ const VoucherForm = (props) => {
                           }
                         };
                         xhr.send(form_data);
-
-                        //   postRequest(
-                        //     "masters/customer/UploadvoucherMob64",
-                        //     {
-                        //       base64image: voucheruploads.image_base64,
-                        //       imageName: param.image_path,
-                        //     },
-                        //     userToken
-                        //   ).then((resp) => {
-                        //     if (resp.status == 200) {
-                        //       if (resp.data[0].valid) {
-                        //         console.log("image : " + resp.data[0].valid);
-                        //       }
-                        //     }
-                        //   });
                       }
+
                       props.navigation.navigate("VoucherList");
                     }
                     setLoading(false);
@@ -519,18 +576,137 @@ const VoucherForm = (props) => {
           </View>
         </View>
       </ScrollView>
-      <MessageTemplate
-        visible={false}
+
+      {/* <MessageTemplate
+        visible={visibletemp}
         onDone={(vars) => {
           console.log(vars);
+          let temp = "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
+          setvisibletemp(false);
         }}
-      />
-    </ImageBackground>
+        onClose={() => {
+          setvisibletemp(false);
+        }}
+        type={param.voucher_type}
+        company={userName}
+      /> */}
+      <Portal>
+        <Modal visible={visibletemp} contentContainerStyle={MyStyles.container}>
+          <View
+            style={[
+              MyStyles.row,
+              MyStyles.primaryColor,
+              {
+                marginVertical: 0,
+              },
+            ]}
+          >
+            <IconButton icon="arrow-left"
+              onPress={() => {
+                param.voucher_sms = smsparam.template;
+                smsparam.var1 = "";
+                smsparam.var2 = "";
+                smsparam.var3 = "";
+                smsparam.var4 = "";
+                setsmsparam({ ...smsparam });
+                setvisibletemp(false);
+              }} />
+          </View>
+          <ImageBackground
+            source={require("../assets/login-bg.jpg")}
+            style={MyStyles.container}
+          >
+            <View style={MyStyles.cover}>
+              <TextInput
+                mode="outlined"
+                placeholder="Var1"
+                style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                value={smsparam.var1}
+                onChangeText={(text) => {
+                  smsparam.var1 = text;
+                  setsmsparam({ ...smsparam });
+                  SmsTemplete();
+                }}
+              />
+              <TextInput
+                mode="outlined"
+                placeholder="Var2"
+                style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                value={smsparam.var2}
+                onChangeText={(text) => {
+                  smsparam.var2 = text;
+                  setsmsparam({ ...smsparam });
+                  SmsTemplete();
+                }}
+              />
+              {smsparam.var3visible ?
+                <TextInput
+                  mode="outlined"
+                  placeholder="Var3"
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  value={smsparam.var3}
+                  onChangeText={(text) => {
+                    smsparam.var3 = text;
+                    setsmsparam({ ...smsparam });
+                    SmsTemplete();
+                  }}
+                /> : null}
+              {smsparam.var4visible ?
+                <TextInput
+                  mode="outlined"
+                  placeholder="Var4"
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  value={smsparam.var4}
+                  onChangeText={(text) => {
+                    smsparam.var4 = text;
+                    setsmsparam({ ...smsparam });
+                    SmsTemplete();
+                  }}
+                /> : null}
+
+              <View style={{ marginTop: 50 }}>
+                <Text style={{ textAlign: "center" }}>Sms Templete</Text>
+                <TextInput
+                  mode="outlined"
+                  multiline
+                  numberOfLines={4}
+                  editable={false}
+                  value={smsparam.template}
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                />
+              </View>
+            </View>
+            <FAB
+              style={{ position: "absolute", bottom: 20, right: 20 }}
+              icon="check"
+              onPress={() => {
+                param.voucher_sms = smsparam.template;
+                smsparam.var1 = "";
+                smsparam.var2 = "";
+                smsparam.var3 = "";
+                smsparam.var4 = "";
+                setsmsparam({ ...smsparam });
+                setvisibletemp(false);
+              }}
+            />
+          </ImageBackground>
+        </Modal>
+      </Portal>
+    </ImageBackground >
   );
 };
 
-const MessageTemplate = ({ visible, onDone }) => {
-  const [param, setParam] = useState({});
+const MessageTemplate = ({ visible, onDone, onClose, type, company }) => {
+  const [param, setParam] = useState({
+    var1: "",
+    var2: "",
+    var3: "",
+    var4: "",
+    templete: ""
+  });
+
+
+
   return (
     <Portal>
       <Modal visible={visible} contentContainerStyle={MyStyles.container}>
@@ -543,10 +719,14 @@ const MessageTemplate = ({ visible, onDone }) => {
             },
           ]}
         >
-          <IconButton icon="arrow-left" />
+          <IconButton icon="arrow-left" onPress={() => { onClose(); }} />
         </View>
-        <ImageBackground source={require("../assets/login-bg.jpg")} style={MyStyles.container}>
-          <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+        <ImageBackground
+          source={require("../assets/login-bg.jpg")}
+          style={MyStyles.container}
+        >
+          <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.6)", margin: 20, borderRadius: 10, padding: 10, }}>
+
             <TextInput
               mode="outlined"
               placeholder="Voucher Name"
@@ -574,6 +754,12 @@ const MessageTemplate = ({ visible, onDone }) => {
                 setParam({ ...param, var3: text });
               }}
             />
+            <View style={{ marginTop: 100 }}>
+              <Text style={{ textAlign: "center" }}>SMS Templete</Text>
+              <View style={{ borderColor: "gray", borderWidth: 1, borderRadius: 4 }}>
+                <Text style={{ margin: 10 }}>{param.templete}</Text>
+              </View>
+            </View>
           </View>
           <FAB
             style={{ position: "absolute", bottom: 20, right: 20 }}

@@ -53,6 +53,7 @@ const CustomerList = (props) => {
                   onPress={() => {
                     props.navigation.navigate("Profile", {
                       customer_id: item.customer_id,
+                      customer_mobile: item.mobile,
                     });
                   }}
                 >
@@ -68,6 +69,7 @@ const CustomerList = (props) => {
                     onPress={() => {
                       props.navigation.navigate("Profile", {
                         customer_id: item.customer_id,
+                        customer_mobile: item.mobile,
                       });
                     }}
                   >
@@ -135,7 +137,7 @@ const CustomerForm = (props) => {
     area_id: "",
     category_id: "",
     doa: "",
-    dob: moment(),
+    dob: "",
     profession: "",
     ref_id: "",
     staff_id: "",

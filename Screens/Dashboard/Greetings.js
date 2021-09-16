@@ -38,6 +38,7 @@ const Greetings = (props) => {
                 onPress={() => {
                   props.navigation.navigate("Profile", {
                     customer_id: item.customer_id,
+                    customer_mobile: item.mobile,
                   });
                 }}
               >

@@ -29,18 +29,24 @@ import moment from "moment";
 import Loading from "../../Components/Loading";
 import SelectCustomer from "../../Components/SelectCustomer";
 import { postRequest } from "../../Services/RequestServices";
+import { LinearGradient } from "expo-linear-gradient";
 
 const GeneralCatalogList = (props) => {
-  const { userToken } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
   React.useEffect(() => {
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/generalsession/browse", {}, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/generalsession/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
@@ -76,17 +82,18 @@ const GeneralCatalogList = (props) => {
               marginVertical: 5,
             }}
           >
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
-                  borderTopRightRadius: 10,
-                  borderTopLeftRadius: 10,
-                  margin: 0,
-                },
-              ]}
+            <LinearGradient
+              colors={["#F6356F", "#FF5F50"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "pink",
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+                margin: 0,
+              }}
             >
               <Text
                 style={{
@@ -97,11 +104,14 @@ const GeneralCatalogList = (props) => {
               >
                 {item.title}
               </Text>
-            </View>
+            </LinearGradient>
             <Card.Content>
               <View style={MyStyles.row}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.entry_no}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    {item.entry_no} {"                "} {item.date}
+                  </Text>
+
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.no_of_customer} {"Customers"}
                   </Text>
@@ -125,6 +135,7 @@ const GeneralCatalogList = (props) => {
                         tran_id: item.tran_id,
                       })
                     }
+                    color="#aaa"
                   />
                   <IconButton
                     icon="delete"
@@ -133,7 +144,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -144,6 +155,7 @@ const GeneralCatalogList = (props) => {
                         },
                       ]);
                     }}
+                    color="#aaa"
                   />
                 </View>
               </View>
@@ -188,7 +200,7 @@ const GeneralCatalog = (props) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
-
+  const [testlist, settestlist] = useState([]);
   React.useEffect(() => {
     postRequest(
       "transactions/customer/session/getSubcategory",
@@ -196,7 +208,11 @@ const GeneralCatalog = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
-        setsubcategorylist(resp.data);
+        var _subcategoryList = [];
+        resp.data.map((item, index) => {
+          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+        });
+        setsubcategorylist(_subcategoryList);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
@@ -227,9 +243,10 @@ const GeneralCatalog = (props) => {
           param.title = resp.data[0].title;
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
-          param.subcategory_id = resp.data[0].products[0].subcategory_id;
 
           param.customer_session_products = resp.data[0].products;
+
+
 
           postRequest(
             "transactions/customer/customerListMob",
@@ -250,10 +267,17 @@ const GeneralCatalog = (props) => {
               Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
             }
           });
-          selectedProducts.push({
-            data: resp.data[0].products,
-          });
-          setSelectedProducts([...selectedProducts]);
+
+          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
+            if (!acc[item.text]) acc[item.text] = {
+              subcategory_name: item.text,
+              data: []
+            };
+            acc[item.text].data.push(item);
+            return acc;
+          }, {}))
+        
+          setSelectedProducts(tempData);       
         }
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -266,10 +290,16 @@ const GeneralCatalog = (props) => {
   const ProductList = () => {
     let data = {
       subcategory_id: param.subcategory_id,
-      min_amount: param.min_amount,
-      max_amount: param.max_amount,
+      min_amount: param.min_amount == "" ? "0" : param.min_amount,
+      max_amount: param.max_amount == "" ? "0" : param.max_amount,
     };
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
+
+
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
@@ -291,7 +321,8 @@ const GeneralCatalog = (props) => {
               ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                setparam({ ...param, subcategory_id: val });
+                param.subcategory_id= val;
+                setparam({ ...param});
                 ProductList();
               }}
               placeholder="SubCategory"
@@ -337,7 +368,10 @@ const GeneralCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>{item.subCategory}</Subheading>
+                <Subheading style={{ width: "100%", color: "#000" }}>                
+                  {item.subcategory_name}
+                </Subheading>
+
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -356,6 +390,7 @@ const GeneralCatalog = (props) => {
                         param.customer_session_products[index].data.splice(i, 1);
                         setparam([...param]);
                       }}
+                      color="#aaa"
                     />
                     <View
                       key={i}
@@ -393,12 +428,22 @@ const GeneralCatalog = (props) => {
         visible={product}
         data={productList}
         onDone={(items) => {
-          selectedProducts.push({
-            subcategory_id: param.subcategory_id,
-            data: items,
-          });
-          setSelectedProducts([...selectedProducts]);
-          setparam({ ...param, customer_session_products: items });
+          items.map((item, i) => {
+            param.customer_session_products.push(item);
+          });         
+          setparam({ ...param, customer_session_products: param.customer_session_products });
+         
+          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
+            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
+              subcategory_name: item.subcategory_name,
+              data: []
+            };
+            acc[item.subcategory_name].data.push(item);
+            return acc;
+          }, {}))
+        
+          setSelectedProducts(tempData);
+
         }}
         onClose={() => setProduct(false)}
       />
@@ -407,6 +452,7 @@ const GeneralCatalog = (props) => {
         visible={contact}
         data={customerList}
         onDone={(items) => {
+
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
@@ -465,7 +511,7 @@ const GeneralCatalog = (props) => {
                   <Button
                     mode="contained"
                     uppercase={false}
-                    onPress={() => {
+                    onPress={() => {                    
                       setLoading(true);
                       postRequest(
                         "transactions/customer/generalsession/insert",
