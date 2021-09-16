@@ -23,6 +23,7 @@ import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 const CustomerCatalogList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -113,6 +114,7 @@ const CustomerCatalogList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("CustomerCatalog", {
                         tran_id: item.tran_id,
@@ -122,11 +124,12 @@ const CustomerCatalogList = (props) => {
                   />
                   <IconButton
                     icon="delete"
+                    color="#AAA"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -154,6 +157,7 @@ const CustomerCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() => props.navigation.navigate("CustomerCatalog", { tran_id: 0 })}
       />
     </View>
@@ -192,6 +196,7 @@ const CustomerCatalog = (props) => {
           _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
         });
         setsubcategorylist(_subcategoryList);
+
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
@@ -224,13 +229,18 @@ const CustomerCatalog = (props) => {
           param.customer_session_products = resp.data[0].products;
           setparam({ ...param });
 
-          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-            (items) => {
+
+            postRequest(
+              "transactions/customer/customerListMob",
+              { branch_id: branchId },
+              userToken
+            ).then((items) => {
               if (items.status == 200) {
                 let listData = [];
                 listData = items.data
                 listData.map((item, index) => {                
                   listData[index].selected = item.customer_id === resp.data[0].customer_id ? true : false;
+
                 });
                 setCustomerList(listData);
                
@@ -250,11 +260,10 @@ const CustomerCatalog = (props) => {
           }, {}))
 
           setSelectedProducts(tempData);
+
         }
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
-    });
+    );
     setLoading(false);
   }, []);
 

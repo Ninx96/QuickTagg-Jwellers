@@ -46,31 +46,27 @@ const GeneralCatalogList = (props) => {
       { search: search == undefined ? "" : search },
       userToken
     ).then((resp) => {
+
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest(
-      "transactions/customer/generalsession/delete",
-      { tran_id: id },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        if (resp.data[0].valid) {
-          Browse();
+    postRequest("transactions/customer/generalsession/delete", { tran_id: id }, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          if (resp.data[0].valid) {
+            Browse();
+          }
+          setLoading(false);
         }
-        setLoading(false);
       }
-    });
+    );
   };
   return (
     <View style={MyStyles.container}>
@@ -115,6 +111,7 @@ const GeneralCatalogList = (props) => {
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.entry_no} {"                "} {item.date}
                   </Text>
+
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.no_of_customer} {"Customers"}
                   </Text>
@@ -132,6 +129,7 @@ const GeneralCatalogList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("GeneralCatalog", {
                         tran_id: item.tran_id,
@@ -141,6 +139,7 @@ const GeneralCatalogList = (props) => {
                   />
                   <IconButton
                     icon="delete"
+                    color="#AAA"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
@@ -172,10 +171,9 @@ const GeneralCatalogList = (props) => {
           bottom: 20,
           right: 20,
         }}
+        color="#000"
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
-        }
+        onPress={() => props.navigation.navigate("GeneralCatalog", { tran_id: 0 })}
       />
     </View>
   );
@@ -216,27 +214,19 @@ const GeneralCatalog = (props) => {
         });
         setsubcategorylist(_subcategoryList);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     if (tran_id == 0) {
-      postRequest(
-        "transactions/customer/customerListMob",
-        { branch_id: branchId },
-        userToken
-      ).then((resp) => {
-        if (resp.status == 200) {
-          setCustomerList(resp.data);
-        } else {
-          Alert.alert(
-            "Error !",
-            "Oops! \nSeems like we run into some Server Error"
-          );
+      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            setCustomerList(resp.data);
+          } else {
+            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          }
         }
-      });
+      );
     }
 
     postRequest(
@@ -268,18 +258,13 @@ const GeneralCatalog = (props) => {
               listData = items.data;
               listData.map((item, index) => {
                 listData[index].selected =
-                  resp.data[0].customers.findIndex(
-                    (e) => e.customer_id === item.customer_id
-                  ) > -1
+                  resp.data[0].customers.findIndex((e) => e.customer_id === item.customer_id) > -1
                     ? true
                     : false;
               });
               setCustomerList(listData);
             } else {
-              Alert.alert(
-                "Error !",
-                "Oops! \nSeems like we run into some Server Error"
-              );
+              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
             }
           });
 
@@ -295,10 +280,7 @@ const GeneralCatalog = (props) => {
           setSelectedProducts(tempData);       
         }
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
 
@@ -317,23 +299,18 @@ const GeneralCatalog = (props) => {
       userToken
     ).then((resp) => {
 
+
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
   };
 
   return (
-    <ImageBackground
-      style={MyStyles.container}
-      source={require("../../assets/login-bg.jpg")}
-    >
+    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -372,24 +349,11 @@ const GeneralCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View
-              style={[
-                MyStyles.row,
-                { justifyContent: "space-evenly", marginVertical: 40 },
-              ]}
-            >
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setProduct(true)}
-              >
+            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
+              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
                 Add Products
               </Button>
-              <Button
-                mode="contained"
-                uppercase={false}
-                onPress={() => setContact(true)}
-              >
+              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
                 Next
               </Button>
             </View>
@@ -407,6 +371,7 @@ const GeneralCatalog = (props) => {
                 <Subheading style={{ width: "100%", color: "#000" }}>                
                   {item.subcategory_name}
                 </Subheading>
+
                 {item.data.map((item, i) => (
                   <View>
                     <IconButton
@@ -422,10 +387,7 @@ const GeneralCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(
-                          i,
-                          1
-                        );
+                        param.customer_session_products[index].data.splice(i, 1);
                         setparam([...param]);
                       }}
                       color="#aaa"
@@ -503,17 +465,9 @@ const GeneralCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground
-            style={MyStyles.container}
-            source={require("../../assets/login-bg.jpg")}
-          >
+          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
             <View style={{ flex: 1 }}>
-              <View
-                style={[
-                  MyStyles.row,
-                  { backgroundColor: "#ffba3c", marginTop: 0 },
-                ]}
-              >
+              <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
                 <IconButton
                   icon="chevron-left"
                   size={30}
@@ -523,9 +477,7 @@ const GeneralCatalog = (props) => {
                     setRemarks(false);
                   }}
                 />
-                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
-                  Enter Remarks
-                </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Enter Remarks</Text>
               </View>
               <View style={[MyStyles.cover, { backgroundColor: "" }]}>
                 <TextInput
@@ -555,12 +507,7 @@ const GeneralCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View
-                  style={[
-                    MyStyles.row,
-                    { justifyContent: "center", marginVertical: 40 },
-                  ]}
-                >
+                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
                   <Button
                     mode="contained"
                     uppercase={false}

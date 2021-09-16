@@ -113,6 +113,7 @@ const TryAndBuyCatalogList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("TryAndBuyCatalog", {
                         tran_id: item.tran_id,
@@ -153,6 +154,7 @@ const TryAndBuyCatalogList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() => props.navigation.navigate("TryAndBuyCatalog", { tran_id: 0 })}
       />
     </View>
@@ -208,7 +210,11 @@ const TryAndBuyCatalog = (props) => {
         }
       );
     }
-    postRequest("transactions/customer/trialsession/preview-session", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/trialsession/preview-session",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
@@ -231,8 +237,9 @@ const TryAndBuyCatalog = (props) => {
               } else {
                 Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
               }
+
             }
-          );
+          });
 
           let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
             if (!acc[item.text]) acc[item.text] = {

@@ -352,7 +352,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Greetings" disableSearch />,
+          header: (props) => <TitleBar {...props} title="Greetings 🎂" disableSearch />,
         }}
       />
 

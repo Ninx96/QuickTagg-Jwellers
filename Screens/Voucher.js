@@ -6,6 +6,7 @@ import {
   FlatList,
   Alert
 } from "react-native";
+
 import {
   Button,
   Checkbox,
@@ -43,13 +44,11 @@ const VoucherList = (props) => {
       { search: search == undefined ? "" : search },
       userToken
     ).then((resp) => {
+
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
     });
     setLoading(false);
@@ -57,16 +56,14 @@ const VoucherList = (props) => {
   const Delete = (id) => {
     setLoading(true);
     let data = { voucher_id: id };
-    postRequest("masters/customer/voucher/delete", data, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest("masters/customer/voucher/delete", data, userToken).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
 
   return (
@@ -113,9 +110,7 @@ const VoucherList = (props) => {
             <Card.Content>
               <View style={[MyStyles.row, { margin: 0 }]}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.voucher_heading}
-                  </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.voucher_heading}</Text>
                   <Text style={{ marginBottom: 20 }}>
                     {"Value => "}
                     {item.voucher_value}
@@ -128,6 +123,7 @@ const VoucherList = (props) => {
                 <View>
                   <IconButton
                     icon="pencil"
+                    color="#AAA"
                     onPress={() =>
                       props.navigation.navigate("VoucherForm", {
                         voucher_id: item.voucher_id,
@@ -137,11 +133,12 @@ const VoucherList = (props) => {
                   />
                   <IconButton
                     icon="delete"
+
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -169,9 +166,8 @@ const VoucherList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() =>
-          props.navigation.navigate("VoucherForm", { voucher_id: 0 })
-        }
+        color="#000"
+        onPress={() => props.navigation.navigate("VoucherForm", { voucher_id: 0 })}
       />
     </View>
   );
@@ -235,6 +231,7 @@ const VoucherForm = (props) => {
       postRequest("masters/customer/voucher/preview", { voucher_id: voucher_id }, userToken).then(
         (resp) => {
           console.log(resp);
+
           if (resp.status == 200) {
             param.voucher_id = resp.data.voucher_id;
             param.voucher_session_type = resp.data.voucher_session_type;
@@ -274,7 +271,8 @@ const VoucherForm = (props) => {
               param.duration = "";
             }
           }
-        });
+        }
+      );
     }
 
     setLoading(false);
@@ -318,10 +316,7 @@ const VoucherForm = (props) => {
   }
 
   return (
-    <ImageBackground
-      source={require("../assets/login-bg.jpg")}
-      style={MyStyles.container}
-    >
+    <ImageBackground source={require("../assets/login-bg.jpg")} style={MyStyles.container}>
       <ScrollView>
         <View style={MyStyles.cover}>
           <DropDown
@@ -475,6 +470,7 @@ const VoucherForm = (props) => {
                   ...param,
                   image_path:
                     "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
+
                 });
               }}
             />
@@ -499,16 +495,12 @@ const VoucherForm = (props) => {
                   ...param,
                   banner_image:
                     "banner-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
+
                 });
               }}
             />
           </View>
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
+          <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
             <Button
               mode="contained"
               uppercase={false}
@@ -517,6 +509,7 @@ const VoucherForm = (props) => {
                 postRequest("masters/customer/voucher/insert", param, userToken).then((resp) => {
                   if (resp.status == 200) {
                     if (resp.data[0].valid) {
+
 
                       if (Banner.uri) {
                         const form_data = new FormData();
@@ -527,7 +520,11 @@ const VoucherForm = (props) => {
                         });
 
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", serviceUrl + "masters/customer/UploadvoucherBannerMob", true);
+                        xhr.open(
+                          "POST",
+                          serviceUrl + "masters/customer/UploadvoucherBannerMob",
+                          true
+                        );
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.setRequestHeader("Content-Type", "multipart/form-data");
                         xhr.setRequestHeader("auth-token", userToken);
@@ -729,6 +726,7 @@ const MessageTemplate = ({ visible, onDone, onClose, type, company }) => {
           style={MyStyles.container}
         >
           <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.6)", margin: 20, borderRadius: 10, padding: 10, }}>
+
             <TextInput
               mode="outlined"
               placeholder="Voucher Name"
