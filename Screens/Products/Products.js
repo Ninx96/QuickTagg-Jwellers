@@ -1,6 +1,22 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Alert, FlatList, Image, Share } from "react-native";
-import { Button, Text, FAB, TextInput, Checkbox, Card, IconButton } from "react-native-paper";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Alert,
+  FlatList,
+  Image,
+  Share,
+} from "react-native";
+import {
+  Button,
+  Text,
+  FAB,
+  TextInput,
+  Checkbox,
+  Card,
+  IconButton,
+} from "react-native-paper";
 import Swiper from "react-native-swiper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MyStyles from "../../Styles/MyStyles";
@@ -15,13 +31,20 @@ const ProductsList = (props) => {
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
-  React.useEffect(() => {  
-    postRequest("masters/product/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+  React.useEffect(() => {
+    console.log(search);
+    postRequest(
+      "masters/product/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
-
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -46,7 +69,9 @@ const ProductsList = (props) => {
               })
             }
           >
-            {item.exhibition ? <BadgeRibbon text="E" position="left" color="red" /> : null}
+            {item.exhibition ? (
+              <BadgeRibbon text="E" position="left" color="red" />
+            ) : null}
             {item.trial ? <BadgeRibbon text="T" position="right" /> : null}
             <Image
               source={{ uri: item.url_image + "" + item.image_path }}
@@ -76,7 +101,9 @@ const ProductsList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("ProductsForm", { product_id: 0 })}
+        onPress={() =>
+          props.navigation.navigate("ProductsForm", { product_id: 0 })
+        }
       />
     </View>
   );
@@ -142,7 +169,10 @@ const ProductsPreview = (props) => {
         ImagesList = resp.data[0].images;
         setProductImages(ImagesList);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -166,11 +196,16 @@ const ProductsPreview = (props) => {
           />
         </View> */}
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
-          <Text style={{ fontWeight: "bold", fontSize: 22 }}>{param.product_name}</Text>
-          <Text style={{ fontSize: 18, marginVertical: 10 }}>SKU: {param.product_code}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 22 }}>
+            {param.product_name}
+          </Text>
+          <Text style={{ fontSize: 18, marginVertical: 10 }}>
+            SKU: {param.product_code}
+          </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontSize: 18 }}>
-              Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text> {"      "}
+              Price: <Text style={{ fontWeight: "bold" }}>{param.price}</Text>{" "}
+              {"      "}
               <Text
                 style={{
                   fontSize: 14,
@@ -195,7 +230,7 @@ const ProductsPreview = (props) => {
                 shareOptions.title = param.product_name;
                 shareOptions.message = param.product_name;
                 shareOptions.url = "www.google.com/";
-                setshareOptions({ ...shareOptions });                
+                setshareOptions({ ...shareOptions });
                 Share.share(shareOptions);
               }}
             />
@@ -224,39 +259,57 @@ const ProductsPreview = (props) => {
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Availablity :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Availablity :
+            </Text>
             <Text>{param.available}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Metal :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Metal :
+            </Text>
             <Text>{param.Metal}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Material :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Material :
+            </Text>
             <Text>{param.material}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Disable :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Disable :
+            </Text>
             <Text>{param.disable}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Exhibition :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Exhibition :
+            </Text>
             <Text>{param.exhibition}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Weight :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Weight :
+            </Text>
             <Text>{param.weight}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Size/Length :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Size/Length :
+            </Text>
             <Text>{param.size_length}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Gender :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Gender :
+            </Text>
             <Text>{param.gender}</Text>
           </View>
           <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>Description :</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 16, width: 150 }}>
+              Description :
+            </Text>
             <Text>{param.product_code}</Text>
           </View>
         </View>
@@ -306,13 +359,18 @@ const ProductsForm = (props) => {
   const [productsuploads, setproductsuploads] = useState([]);
 
   React.useEffect(() => {
-    postRequest("masters/product/subcategory/getCategory", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
-        setcategorylist(resp.data);
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+    postRequest("masters/product/subcategory/getCategory", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setcategorylist(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
+    );
 
     setLoading(false);
   }, []);
@@ -326,12 +384,18 @@ const ProductsForm = (props) => {
       if (resp.status == 200) {
         setsubcategorylist(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
   };
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
@@ -493,7 +557,7 @@ const ProductsForm = (props) => {
 
           <MultipleImages
             data={[]}
-            onSelect={(fileArray) => {          
+            onSelect={(fileArray) => {
               let imagesname = [],
                 imagesdata = [];
               fileArray.map((resp, index) => {
@@ -504,7 +568,7 @@ const ProductsForm = (props) => {
                 });
               });
               setparam({ ...param, product_images: imagesname });
-              setproductsuploads(imagesdata);             
+              setproductsuploads(imagesdata);
             }}
           />
 
@@ -514,49 +578,57 @@ const ProductsForm = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/product/insert", param, userToken).then((resp) => {
-               
-                if (resp.status == 200) {
-                  if (resp.data[0].valid) {
-                   
+              postRequest("masters/product/insert", param, userToken).then(
+                (resp) => {
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      if (param.product_images.length !== 0) {
+                        productsuploads.map((item, index) => {
+                          const form_data = new FormData();
+                          form_data.append("files", {
+                            uri: item.image_path,
+                            type: "image/jpeg",
+                            name: item.image_name,
+                          });
 
-                    if (param.product_images.length !== 0) {
-                      productsuploads.map((item, index) => {
+                          var xhr = new XMLHttpRequest();
+                          xhr.open(
+                            "POST",
+                            serviceUrl + "masters/product/uploadImageMob",
+                            true
+                          );
+                          xhr.setRequestHeader("Accept", "application/json");
+                          xhr.setRequestHeader(
+                            "Content-Type",
+                            "multipart/form-data"
+                          );
+                          xhr.setRequestHeader("auth-token", userToken);
 
-                        const form_data = new FormData();
-                        form_data.append("files", {
-                          uri: item.image_path,
-                          type: "image/jpeg",
-                          name: item.image_name
-                        });
-
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", serviceUrl + "masters/product/uploadImageMob", true);
-                        xhr.setRequestHeader("Accept", "application/json");
-                        xhr.setRequestHeader("Content-Type", "multipart/form-data");
-                        xhr.setRequestHeader("auth-token", userToken);
-
-                        xhr.onload = function (e) {
-                          const resp = xhr.response;
-                          if (resp.status == 200) {
-                            if (resp.data[0].valid) {
-                             // console.log("Images : " + resp.data[0].valid);
+                          xhr.onload = function (e) {
+                            const resp = xhr.response;
+                            if (resp.status == 200) {
+                              if (resp.data[0].valid) {
+                                // console.log("Images : " + resp.data[0].valid);
+                              }
                             }
-                          }
-                        };
-                        xhr.send(form_data);
-                      });
-                    }
+                          };
+                          xhr.send(form_data);
+                        });
+                      }
 
-                    props.navigation.navigate("ProductTabs");
+                      props.navigation.navigate("ProductTabs");
+                    } else {
+                      Alert.alert("Error !", resp.error);
+                    }
                   } else {
-                    Alert.alert("Error !", resp.error);
+                    Alert.alert(
+                      "Error !",
+                      "Oops! \nSeems like we run into some Server Error"
+                    );
                   }
-                } else {
-                  Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+                  setLoading(false);
                 }
-                setLoading(false);
-              });
+              );
             }}
           >
             Submit

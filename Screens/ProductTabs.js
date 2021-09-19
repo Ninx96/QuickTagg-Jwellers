@@ -18,12 +18,20 @@ const ProductTabs = (props) => {
           labelStyle: { fontSize: 14, fontWeight: "bold" },
         }}
       >
-        <Tab.Screen name="Products" component={ProductsList} initialParams={props.route.params} />
-        <Tab.Screen name="Category" component={CategoryList} initialParams={props.route.params} />
+        <Tab.Screen
+          name="Products"
+          children={() => <ProductsList {...props} />}
+          // initialParams={props.route.params}
+        />
+        <Tab.Screen
+          name="Category"
+          children={() => <CategoryList {...props} />}
+          // initialParams={props.route.params}
+        />
         <Tab.Screen
           name="SubCategory"
-          component={SubCategoryList}
-          initialParams={props.route.params}
+          children={() => <SubCategoryList {...props} />}
+          // initialParams={props.route.params}
         />
       </Tab.Navigator>
     </View>
