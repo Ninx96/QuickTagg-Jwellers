@@ -19,7 +19,6 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
   const [listData, setListData] = useState(data);
   useEffect(() => {
     setListData(data);
-   
   }, [data]);
   return (
     <Portal>
@@ -49,7 +48,19 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   width: "60%",
                 }}
                 left={<TextInput.Icon name="magnify" />}
-                onChangeText={(text) => { }}
+                onChangeText={(text) => {
+                  const keyword = new RegExp(text.toLowerCase());
+                  const filter = data.filter((item, index) => {
+                    if (
+                      item.product_name.toLowerCase().match(keyword) ||
+                      item.product_code.toLowerCase().match(keyword)
+                    ) {
+                      return true;
+                    }
+                    return false;
+                  });
+                  setListData(filter);
+                }}
                 placeholder="Search"
               />
             ) : (
@@ -75,7 +86,9 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
                   alignItems: "center",
                 }}
                 onPress={() => {
-                  item.selected = !item.selected;
+                  const isSelected = !item.selected;
+                  item.selected = isSelected;
+                  data[index].selected = isSelected;
                   setListData([...listData]);
                 }}
               >
@@ -116,7 +129,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
           style={{ position: "absolute", bottom: 20, right: 20 }}
           icon="check"
           onPress={() => {
-            const selected = listData.filter((item) => item.selected);
+            const selected = data.filter((item) => item.selected);
             onDone(selected);
             onClose();
           }}
@@ -128,27 +141,27 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             let _selecteddata = [];
             listData.map((resp, index) => {
               _selecteddata.push({
-                "Metal": resp.Metal,
-                "category_id": resp.category_id,
-                "category_name": resp.category_name,
-                "discounted_price": resp.discounted_price,
-                "exhibition": resp.exhibition,
-                "gender": resp.gender,
-                "image_path": resp.image_path,
-                "material": resp.material,
-                "on_demand": resp.on_demand,
-                "price": resp.price,
-                "product_code": resp.product_code,
-                "product_id": resp.product_id,
-                "product_name": resp.product_name,
-                "remarks": resp.remarks,
-                "size_length": resp.size_length,
-                "subcategory_id": resp.subcategory_id,
-                "subcategory_name": resp.subcategory_name,
-                "trial": resp.trial,
-                "url_image": resp.url_image,
-                "weight": resp.weight,
-                "selected": true
+                Metal: resp.Metal,
+                category_id: resp.category_id,
+                category_name: resp.category_name,
+                discounted_price: resp.discounted_price,
+                exhibition: resp.exhibition,
+                gender: resp.gender,
+                image_path: resp.image_path,
+                material: resp.material,
+                on_demand: resp.on_demand,
+                price: resp.price,
+                product_code: resp.product_code,
+                product_id: resp.product_id,
+                product_name: resp.product_name,
+                remarks: resp.remarks,
+                size_length: resp.size_length,
+                subcategory_id: resp.subcategory_id,
+                subcategory_name: resp.subcategory_name,
+                trial: resp.trial,
+                url_image: resp.url_image,
+                weight: resp.weight,
+                selected: true,
               });
             });
             setListData(_selecteddata);

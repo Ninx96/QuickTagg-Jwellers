@@ -15,13 +15,19 @@ import {
 } from "react-native-paper";
 import MyStyles from "../Styles/MyStyles";
 
-const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }) => {
+const SelectCustomer = ({
+  visible,
+  multiple = true,
+  data = [],
+  onDone,
+  onClose,
+}) => {
   const [listData, setListData] = useState(data);
   const [selectedIndex, setselectedIndex] = useState(null);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    setListData(data);  
+    setListData(data);
   }, [data]);
 
   return (
@@ -32,15 +38,39 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
         contentContainerStyle={{ flex: 1, backgroundColor: "#fff" }}
       >
         <View style={{ flex: 1 }}>
-          <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
-            <IconButton icon="chevron-left" size={30} color="black" onPress={onClose} />
+          <View
+            style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}
+          >
+            <IconButton
+              icon="chevron-left"
+              size={30}
+              color="black"
+              onPress={onClose}
+            />
             {show ? (
               <TextInput
                 mode="flat"
                 theme={{ colors: { primary: "black" } }}
-                style={{ backgroundColor: "rgba(0,0,0,0)", height: 45, width: "60%" }}
+                style={{
+                  backgroundColor: "rgba(0,0,0,0)",
+                  height: 45,
+                  width: "60%",
+                }}
                 left={<TextInput.Icon name="magnify" />}
-                onChangeText={(text) => { }}
+                onChangeText={(text) => {
+                  const keyword = new RegExp(text.toLowerCase());
+                  const filter = data.filter((item, index) => {
+                    if (
+                      (item.full_name &&
+                        item.full_name.toLowerCase().match(keyword)) ||
+                      item.mobile.toLowerCase().match(keyword)
+                    ) {
+                      return true;
+                    }
+                    return false;
+                  });
+                  setListData(filter);
+                }}
                 placeholder="Search"
               />
             ) : (
@@ -62,16 +92,18 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                 onPress={
                   multiple
                     ? () => {
-                      item.selected = !item.selected;
-                      setListData([...listData]);
-                    }
-                    : () => {
-                      if (selectedIndex == index) {
-                        setselectedIndex(null);
-                      } else {
-                        setselectedIndex(index);
+                        const isSelected = !item.selected;
+                        item.selected = isSelected;
+                        data[index].selected = isSelected;
+                        setListData([...listData]);
                       }
-                    }
+                    : () => {
+                        if (selectedIndex == index) {
+                          setselectedIndex(null);
+                        } else {
+                          setselectedIndex(index);
+                        }
+                      }
                 }
                 title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
@@ -80,16 +112,22 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
                   return (
                     <TouchableRipple style={MyStyles.squarefixedRatio}>
                       <Text style={{ color: "red" }}>
-                        {item.category_name == null ? "" : item.category_name.charAt(0)}
+                        {item.category_name == null
+                          ? ""
+                          : item.category_name.charAt(0)}
                       </Text>
                     </TouchableRipple>
                   );
                 }}
                 right={() =>
                   multiple ? (
-                    <Checkbox status={item.selected ? "checked" : "unchecked"} />
+                    <Checkbox
+                      status={item.selected ? "checked" : "unchecked"}
+                    />
                   ) : (
-                    <Checkbox status={selectedIndex == index ? "checked" : "unchecked"} />
+                    <Checkbox
+                      status={selectedIndex == index ? "checked" : "unchecked"}
+                    />
                   )
                 }
               />
@@ -104,15 +142,19 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
           onPress={
             multiple
               ? () => {
-                const selectedCustomers = listData.filter((item) => item.selected);
-                onDone(selectedCustomers);
-                onClose();
-              }
+                  const selectedCustomers = data.filter(
+                    (item) => item.selected
+                  );
+                  onDone(selectedCustomers);
+                  onClose();
+                }
               : () => {
-                const selectedCustomer = listData.filter((item, index) => index == selectedIndex);
-                onDone(selectedCustomer);
-                onClose();
-              }
+                  const selectedCustomer = data.filter(
+                    (item, index) => index == selectedIndex
+                  );
+                  onDone(selectedCustomer);
+                  onClose();
+                }
           }
         />
         <FAB
@@ -120,10 +162,17 @@ const SelectCustomer = ({ visible, multiple = true, data = [], onDone, onClose }
           icon="select-all"
           onPress={() => {
             let _selecteddata = [];
-            listData.map((resp, index) => {            
-              _selecteddata.push({ "category_name": resp.category_name, "customer_id": resp.customer_id, "full_name": resp.full_name, "mobile": resp.mobile, "type": resp.type, "selected": true });
+            listData.map((resp, index) => {
+              _selecteddata.push({
+                category_name: resp.category_name,
+                customer_id: resp.customer_id,
+                full_name: resp.full_name,
+                mobile: resp.mobile,
+                type: resp.type,
+                selected: true,
+              });
             });
-            setListData(_selecteddata);           
+            setListData(_selecteddata);
           }}
         />
       </Modal>
