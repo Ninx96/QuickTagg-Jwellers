@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import {
   Button,
   Text,
@@ -23,7 +30,6 @@ import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
 import { LinearGradient } from "expo-linear-gradient";
 
-
 const CustomerCatalogList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -34,18 +40,29 @@ const CustomerCatalogList = (props) => {
   }, [search]);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/session/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("transactions/customer/session/delete", { tran_id: id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         if (resp.data[0].valid) {
           Browse();
@@ -158,7 +175,9 @@ const CustomerCatalogList = (props) => {
         }}
         icon="plus"
         color="#000"
-        onPress={() => props.navigation.navigate("CustomerCatalog", { tran_id: 0 })}
+        onPress={() =>
+          props.navigation.navigate("CustomerCatalog", { tran_id: 0 })
+        }
       />
     </View>
   );
@@ -189,36 +208,55 @@ const CustomerCatalog = (props) => {
   const [subcategorylist, setsubcategorylist] = useState([]);
 
   React.useEffect(() => {
-    postRequest("transactions/customer/session/getSubcategory", { branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         var _subcategoryList = [];
         resp.data.map((item, index) => {
-          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+          _subcategoryList.push({
+            subcategory_id: item.subcategory_id,
+            subcategory_name:
+              item.subcategory_name + " (" + item.category_name + ")",
+          });
         });
         setsubcategorylist(_subcategoryList);
-
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
-    if (tran_id == 0) {     
-      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-        (resp) => {
-          if (resp.status == 200) {
-            setCustomerList(resp.data);
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-          }
+    if (tran_id == 0) {
+      postRequest(
+        "transactions/customer/customerListMob",
+        { branch_id: branchId },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
-      );
+      });
     }
 
-    postRequest("transactions/customer/session/preview", { tran_id: tran_id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/preview",
+      { tran_id: tran_id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
-        } else {         
+        } else {
           param.tran_id = resp.data[0].tran_id;
           param.customer_id = resp.data[0].customer_id;
           param.customer_name = resp.data[0].customer_name;
@@ -229,41 +267,43 @@ const CustomerCatalog = (props) => {
           param.customer_session_products = resp.data[0].products;
           setparam({ ...param });
 
-
-            postRequest(
-              "transactions/customer/customerListMob",
-              { branch_id: branchId },
-              userToken
-            ).then((items) => {
-              if (items.status == 200) {
-                let listData = [];
-                listData = items.data
-                listData.map((item, index) => {                
-                  listData[index].selected = item.customer_id === resp.data[0].customer_id ? true : false;
-
-                });
-                setCustomerList(listData);
-               
-              } else {
-                Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-              }
+          postRequest(
+            "transactions/customer/customerListMob",
+            { branch_id: branchId },
+            userToken
+          ).then((items) => {
+            if (items.status == 200) {
+              let listData = [];
+              listData = items.data;
+              listData.map((item, index) => {
+                listData[index].selected =
+                  item.customer_id === resp.data[0].customer_id ? true : false;
+              });
+              setCustomerList(listData);
+            } else {
+              Alert.alert(
+                "Error !",
+                "Oops! \nSeems like we run into some Server Error"
+              );
             }
+          });
+
+          let tempData = Object.values(
+            param.customer_session_products.reduce((acc, item) => {
+              if (!acc[item.text])
+                acc[item.text] = {
+                  subcategory_name: item.text,
+                  data: [],
+                };
+              acc[item.text].data.push(item);
+              return acc;
+            }, {})
           );
 
-          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
-            if (!acc[item.text]) acc[item.text] = {
-              subcategory_name: item.text,
-              data: []
-            };
-            acc[item.text].data.push(item);
-            return acc;
-          }, {}))
-
           setSelectedProducts(tempData);
-
         }
       }
-    );
+    });
     setLoading(false);
   }, []);
 
@@ -273,17 +313,27 @@ const CustomerCatalog = (props) => {
       min_amount: param.min_amount == "" ? "0" : param.min_amount,
       max_amount: param.max_amount == "" ? "0" : param.max_amount,
     };
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -322,11 +372,24 @@ const CustomerCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
-              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "space-evenly", marginVertical: 40 },
+              ]}
+            >
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setProduct(true)}
+              >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -359,7 +422,10 @@ const CustomerCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(i, 1);
+                        param.customer_session_products[index].data.splice(
+                          i,
+                          1
+                        );
                         setparam([...param]);
                       }}
                     />
@@ -400,16 +466,22 @@ const CustomerCatalog = (props) => {
           items.map((item, i) => {
             param.customer_session_products.push(item);
           });
-          setparam({ ...param, customer_session_products: param.customer_session_products });
+          setparam({
+            ...param,
+            customer_session_products: param.customer_session_products,
+          });
 
-          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
-            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
-              subcategory_name: item.subcategory_name,
-              data: []
-            };
-            acc[item.subcategory_name].data.push(item);
-            return acc;
-          }, {}))
+          let tempData = Object.values(
+            param.customer_session_products.reduce((acc, item) => {
+              if (!acc[item.subcategory_name])
+                acc[item.subcategory_name] = {
+                  subcategory_name: item.subcategory_name,
+                  data: [],
+                };
+              acc[item.subcategory_name].data.push(item);
+              return acc;
+            }, {})
+          );
 
           setSelectedProducts(tempData);
         }}
@@ -438,7 +510,10 @@ const CustomerCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -482,22 +557,29 @@ const CustomerCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
                   <Button
                     mode="contained"
                     uppercase={false}
-                    onPress={() => {                   
+                    onPress={() => {
                       setLoading(true);
-                      postRequest("transactions/customer/session/insert", param, userToken).then(
-                        (resp) => {
-                          if (resp.status == 200) {
-                            if (resp.data[0].valid) {
-                              props.navigation.navigate("CustomerCatalogList");
-                            }
-                            setLoading(false);
+                      postRequest(
+                        "transactions/customer/session/insert",
+                        param,
+                        userToken
+                      ).then((resp) => {
+                        if (resp.status == 200) {
+                          if (resp.data[0].valid) {
+                            props.navigation.navigate("CustomerCatalogList");
                           }
+                          setLoading(false);
                         }
-                      );
+                      });
                     }}
                   >
                     Submit

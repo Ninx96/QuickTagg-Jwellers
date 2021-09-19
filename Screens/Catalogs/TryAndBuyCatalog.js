@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import {
   Button,
   Text,
@@ -33,18 +40,29 @@ const TryAndBuyCatalogList = (props) => {
   }, [search]);
 
   const Browse = (id) => {
-    postRequest("transactions/customer/trialsession/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/trialsession/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("transactions/customer/trial/delete", { tran_id: id }, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/trial/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         if (resp.data[0].valid) {
           Browse();
@@ -155,7 +173,9 @@ const TryAndBuyCatalogList = (props) => {
         }}
         icon="plus"
         color="#000"
-        onPress={() => props.navigation.navigate("TryAndBuyCatalog", { tran_id: 0 })}
+        onPress={() =>
+          props.navigation.navigate("TryAndBuyCatalog", { tran_id: 0 })
+        }
       />
     </View>
   );
@@ -192,23 +212,35 @@ const TryAndBuyCatalog = (props) => {
       if (resp.status == 200) {
         var _subcategoryList = [];
         resp.data.map((item, index) => {
-          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+          _subcategoryList.push({
+            subcategory_id: item.subcategory_id,
+            subcategory_name:
+              item.subcategory_name + " (" + item.category_name + ")",
+          });
         });
         setsubcategorylist(_subcategoryList);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     if (tran_id == 0) {
-      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-        (resp) => {
-          if (resp.status == 200) {
-            setCustomerList(resp.data);
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-          }
+      postRequest(
+        "transactions/customer/customerListMob",
+        { branch_id: branchId },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
-      );
+      });
     }
     postRequest(
       "transactions/customer/trialsession/preview-session",
@@ -224,36 +256,51 @@ const TryAndBuyCatalog = (props) => {
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
           param.subcategory_id = resp.data[0].products[0].subcategory_id;
-          setparam({ ...param });         
-          postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-            (items) => {
-              if (items.status == 200) {
-                let listData = [];
-                listData = items.data
-                listData.map((item, index) => {
-                  listData[index].selected = resp.data[0].customers.findIndex(e => e.customer_id === item.customer_id) > -1 ? true : false;
-                });
-                setCustomerList(listData);
-              } else {
-                Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-              }
-
+          setparam({ ...param });
+          postRequest(
+            "transactions/customer/customerListMob",
+            { branch_id: branchId },
+            userToken
+          ).then((items) => {
+            if (items.status == 200) {
+              let listData = [];
+              listData = items.data;
+              listData.map((item, index) => {
+                listData[index].selected =
+                  resp.data[0].customers.findIndex(
+                    (e) => e.customer_id === item.customer_id
+                  ) > -1
+                    ? true
+                    : false;
+              });
+              setCustomerList(listData);
+            } else {
+              Alert.alert(
+                "Error !",
+                "Oops! \nSeems like we run into some Server Error"
+              );
             }
           });
 
-          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
-            if (!acc[item.text]) acc[item.text] = {
-              subcategory_name: item.text,
-              data: []
-            };
-            acc[item.text].data.push(item);
-            return acc;
-          }, {}))
-        
-          setSelectedProducts(tempData);  
+          let tempData = Object.values(
+            param.customer_session_products.reduce((acc, item) => {
+              if (!acc[item.text])
+                acc[item.text] = {
+                  subcategory_name: item.text,
+                  data: [],
+                };
+              acc[item.text].data.push(item);
+              return acc;
+            }, {})
+          );
+
+          setSelectedProducts(tempData);
         }
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
 
@@ -266,18 +313,28 @@ const TryAndBuyCatalog = (props) => {
       min_amount: param.min_amount == "" ? "0" : param.min_amount,
       max_amount: param.max_amount == "" ? "0" : param.max_amount,
     };
-    postRequest("transactions/customer/session/getProducts", data, userToken).then((resp) => {
+    postRequest(
+      "transactions/customer/session/getProducts",
+      data,
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -288,8 +345,8 @@ const TryAndBuyCatalog = (props) => {
               ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                param.subcategory_id= val;
-                setparam({ ...param});
+                param.subcategory_id = val;
+                setparam({ ...param });
                 ProductList();
               }}
               placeholder="SubCategory"
@@ -316,11 +373,24 @@ const TryAndBuyCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
-              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "space-evenly", marginVertical: 40 },
+              ]}
+            >
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setProduct(true)}
+              >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -335,7 +405,7 @@ const TryAndBuyCatalog = (props) => {
                   flexWrap: "wrap",
                 }}
               >
-              <Subheading style={{ width: "100%", color: "#000" }}>                
+                <Subheading style={{ width: "100%", color: "#000" }}>
                   {item.subcategory_name}
                 </Subheading>
                 {item.data.map((item, i) => (
@@ -395,18 +465,21 @@ const TryAndBuyCatalog = (props) => {
         onDone={(items) => {
           items.map((item, i) => {
             param.product_ids.push(item);
-          });         
+          });
           setparam({ ...param, product_ids: param.product_ids });
-         
-          let tempData = Object.values(param.product_ids.reduce((acc, item) => {
-            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
-              subcategory_name: item.subcategory_name,
-              data: []
-            };
-            acc[item.subcategory_name].data.push(item);
-            return acc;
-          }, {}))
-        
+
+          let tempData = Object.values(
+            param.product_ids.reduce((acc, item) => {
+              if (!acc[item.subcategory_name])
+                acc[item.subcategory_name] = {
+                  subcategory_name: item.subcategory_name,
+                  data: [],
+                };
+              acc[item.subcategory_name].data.push(item);
+              return acc;
+            }, {})
+          );
+
           setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
@@ -434,7 +507,10 @@ const TryAndBuyCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
             <View style={{ flex: 1 }}>
               <View style={MyStyles.row}>
                 <IconButton
@@ -478,21 +554,28 @@ const TryAndBuyCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
                   <Button
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
                       setLoading(true);
-                      postRequest("transactions/customer/trial/insert", param, userToken).then(
-                        (resp) => {
-                          console.log(resp);
-                          if (resp.status == 200) {
-                            props.navigation.navigate("TryAndBuyCatalogList");
-                            setLoading(false);
-                          }
+                      postRequest(
+                        "transactions/customer/trial/insert",
+                        param,
+                        userToken
+                      ).then((resp) => {
+                        console.log(resp);
+                        if (resp.status == 200) {
+                          props.navigation.navigate("TryAndBuyCatalogList");
+                          setLoading(false);
                         }
-                      );
+                      });
                     }}
                   >
                     Submit
