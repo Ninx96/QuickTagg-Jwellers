@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, FlatList, Image, Alert } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  FlatList,
+  Image,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import {
   Button,
   Text,
@@ -16,6 +25,7 @@ import ImageUpload from "../../Components/ImageUpload";
 import { postRequest } from "../../Services/RequestServices";
 import { serviceUrl } from "../../Services/Constants";
 import moment from "moment";
+import Autocomplete from "react-native-autocomplete-input";
 
 const CategoryList = (props) => {
   const { userToken, search } = props.route.params;
@@ -26,18 +36,29 @@ const CategoryList = (props) => {
     Browse();
   }, [search]);
   const Browse = () => {
-    postRequest("masters/product/category/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
-      if (resp.status == 200) {       
+    postRequest(
+      "masters/product/category/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("masters/product/category/delete", { category_id: id }, userToken).then((resp) => {
+    postRequest(
+      "masters/product/category/delete",
+      { category_id: id },
+      userToken
+    ).then((resp) => {
       console.log(resp);
       if (resp.status == 200) {
         if (resp.data[0].valid) {
@@ -60,10 +81,24 @@ const CategoryList = (props) => {
               marginVertical: 10,
             }}
           >
-            <Card.Cover source={item.image_path != "" ? { uri: item.url_banner + "" + item.banner_path } : require("../../assets/upload.png")} style={{ height: 140 }} />
+            <Card.Cover
+              source={
+                item.image_path != ""
+                  ? { uri: item.url_banner + "" + item.banner_path }
+                  : require("../../assets/upload.png")
+              }
+              style={{ height: 140 }}
+            />
 
-            <View style={[MyStyles.row, { marginVertical: 0, paddingHorizontal: 10 }]}>
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>{item.category_name}</Text>
+            <View
+              style={[
+                MyStyles.row,
+                { marginVertical: 0, paddingHorizontal: 10 },
+              ]}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {item.category_name}
+              </Text>
 
               <Image
                 source={{ uri: item.url_image + "" + item.image_path }}
@@ -77,7 +112,6 @@ const CategoryList = (props) => {
                 }}
               />
               <View>
-
                 <TouchableRipple
                   style={{ zIndex: 0 }}
                   onPress={() => {
@@ -95,7 +129,7 @@ const CategoryList = (props) => {
                     Alert.alert("Alert", "You want to delete?", [
                       {
                         text: "No",
-                        onPress: () => { },
+                        onPress: () => {},
                         style: "cancel",
                       },
                       {
@@ -140,8 +174,75 @@ const CategoryForm = (props) => {
     image_path: "",
     banner_path: "",
   });
-  const [Banner, setBanner] = React.useState(require("../../assets/upload.png"));
+  const [Banner, setBanner] = React.useState(
+    require("../../assets/upload.png")
+  );
   const [Image, setImage] = React.useState(require("../../assets/upload.png"));
+
+  // For Filtered Data
+  const [filteredFilms, setFilteredFilms] = useState([]);
+
+  const [films, setFilms] = useState([
+    { userId: 1, id: 1, title: "delectus aut autem", completed: false },
+    {
+      userId: 1,
+      id: 2,
+      title: "quis ut nam facilis et officia qui",
+      completed: false,
+    },
+    { userId: 1, id: 3, title: "fugiat veniam minus", completed: false },
+    { userId: 1, id: 4, title: "et porro tempora", completed: true },
+    {
+      userId: 1,
+      id: 5,
+      title: "laboriosam mollitia et enim quasi adipisci quia provident illum",
+      completed: false,
+    },
+    {
+      userId: 1,
+      id: 6,
+      title: "qui ullam ratione quibusdam voluptatem quia omnis",
+      completed: false,
+    },
+    {
+      userId: 1,
+      id: 7,
+      title: "illo expedita consequatur quia in",
+      completed: false,
+    },
+    {
+      userId: 1,
+      id: 8,
+      title: "quo adipisci enim quam ut ab",
+      completed: true,
+    },
+    {
+      userId: 1,
+      id: 9,
+      title: "molestiae perspiciatis ipsa",
+      completed: false,
+    },
+    {
+      userId: 1,
+      id: 10,
+      title: "illo est ratione doloremque quia maiores aut",
+      completed: true,
+    },
+  ]);
+
+  const findFilm = (query) => {
+    // Method called every time when we change the value of the input
+    if (query) {
+      // Making a case insensitive regular expression
+      const regex = new RegExp(`${query.trim()}`, "i");
+      // Setting the filtered film array according the query
+      setFilteredFilms(films.filter((film) => film.title.search(regex) >= 0));
+    } else {
+      // If the query is null then return blank
+      setFilteredFilms([]);
+    }
+  };
+
   React.useEffect(() => {
     if (category_id != 0) {
       postRequest(
@@ -155,7 +256,10 @@ const CategoryForm = (props) => {
           param.banner_path = resp.data.banner_path;
           setparam({ ...param });
         } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
       });
     }
@@ -163,7 +267,10 @@ const CategoryForm = (props) => {
   }, []);
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <TextInput
           mode="outlined"
@@ -174,6 +281,35 @@ const CategoryForm = (props) => {
             setparam({ ...param, category_name: text });
           }}
         />
+
+        <Autocomplete
+          autoCapitalize="none"
+          autoCorrect={false}
+          containerStyle={styles.autocompleteContainer}
+          inputContainerStyle={{
+            height: 55,
+            borderWidth: 1.5,
+            borderColor: "#888",
+          }}
+          //data to show in suggestion
+          data={filteredFilms}
+          //default value if you want to set something in input
+          defaultValue=""
+          // onchange of the text changing the state of the query
+          // which will trigger the findFilm method
+          // to show the suggestions
+          onChangeText={(text) => findFilm(text)}
+          placeholder="Category Name"
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.title}
+              </Text>
+            ),
+          }}
+        />
+
         <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>
           <ImageUpload
             label="Choose Image :"
@@ -187,7 +323,8 @@ const CategoryForm = (props) => {
             }}
             onUploadImage={(result) => {
               setImage({ uri: result.uri });
-              param.image_path = "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg";
+              param.image_path =
+                "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg";
               setparam({ ...param });
               console.log(param.image_path);
             }}
@@ -204,22 +341,31 @@ const CategoryForm = (props) => {
             }}
             onUploadImage={(result) => {
               setBanner({ uri: result.uri });
-              param.banner_path = "banner-" + moment().format("YYYYMMDD-hhmmss") + ".jpg";
+              param.banner_path =
+                "banner-" + moment().format("YYYYMMDD-hhmmss") + ".jpg";
               setparam({ ...param });
             }}
           />
         </View>
-        <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
               console.log(param);
-              postRequest("masters/product/category/insert", param, userToken).then((resp) => {
+              postRequest(
+                "masters/product/category/insert",
+                param,
+                userToken
+              ).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
-
                     if (Banner.uri) {
                       console.log(param.banner_path);
                       console.log(Banner.uri);
@@ -231,9 +377,17 @@ const CategoryForm = (props) => {
                       });
 
                       var xhr = new XMLHttpRequest();
-                      xhr.open("POST", serviceUrl + "masters/branch/UploadProductCategoryBannerMob", true);
+                      xhr.open(
+                        "POST",
+                        serviceUrl +
+                          "masters/branch/UploadProductCategoryBannerMob",
+                        true
+                      );
                       xhr.setRequestHeader("Accept", "application/json");
-                      xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                      xhr.setRequestHeader(
+                        "Content-Type",
+                        "multipart/form-data"
+                      );
                       xhr.setRequestHeader("auth-token", userToken);
 
                       xhr.onload = function (e) {
@@ -257,9 +411,16 @@ const CategoryForm = (props) => {
                       });
 
                       var xhr = new XMLHttpRequest();
-                      xhr.open("POST", serviceUrl + "masters/branch/UploadProductCategoryMob", true);
+                      xhr.open(
+                        "POST",
+                        serviceUrl + "masters/branch/UploadProductCategoryMob",
+                        true
+                      );
                       xhr.setRequestHeader("Accept", "application/json");
-                      xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                      xhr.setRequestHeader(
+                        "Content-Type",
+                        "multipart/form-data"
+                      );
                       xhr.setRequestHeader("auth-token", userToken);
 
                       xhr.onload = function (e) {
@@ -289,3 +450,30 @@ const CategoryForm = (props) => {
 };
 
 export { CategoryForm, CategoryList };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F5FCFF",
+    flex: 1,
+    padding: 16,
+    marginTop: 40,
+  },
+  autocompleteContainer: {
+    backgroundColor: "#ffffff",
+    borderWidth: 0,
+  },
+  descriptionContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  infoText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});
