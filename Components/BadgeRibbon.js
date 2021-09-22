@@ -1,8 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Text, View, Dimensions, Image, Animated, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  Dimensions,
+  Image,
+  Animated,
+  StyleSheet,
+} from "react-native";
 import MyStyles from "../Styles/MyStyles";
 
-export default function BadgeRibbon({ text, position = "right", color = "#ffba3c" }) {
+export default function BadgeRibbon({
+  text,
+  position = "right",
+  color = "#ffba3c",
+  textStyle,
+}) {
   return (
     <View>
       <View
@@ -26,8 +38,15 @@ export default function BadgeRibbon({ text, position = "right", color = "#ffba3c
               position: "absolute",
               top: 5,
               left: -5,
-              transform: [position == "right" ? { rotate: "-45deg" } : { rotate: "45deg" }],
+              transform: [
+                position == "right"
+                  ? { rotate: "-45deg" }
+                  : position == "voucherRight"
+                  ? { rotate: "0deg" }
+                  : { rotate: "45deg" },
+              ],
             },
+            textStyle,
           ]}
         >
           {text}
@@ -48,5 +67,12 @@ const positionStyles = StyleSheet.create({
     top: -25,
     left: -25,
     transform: [{ rotate: "-45deg" }],
+  },
+  voucherRight: {
+    zIndex: 10,
+    top: -50,
+    right: -50,
+    borderWidth: 50,
+    transform: [{ rotate: "45deg" }],
   },
 });

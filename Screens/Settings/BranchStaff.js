@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, ScrollView, FlatList, Alert } from "react-native";
-import { Button, FAB, List, TextInput, TouchableRipple } from "react-native-paper";
+import {
+  View,
+  ImageBackground,
+  ScrollView,
+  FlatList,
+  Alert,
+} from "react-native";
+import {
+  Button,
+  FAB,
+  List,
+  TextInput,
+  TouchableRipple,
+} from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 
 const BranchStaffList = (props) => {
-  const { userToken,search } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
@@ -14,12 +26,19 @@ const BranchStaffList = (props) => {
     Browse();
   }, [search]);
 
-  const Browse = (id) => {   
-    postRequest("masters/staff/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+  const Browse = (id) => {
+    postRequest(
+      "masters/staff/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
 
@@ -98,7 +117,10 @@ const BranchStaffList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("BranchStaff", { staff_id: 0 })}
+        color="#000"
+        onPress={() =>
+          props.navigation.navigate("BranchStaff", { staff_id: 0 })
+        }
       />
     </View>
   );
@@ -127,7 +149,10 @@ const BranchStaff = (props) => {
           param.mobile = resp.data[0].mobile;
           setparam({ ...param });
         } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
       });
     }
@@ -135,49 +160,59 @@ const BranchStaff = (props) => {
   }, []);
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
-      <ScrollView>
-        <View style={MyStyles.cover}>
-          <TextInput
-            mode="outlined"
-            placeholder="Staff Name"
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.name}
-            onChangeText={(text) => {
-              setparam({ ...param, name: text });
-            }}
-          />
-          <TextInput
-            mode="outlined"
-            placeholder="Staff Mobile"
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.mobile}
-            keyboardType={"number-pad"}
-            maxLength={10}
-            onChangeText={(text) => {
-              setparam({ ...param, mobile: text });
-            }}
-          />
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+        <TextInput
+          mode="outlined"
+          placeholder="Staff Name"
+          style={{ backgroundColor: "rgba(0,0,0,0)" }}
+          value={param.name}
+          onChangeText={(text) => {
+            setparam({ ...param, name: text });
+          }}
+        />
+        <TextInput
+          mode="outlined"
+          placeholder="Staff Mobile"
+          style={{ backgroundColor: "rgba(0,0,0,0)" }}
+          value={param.mobile}
+          keyboardType={"number-pad"}
+          maxLength={10}
+          onChangeText={(text) => {
+            setparam({ ...param, mobile: text });
+          }}
+        />
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/staff/insert", param, userToken).then((resp) => {
-                if (resp.status == 200) {
-                  if (resp.data[0].valid) {
-                    props.navigation.navigate("BranchStaffList");
+              postRequest("masters/staff/insert", param, userToken).then(
+                (resp) => {
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      props.navigation.navigate("BranchStaffList");
+                    }
+                    setLoading(false);
                   }
-                  setLoading(false);
                 }
-              });
+              );
             }}
           >
             Submit
           </Button>
         </View>
-      </ScrollView>
+      </View>
     </ImageBackground>
   );
 };

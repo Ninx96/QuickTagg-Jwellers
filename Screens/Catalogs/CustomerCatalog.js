@@ -110,7 +110,7 @@ const CustomerCatalogList = (props) => {
             </LinearGradient>
             <Card.Content>
               <View style={MyStyles.row}>
-                <View>
+                <View style={{ maxWidth: "80%" }}>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.entry_no} {"                "} {item.date}
                   </Text>

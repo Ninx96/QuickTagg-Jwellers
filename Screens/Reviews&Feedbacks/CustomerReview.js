@@ -1,6 +1,20 @@
 import React, { useState } from "react";
-import { ImageBackground, ScrollView, View, FlatList, Alert } from "react-native";
-import { Button, FAB, Text, TextInput, Card, IconButton, Avatar } from "react-native-paper";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  FlatList,
+  Alert,
+} from "react-native";
+import {
+  Button,
+  FAB,
+  Text,
+  TextInput,
+  Card,
+  IconButton,
+  Avatar,
+} from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import MyStyles from "../../Styles/MyStyles";
@@ -17,27 +31,34 @@ const CustomerReviewList = (props) => {
   }, []);
 
   const Browse = (id) => {
-    postRequest("masters/customer/customerreview/browse", {}, userToken).then((resp) => {
-      if (resp.status == 200) {      
-        setgriddata(resp.data);
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+    postRequest("masters/customer/customerreview/browse", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setgriddata(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
+    );
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("masters/customer/customerreview/delete", { tran_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "masters/customer/customerreview/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
@@ -59,12 +80,17 @@ const CustomerReviewList = (props) => {
               style={{ marginTop: 0 }}
               title={item.customer_name}
               titleStyle={{ textAlign: "center", color: "#FFF" }}
-              left={() => <Avatar.Image source={require("../../assets/upload.png")} size={85} />}
+              left={() => (
+                <Avatar.Image
+                  source={require("../../assets/upload.png")}
+                  size={85}
+                />
+              )}
               right={() => (
                 <>
                   <IconButton
                     icon="pencil"
-                    color="#aaa"
+                    color="#FFF"
                     onPress={() => {
                       props.navigation.navigate("CustomerReview", {
                         tran_id: item.tran_id,
@@ -73,12 +99,12 @@ const CustomerReviewList = (props) => {
                   />
                   <IconButton
                     icon="delete"
-                    color="#aaa"
+                    color="#FFF"
                     onPress={() => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -105,10 +131,13 @@ const CustomerReviewList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 70,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("CustomerReview", { tran_id: 0 })}
+        color="#000"
+        onPress={() =>
+          props.navigation.navigate("CustomerReview", { tran_id: 0 })
+        }
       />
     </View>
   );
@@ -125,33 +154,41 @@ const CustomerReview = (props) => {
   });
   const [Image, setImage] = React.useState(require("../../assets/upload.png"));
   const [imageuploads, setimageuploads] = useState({
-    image_name: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png",
+    image_name: "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
     image_base64: "",
   });
 
   React.useEffect(() => {
     if (tran_id != 0) {
-      postRequest("masters/customer/customerreview/preview", { tran_id: tran_id }, userToken).then(
-        (resp) => {
-          if (resp.status == 200) {
-            param.tran_id = resp.data.tran_id;
-            param.customer_name = resp.data.customer_name;
-            param.review = resp.data.review;
-            param.image_path = resp.data.image_path;
-            setparam({ ...param });
+      postRequest(
+        "masters/customer/customerreview/preview",
+        { tran_id: tran_id },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          param.tran_id = resp.data.tran_id;
+          param.customer_name = resp.data.customer_name;
+          param.review = resp.data.review;
+          param.image_path = resp.data.image_path;
+          setparam({ ...param });
 
-            setImage({ uri: `${resp.data.url + "" + resp.data.image_path}` });
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-          }
+          setImage({ uri: `${resp.data.url + "" + resp.data.image_path}` });
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
-      );
+      });
     }
     setLoading(false);
   }, []);
 
   return (
-    <ImageBackground source={require("../../assets/login-bg.jpg")} style={MyStyles.container}>
+    <ImageBackground
+      source={require("../../assets/login-bg.jpg")}
+      style={MyStyles.container}
+    >
       <View style={MyStyles.cover}>
         <TextInput
           mode="outlined"
@@ -177,41 +214,59 @@ const CustomerReview = (props) => {
           <ImageUpload
             label="Upload Image :"
             source={Image}
-            onClearImage={() => { }}
+            onClearImage={() => {}}
             onUploadImage={(result) => {
               setImage({ uri: result.uri });
               setimageuploads({ ...imageuploads, image_base64: result.base64 });
-              setparam({ ...param, image_path: "image-" + moment().format('YYYYMMDD-hhmmss') + ".png" })
+              setparam({
+                ...param,
+                image_path:
+                  "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+              });
             }}
           />
         </View>
 
-        <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/customer/customerreview/insert", param, userToken).then(
-                (resp) => {
-                  if (resp.status == 200) {
-                    if (resp.data[0].valid) {
-                      if (param.image_path !== "") {
-                        postRequest("masters/customer/UploadCustomerReviewImageMob64", { base64image: imageuploads.image_base64, imageName: param.image_path }, userToken).then((resp) => {
-                          if (resp.status == 200) {
-                            if (resp.data[0].valid) {
-                              console.log("image : " + resp.data[0].valid);
-                            }
+              postRequest(
+                "masters/customer/customerreview/insert",
+                param,
+                userToken
+              ).then((resp) => {
+                if (resp.status == 200) {
+                  if (resp.data[0].valid) {
+                    if (param.image_path !== "") {
+                      postRequest(
+                        "masters/customer/UploadCustomerReviewImageMob64",
+                        {
+                          base64image: imageuploads.image_base64,
+                          imageName: param.image_path,
+                        },
+                        userToken
+                      ).then((resp) => {
+                        if (resp.status == 200) {
+                          if (resp.data[0].valid) {
+                            console.log("image : " + resp.data[0].valid);
                           }
-                        });
-                      }
-                      props.navigation.navigate("ReviewFeedback");
+                        }
+                      });
                     }
-                    setLoading(false);
+                    props.navigation.navigate("ReviewFeedback");
                   }
+                  setLoading(false);
                 }
-              );
+              });
             }}
           >
             Submit

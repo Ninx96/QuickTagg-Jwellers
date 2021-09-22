@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, ScrollView, FlatList, Alert } from "react-native";
-import { Button, FAB, List, TextInput, TouchableRipple } from "react-native-paper";
+import {
+  View,
+  ImageBackground,
+  ScrollView,
+  FlatList,
+  Alert,
+} from "react-native";
+import {
+  Button,
+  FAB,
+  List,
+  TextInput,
+  TouchableRipple,
+} from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 const BranchAreaList = (props) => {
-  const { userToken,search } = props.route.params;
+  const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
 
@@ -13,12 +25,19 @@ const BranchAreaList = (props) => {
     Browse();
   }, [search]);
 
-  const Browse = () => {   
-    postRequest("masters/area/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+  const Browse = () => {
+    postRequest(
+      "masters/area/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -95,6 +114,7 @@ const BranchAreaList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
+        color="#000"
         onPress={() => props.navigation.navigate("BranchArea", { area_id: 0 })}
       />
     </View>
@@ -122,7 +142,10 @@ const BranchArea = (props) => {
           param.area_name = resp.data[0].area_name;
           setparam({ ...param });
         } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
       });
     }
@@ -130,38 +153,48 @@ const BranchArea = (props) => {
   }, []);
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
-      <ScrollView>
-        <View style={MyStyles.cover}>
-          <TextInput
-            mode="outlined"
-            placeholder="Branch Area"
-            style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            value={param.area_name}
-            onChangeText={(text) => {
-              setparam({ ...param, area_name: text });
-            }}
-          />
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+        <TextInput
+          mode="outlined"
+          placeholder="Branch Area"
+          style={{ backgroundColor: "rgba(0,0,0,0)" }}
+          value={param.area_name}
+          onChangeText={(text) => {
+            setparam({ ...param, area_name: text });
+          }}
+        />
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/area/insert", param, userToken).then((resp) => {
-                if (resp.status == 200) {
-                  if (resp.data[0].valid) {
-                    props.navigation.navigate("BranchAreaList");
+              postRequest("masters/area/insert", param, userToken).then(
+                (resp) => {
+                  if (resp.status == 200) {
+                    if (resp.data[0].valid) {
+                      props.navigation.navigate("BranchAreaList");
+                    }
+                    setLoading(false);
                   }
-                  setLoading(false);
                 }
-              });
+              );
             }}
           >
             Submit
           </Button>
         </View>
-      </ScrollView>
+      </View>
     </ImageBackground>
   );
 };

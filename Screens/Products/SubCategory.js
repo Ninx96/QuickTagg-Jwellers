@@ -1,6 +1,13 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
-import { ImageBackground, ScrollView, View, Alert, FlatList, Image } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  View,
+  Alert,
+  FlatList,
+  Image,
+} from "react-native";
 import {
   Button,
   Text,
@@ -27,29 +34,36 @@ const SubCategoryList = (props) => {
     Browse();
   }, [search]);
   const Browse = () => {
-    postRequest("masters/product/subcategory/browse_app", { category_id: 4, search: search == undefined ? "" : search }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          setgriddata(resp.data);
-        } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-        }
+    postRequest(
+      "masters/product/subcategory/browse_app",
+      { category_id: 4, search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
-    );
+    });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("masters/product/subcategory/delete", { subcategory_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "masters/product/subcategory/delete",
+      { subcategory_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
@@ -81,7 +95,7 @@ const SubCategoryList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -109,13 +123,16 @@ const SubCategoryList = (props) => {
           right: 20,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("SubCategoryForm", { subcategory_id: 0 })}
+        color="#000"
+        onPress={() =>
+          props.navigation.navigate("SubCategoryForm", { subcategory_id: 0 })
+        }
       />
     </View>
   );
 };
 
-const SubCategoryForm = (props) => { 
+const SubCategoryForm = (props) => {
   const { userToken, subcategory_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [categorylist, setcategorylist] = useState([]);
@@ -126,27 +143,35 @@ const SubCategoryForm = (props) => {
   });
 
   React.useEffect(() => {
-    postRequest("masters/product/subcategory/getCategory", {}, userToken).then((resp) => {
-      if (resp.status == 200) {
-        setcategorylist(resp.data);
-      } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+    postRequest("masters/product/subcategory/getCategory", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setcategorylist(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
+    );
 
     if (subcategory_id != 0) {
       postRequest(
         "masters/product/subcategory/preview",
         { subcategory_id: subcategory_id },
         userToken
-      ).then((resp) => {       
+      ).then((resp) => {
         if (resp.status == 200) {
           param.category_id = resp.data.category_id;
           param.subcategory_id = resp.data.subcategory_id;
           param.subcategory_name = resp.data.subcategory_name;
           setparam({ ...param });
         } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
       });
     }
@@ -154,7 +179,10 @@ const SubCategoryForm = (props) => {
   }, []);
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <DropDown
           data={categorylist}
@@ -175,13 +203,22 @@ const SubCategoryForm = (props) => {
             setparam({ ...param, subcategory_name: text });
           }}
         />
-        <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              postRequest("masters/product/subcategory/insert", param, userToken).then((resp) => {
+              postRequest(
+                "masters/product/subcategory/insert",
+                param,
+                userToken
+              ).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
                     props.navigation.navigate("ProductTabs");

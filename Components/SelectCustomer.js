@@ -136,7 +136,7 @@ const SelectCustomer = ({
           />
         </View>
         <FAB
-          style={{ position: "absolute", bottom: 20, right: 20 }}
+          style={{ position: "absolute", bottom: 20, right: 40 }}
           icon="check"
           color="#000"
           onPress={
@@ -158,8 +158,9 @@ const SelectCustomer = ({
           }
         />
         <FAB
-          style={{ position: "absolute", bottom: 20, right: 100 }}
+          style={{ position: "absolute", bottom: 20, right: 110 }}
           icon="select-all"
+          color="#000"
           onPress={() => {
             let _selecteddata = [];
             listData.map((resp, index) => {

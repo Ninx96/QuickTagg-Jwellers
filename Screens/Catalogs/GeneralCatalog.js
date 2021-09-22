@@ -18,6 +18,7 @@ import {
   Portal,
   Modal,
   Subheading,
+  Divider,
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
@@ -46,27 +47,31 @@ const GeneralCatalogList = (props) => {
       { search: search == undefined ? "" : search },
       userToken
     ).then((resp) => {
-
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
   const Delete = (id) => {
     setLoading(true);
-    postRequest("transactions/customer/generalsession/delete", { tran_id: id }, userToken).then(
-      (resp) => {
-        if (resp.status == 200) {
-          if (resp.data[0].valid) {
-            Browse();
-          }
-          setLoading(false);
+    postRequest(
+      "transactions/customer/generalsession/delete",
+      { tran_id: id },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        if (resp.data[0].valid) {
+          Browse();
         }
+        setLoading(false);
       }
-    );
+    });
   };
   return (
     <View style={MyStyles.container}>
@@ -107,7 +112,7 @@ const GeneralCatalogList = (props) => {
             </LinearGradient>
             <Card.Content>
               <View style={MyStyles.row}>
-                <View>
+                <View style={{ maxWidth: "80%" }}>
                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                     {item.entry_no} {"                "} {item.date}
                   </Text>
@@ -144,7 +149,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -173,7 +178,9 @@ const GeneralCatalogList = (props) => {
         }}
         color="#000"
         icon="plus"
-        onPress={() => props.navigation.navigate("GeneralCatalog", { tran_id: 0 })}
+        onPress={() =>
+          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
+        }
       />
     </View>
   );
@@ -210,23 +217,35 @@ const GeneralCatalog = (props) => {
       if (resp.status == 200) {
         var _subcategoryList = [];
         resp.data.map((item, index) => {
-          _subcategoryList.push({ "subcategory_id": item.subcategory_id, "subcategory_name": item.subcategory_name + " (" + item.category_name + ")", })
+          _subcategoryList.push({
+            subcategory_id: item.subcategory_id,
+            subcategory_name:
+              item.subcategory_name + " (" + item.category_name + ")",
+          });
         });
         setsubcategorylist(_subcategoryList);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     if (tran_id == 0) {
-      postRequest("transactions/customer/customerListMob", { branch_id: branchId }, userToken).then(
-        (resp) => {
-          if (resp.status == 200) {
-            setCustomerList(resp.data);
-          } else {
-            Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
-          }
+      postRequest(
+        "transactions/customer/customerListMob",
+        { branch_id: branchId },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
         }
-      );
+      });
     }
 
     postRequest(
@@ -246,8 +265,6 @@ const GeneralCatalog = (props) => {
 
           param.customer_session_products = resp.data[0].products;
 
-
-
           postRequest(
             "transactions/customer/customerListMob",
             { branch_id: branchId },
@@ -258,29 +275,40 @@ const GeneralCatalog = (props) => {
               listData = items.data;
               listData.map((item, index) => {
                 listData[index].selected =
-                  resp.data[0].customers.findIndex((e) => e.customer_id === item.customer_id) > -1
+                  resp.data[0].customers.findIndex(
+                    (e) => e.customer_id === item.customer_id
+                  ) > -1
                     ? true
                     : false;
               });
               setCustomerList(listData);
             } else {
-              Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+              Alert.alert(
+                "Error !",
+                "Oops! \nSeems like we run into some Server Error"
+              );
             }
           });
 
-          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
-            if (!acc[item.text]) acc[item.text] = {
-              subcategory_name: item.text,
-              data: []
-            };
-            acc[item.text].data.push(item);
-            return acc;
-          }, {}))
-        
-          setSelectedProducts(tempData);       
+          let tempData = Object.values(
+            param.customer_session_products.reduce((acc, item) => {
+              if (!acc[item.text])
+                acc[item.text] = {
+                  subcategory_name: item.text,
+                  data: [],
+                };
+              acc[item.text].data.push(item);
+              return acc;
+            }, {})
+          );
+
+          setSelectedProducts(tempData);
         }
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
 
@@ -298,19 +326,23 @@ const GeneralCatalog = (props) => {
       data,
       userToken
     ).then((resp) => {
-
-
       if (resp.status == 200) {
         setProductList(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   };
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <Loading isloading={false} />
       <ScrollView>
         <View style={MyStyles.cover}>
@@ -321,8 +353,8 @@ const GeneralCatalog = (props) => {
               ext_lbl="subcategory_name"
               value={param.subCategory}
               onChange={(val) => {
-                param.subcategory_id= val;
-                setparam({ ...param});
+                param.subcategory_id = val;
+                setparam({ ...param });
                 ProductList();
               }}
               placeholder="SubCategory"
@@ -349,11 +381,24 @@ const GeneralCatalog = (props) => {
                 ProductList();
               }}
             />
-            <View style={[MyStyles.row, { justifyContent: "space-evenly", marginVertical: 40 }]}>
-              <Button mode="contained" uppercase={false} onPress={() => setProduct(true)}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "space-evenly", marginVertical: 40 },
+              ]}
+            >
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setProduct(true)}
+              >
                 Add Products
               </Button>
-              <Button mode="contained" uppercase={false} onPress={() => setContact(true)}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                onPress={() => setContact(true)}
+              >
                 Next
               </Button>
             </View>
@@ -366,9 +411,11 @@ const GeneralCatalog = (props) => {
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: "#AAA",
                 }}
               >
-                <Subheading style={{ width: "100%", color: "#000" }}>                
+                <Subheading style={{ width: "100%", color: "#000" }}>
                   {item.subcategory_name}
                 </Subheading>
 
@@ -387,7 +434,10 @@ const GeneralCatalog = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(i, 1);
+                        param.customer_session_products[index].data.splice(
+                          i,
+                          1
+                        );
                         setparam([...param]);
                       }}
                       color="#aaa"
@@ -430,20 +480,25 @@ const GeneralCatalog = (props) => {
         onDone={(items) => {
           items.map((item, i) => {
             param.customer_session_products.push(item);
-          });         
-          setparam({ ...param, customer_session_products: param.customer_session_products });
-         
-          let tempData = Object.values(param.customer_session_products.reduce((acc, item) => {
-            if (!acc[item.subcategory_name]) acc[item.subcategory_name] = {
-              subcategory_name: item.subcategory_name,
-              data: []
-            };
-            acc[item.subcategory_name].data.push(item);
-            return acc;
-          }, {}))
-        
-          setSelectedProducts(tempData);
+          });
+          setparam({
+            ...param,
+            customer_session_products: param.customer_session_products,
+          });
 
+          let tempData = Object.values(
+            param.customer_session_products.reduce((acc, item) => {
+              if (!acc[item.subcategory_name])
+                acc[item.subcategory_name] = {
+                  subcategory_name: item.subcategory_name,
+                  data: [],
+                };
+              acc[item.subcategory_name].data.push(item);
+              return acc;
+            }, {})
+          );
+
+          setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
       />
@@ -452,7 +507,6 @@ const GeneralCatalog = (props) => {
         visible={contact}
         data={customerList}
         onDone={(items) => {
-
           setSelectedContacts(items);
           setRemarks(true);
           if (items.length == 0) {
@@ -465,9 +519,17 @@ const GeneralCatalog = (props) => {
       />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
-          <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../../assets/login-bg.jpg")}
+          >
             <View style={{ flex: 1 }}>
-              <View style={[MyStyles.row, { backgroundColor: "#ffba3c", marginTop: 0 }]}>
+              <View
+                style={[
+                  MyStyles.row,
+                  { backgroundColor: "#ffba3c", marginTop: 0 },
+                ]}
+              >
                 <IconButton
                   icon="chevron-left"
                   size={30}
@@ -477,7 +539,9 @@ const GeneralCatalog = (props) => {
                     setRemarks(false);
                   }}
                 />
-                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>Enter Remarks</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                  Enter Remarks
+                </Text>
               </View>
               <View style={[MyStyles.cover, { backgroundColor: "" }]}>
                 <TextInput
@@ -507,11 +571,16 @@ const GeneralCatalog = (props) => {
                     setparam({ ...param, remarks: text });
                   }}
                 />
-                <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
                   <Button
                     mode="contained"
                     uppercase={false}
-                    onPress={() => {                    
+                    onPress={() => {
                       setLoading(true);
                       postRequest(
                         "transactions/customer/generalsession/insert",

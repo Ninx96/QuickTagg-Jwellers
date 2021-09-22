@@ -101,6 +101,7 @@ const ProductsList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() =>
           props.navigation.navigate("ProductsForm", { product_id: 0 })
         }
@@ -238,12 +239,12 @@ const ProductsPreview = (props) => {
         </View>
 
         <View style={{ height: 300 }}>
-          <Swiper>
+          <Swiper loop={false} activeDotColor="#ffba3c">
             {productImages.length > 0 ? (
               productImages.map((resp, index) => {
                 return (
                   <Image
-                    key={resp.image_id}
+                    key={index}
                     source={{ uri: resp.url + "" + resp.image_path }}
                     style={[{ height: 250, width: "100%" }]}
                   />

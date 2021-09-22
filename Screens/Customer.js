@@ -40,16 +40,31 @@ const CustomerList = (props) => {
 
   return (
     <View style={MyStyles.container}>
-      <ScrollView>
-        <FlatList
-          data={griddata}
-          initialNumToRender={10}
-          renderItem={({ item, index }) => (
-            <List.Item
-              key={item.customer_id}
-              style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
-              title={
-                <Text
+      <FlatList
+        data={griddata}
+        initialNumToRender={10}
+        renderItem={({ item, index }) => (
+          <List.Item
+            key={item.customer_id}
+            style={{ borderBottomWidth: 0.5, borderBottomColor: "#CCC" }}
+            title={
+              <Text
+                onPress={() => {
+                  props.navigation.navigate("Profile", {
+                    customer_id: item.customer_id,
+                    customer_mobile: item.mobile,
+                  });
+                }}
+              >
+                {item.full_name}
+              </Text>
+            }
+            titleStyle={{ fontWeight: "bold" }}
+            description={item.mobile + "          " + item.category_name}
+            left={() => {
+              return (
+                <TouchableRipple
+                  style={MyStyles.squarefixedRatio}
                   onPress={() => {
                     props.navigation.navigate("Profile", {
                       customer_id: item.customer_id,
@@ -57,47 +72,30 @@ const CustomerList = (props) => {
                     });
                   }}
                 >
-                  {item.full_name}
-                </Text>
-              }
-              titleStyle={{ fontWeight: "bold" }}
-              description={item.mobile + "          " + item.category_name}
-              left={() => {
-                return (
-                  <TouchableRipple
-                    style={MyStyles.squarefixedRatio}
-                    onPress={() => {
-                      props.navigation.navigate("Profile", {
-                        customer_id: item.customer_id,
-                        customer_mobile: item.mobile,
-                      });
-                    }}
-                  >
-                    <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {item.type == null ? "" : item.type.charAt(0)}
-                    </Text>
-                  </TouchableRipple>
-                );
-              }}
-              right={() => {
-                return (
-                  <TouchableRipple
-                    style={{ zIndex: 0 }}
-                    onPress={() => {
-                      props.navigation.navigate("CustomerForm", {
-                        customer_id: item.customer_id,
-                      });
-                    }}
-                  >
-                    <List.Icon {...props} icon="pencil" color="#aaa" />
-                  </TouchableRipple>
-                );
-              }}
-            />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </ScrollView>
+                  <Text style={{ color: "red", textTransform: "uppercase" }}>
+                    {item.type == null ? "" : item.type.charAt(0)}
+                  </Text>
+                </TouchableRipple>
+              );
+            }}
+            right={() => {
+              return (
+                <TouchableRipple
+                  style={{ zIndex: 0 }}
+                  onPress={() => {
+                    props.navigation.navigate("CustomerForm", {
+                      customer_id: item.customer_id,
+                    });
+                  }}
+                >
+                  <List.Icon {...props} icon="pencil" color="#aaa" />
+                </TouchableRipple>
+              );
+            }}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
       <FAB
         style={{
           position: "absolute",

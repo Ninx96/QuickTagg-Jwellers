@@ -108,7 +108,7 @@ const CategoryList = (props) => {
                   width: 130,
                   marginLeft: "auto",
                   alignSelf: "flex-end",
-                  marginBottom: 10,
+                  marginBottom: 20,
                 }}
               />
               <View>
@@ -156,6 +156,7 @@ const CategoryList = (props) => {
           right: 20,
         }}
         icon="plus"
+        color="#000"
         onPress={() => {
           props.navigation.navigate("CategoryForm", {
             category_id: 0,
@@ -183,65 +184,16 @@ const CategoryForm = (props) => {
   const [filteredFilms, setFilteredFilms] = useState([]);
 
   const [films, setFilms] = useState([
-    { userId: 1, id: 1, title: "delectus aut autem", completed: false },
+    { userId: 1, id: 1, title: "Rings", completed: false },
     {
       userId: 1,
       id: 2,
-      title: "quis ut nam facilis et officia qui",
+      title: "Round",
       completed: false,
     },
-    { userId: 1, id: 3, title: "fugiat veniam minus", completed: false },
-    { userId: 1, id: 4, title: "et porro tempora", completed: true },
-    {
-      userId: 1,
-      id: 5,
-      title: "laboriosam mollitia et enim quasi adipisci quia provident illum",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 6,
-      title: "qui ullam ratione quibusdam voluptatem quia omnis",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 7,
-      title: "illo expedita consequatur quia in",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 8,
-      title: "quo adipisci enim quam ut ab",
-      completed: true,
-    },
-    {
-      userId: 1,
-      id: 9,
-      title: "molestiae perspiciatis ipsa",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 10,
-      title: "illo est ratione doloremque quia maiores aut",
-      completed: true,
-    },
+    { userId: 1, id: 3, title: "Red", completed: false },
+    { userId: 1, id: 3, title: "Rat", completed: false },
   ]);
-
-  const findFilm = (query) => {
-    // Method called every time when we change the value of the input
-    if (query) {
-      // Making a case insensitive regular expression
-      const regex = new RegExp(`${query.trim()}`, "i");
-      // Setting the filtered film array according the query
-      setFilteredFilms(films.filter((film) => film.title.search(regex) >= 0));
-    } else {
-      // If the query is null then return blank
-      setFilteredFilms([]);
-    }
-  };
 
   React.useEffect(() => {
     if (category_id != 0) {
@@ -272,34 +224,35 @@ const CategoryForm = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
-        <TextInput
-          mode="outlined"
-          placeholder="Category Name"
-          style={{ backgroundColor: "rgba(0,0,0,0)" }}
-          value={param.category_name}
-          onChangeText={(text) => {
-            setparam({ ...param, category_name: text });
-          }}
-        />
-
         <Autocomplete
+          {...props}
           autoCapitalize="none"
           autoCorrect={false}
-          containerStyle={styles.autocompleteContainer}
-          inputContainerStyle={{
-            height: 55,
-            borderWidth: 1.5,
-            borderColor: "#888",
-          }}
+          //Styles
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
+          //Default Value
+          defaultValue={param.category_name}
           //data to show in suggestion
           data={filteredFilms}
-          //default value if you want to set something in input
-          defaultValue=""
           // onchange of the text changing the state of the query
           // which will trigger the findFilm method
           // to show the suggestions
-          onChangeText={(text) => findFilm(text)}
-          placeholder="Category Name"
+          onChangeText={(query) => {
+            // Method called every time when we change the value of the input
+            if (query) {
+              // Making a case insensitive regular expression
+              const regex = new RegExp(`${query.trim()}`, "i");
+              // Setting the filtered film array according the query
+              setFilteredFilms(
+                films.filter((film) => film.title.search(regex) >= 0)
+              );
+            } else {
+              // If the query is null then return blank
+              setFilteredFilms([]);
+            }
+            setparam({ ...param, category_name: query });
+          }}
           flatListProps={{
             keyExtractor: (_, idx) => idx.toString(),
             renderItem: ({ item, index }) => (
@@ -308,6 +261,16 @@ const CategoryForm = (props) => {
               </Text>
             ),
           }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="Category Name"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
 
         <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>

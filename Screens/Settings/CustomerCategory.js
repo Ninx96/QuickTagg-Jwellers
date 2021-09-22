@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, ScrollView, FlatList, Alert } from "react-native";
-import { Button, FAB, List, TextInput, TouchableRipple } from "react-native-paper";
+import {
+  View,
+  ImageBackground,
+  ScrollView,
+  FlatList,
+  Alert,
+} from "react-native";
+import {
+  Button,
+  FAB,
+  List,
+  TextInput,
+  TouchableRipple,
+} from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
@@ -14,11 +26,18 @@ const CustomerCategoryList = (props) => {
   }, [search]);
 
   const Browse = () => {
-    postRequest("masters/customer/category/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+    postRequest(
+      "masters/customer/category/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
@@ -27,14 +46,16 @@ const CustomerCategoryList = (props) => {
   const Delete = (id) => {
     setLoading(true);
     let data = { category_id: id };
-    postRequest("masters/customer/category/delete", data, userToken).then((resp) => {
-      if (resp.status == 200) {
-        if (resp.data[0].valid) {
-          Browse();
+    postRequest("masters/customer/category/delete", data, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          if (resp.data[0].valid) {
+            Browse();
+          }
+          setLoading(false);
         }
-        setLoading(false);
       }
-    });
+    );
   };
   return (
     <View style={MyStyles.container}>
@@ -65,7 +86,7 @@ const CustomerCategoryList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -94,7 +115,10 @@ const CustomerCategoryList = (props) => {
           zIndex: 100,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate("CustomerCategory", { category_id: 0 })}
+        color="#000"
+        onPress={() =>
+          props.navigation.navigate("CustomerCategory", { category_id: 0 })
+        }
       />
     </View>
   );
@@ -115,21 +139,29 @@ const CustomerCategory = (props) => {
       let param = {
         category_id: category_id,
       };
-      postRequest("masters/customer/category/preview", param, userToken).then((resp) => {
-        if (resp.status == 200) {
-          param.category_id = resp.data[0].category_id;
-          param.category_name = resp.data[0].category_name;
-          setparam({ ...param });
-        } else {
-          Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+      postRequest("masters/customer/category/preview", param, userToken).then(
+        (resp) => {
+          if (resp.status == 200) {
+            param.category_id = resp.data[0].category_id;
+            param.category_name = resp.data[0].category_name;
+            setparam({ ...param });
+          } else {
+            Alert.alert(
+              "Error !",
+              "Oops! \nSeems like we run into some Server Error"
+            );
+          }
         }
-      });
+      );
     }
     setLoading(false);
   }, []);
 
   return (
-    <ImageBackground style={MyStyles.container} source={require("../../assets/login-bg.jpg")}>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <TextInput
           mode="outlined"
@@ -140,14 +172,23 @@ const CustomerCategory = (props) => {
             setparam({ ...param, category_name: text });
           }}
         />
-        <View style={[MyStyles.row, { justifyContent: "center", marginVertical: 40 }]}>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
           <Button
             mode="contained"
             uppercase={false}
             onPress={() => {
               setLoading(true);
 
-              postRequest("masters/customer/category/insert", param, userToken).then((resp) => {
+              postRequest(
+                "masters/customer/category/insert",
+                param,
+                userToken
+              ).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
                     props.navigation.navigate("CustomerCategoryList");

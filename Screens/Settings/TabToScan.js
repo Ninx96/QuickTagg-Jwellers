@@ -12,33 +12,29 @@ const TabToScan = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <ScrollView>
-        <View style={MyStyles.cover}>
-          <ImageUpload
-            imageStyle={{ alignSelf: "center", width: "60%" }}
-            source={require("../../assets/upload.png")}
-            onClearImage={() => {}}
-            onUploadImage={() => {}}
-            label="Choose Logo :"
-          />
+      <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+        <ImageUpload
+          imageStyle={{ alignSelf: "center", width: "60%" }}
+          source={require("../../assets/upload.png")}
+          onClearImage={() => {}}
+          onUploadImage={() => {}}
+          label="Choose Logo :"
+        />
 
-          <Subheading style={{ marginTop: 40 }}>
-            Choose Cover Images :
-          </Subheading>
-          <MultipleImages onSelect={(files) => {}} data={[]} />
+        <Subheading style={{ marginTop: 40 }}>Choose Cover Images :</Subheading>
+        <MultipleImages onSelect={(files) => {}} data={[]} />
 
-          <View
-            style={[
-              MyStyles.row,
-              { justifyContent: "center", marginVertical: 40 },
-            ]}
-          >
-            <Button mode="contained" la uppercase={false} onPress={() => {}}>
-              Submit
-            </Button>
-          </View>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
+          <Button mode="contained" la uppercase={false} onPress={() => {}}>
+            Submit
+          </Button>
         </View>
-      </ScrollView>
+      </View>
     </ImageBackground>
   );
 };

@@ -75,7 +75,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             />
           </View>
           <FlatList
-            style={{ alignSelf: "center" }}
+            // style={{ alignSelf: "center" }}
             data={listData}
             renderItem={({ item, index }) => (
               <Card
@@ -128,6 +128,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
         <FAB
           style={{ position: "absolute", bottom: 20, right: 20 }}
           icon="check"
+          color="#000"
           onPress={() => {
             const selected = data.filter((item) => item.selected);
             onDone(selected);
@@ -137,6 +138,7 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
         <FAB
           style={{ position: "absolute", bottom: 20, right: 100 }}
           icon="select-all"
+          color="#000"
           onPress={() => {
             let _selecteddata = [];
             listData.map((resp, index) => {

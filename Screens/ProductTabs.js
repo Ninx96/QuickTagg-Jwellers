@@ -26,11 +26,15 @@ const ProductTabs = (props) => {
         <Tab.Screen
           name="Category"
           children={() => <CategoryList {...props} />}
+          options={{ title: "CATEGORIES" }}
+
           // initialParams={props.route.params}
         />
         <Tab.Screen
           name="SubCategory"
           children={() => <SubCategoryList {...props} />}
+          options={{ title: "SUB CATEGORIES" }}
+
           // initialParams={props.route.params}
         />
       </Tab.Navigator>
