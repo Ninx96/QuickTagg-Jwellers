@@ -11,18 +11,25 @@ const Greetings = (props) => {
   const [loading, setLoading] = useState(true);
   const [recentdobdoa, setrecentdobdoa] = useState([]);
   React.useEffect(() => {
-    postRequest("masters/dashboard/dobAndDoa", { branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "masters/dashboard/dobAndDoa",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         setrecentdobdoa(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   }, []);
 
   return (
-    <View>
+    <View style={MyStyles.container}>
       <FlatList
         data={recentdobdoa}
         initialNumToRender={10}
@@ -43,7 +50,6 @@ const Greetings = (props) => {
                 }}
               >
                 <Text style={{ color: "red", textTransform: "uppercase" }}>
-                  {" "}
                   {item.type == null ? "" : item.type.charAt(0)}
                 </Text>
               </TouchableRipple>
@@ -65,7 +71,12 @@ const Greetings = (props) => {
                 null}
                 {item.dob != "true" ? (
                   <Text
-                    style={{ fontWeight: "bold", fontSize: 25, color: "red", marginHorizontal: 10 }}
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 25,
+                      color: "red",
+                      marginHorizontal: 10,
+                    }}
                   >
                     B
                   </Text>
@@ -74,9 +85,15 @@ const Greetings = (props) => {
                 <Icon
                   name="whatsapp"
                   size={30}
-                  style={{ marginHorizontal: 2, color: "green", marginLeft: 20 }}
+                  style={{
+                    marginHorizontal: 2,
+                    color: "green",
+                    marginLeft: 20,
+                  }}
                   onPress={() => {
-                    Linking.openURL("whatsapp://send?text=&phone=91" + item.mobile);
+                    Linking.openURL(
+                      "whatsapp://send?text=&phone=91" + item.mobile
+                    );
                   }}
                 />
               </View>

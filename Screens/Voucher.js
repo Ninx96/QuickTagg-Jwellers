@@ -173,7 +173,7 @@ const VoucherList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 80,
         }}
         icon="plus"
         color="#000"
@@ -744,6 +744,9 @@ const VoucherForm = (props) => {
                 setvisibletemp(false);
               }}
             />
+            <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+              Insert SMS
+            </Text>
           </View>
           <ImageBackground
             source={require("../assets/login-bg.jpg")}
@@ -800,7 +803,7 @@ const VoucherForm = (props) => {
               ) : null}
 
               <View style={{ marginTop: 50 }}>
-                <Text style={{ textAlign: "center" }}>Sms Templete</Text>
+                <Text style={{ textAlign: "center" }}>Sms Preview</Text>
                 <TextInput
                   mode="outlined"
                   multiline

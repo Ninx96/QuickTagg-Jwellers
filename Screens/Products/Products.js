@@ -98,7 +98,7 @@ const ProductsList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 40,
         }}
         icon="plus"
         color="#000"

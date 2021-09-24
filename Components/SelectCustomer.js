@@ -61,9 +61,8 @@ const SelectCustomer = ({
                   const keyword = new RegExp(text.toLowerCase());
                   const filter = data.filter((item, index) => {
                     if (
-                      (item.full_name &&
-                        item.full_name.toLowerCase().match(keyword)) ||
-                      item.mobile.toLowerCase().match(keyword)
+                      item.full_name &&
+                      item.full_name.toLowerCase().match(keyword)
                     ) {
                       return true;
                     }

@@ -76,6 +76,7 @@ const GeneralCatalogList = (props) => {
   return (
     <View style={MyStyles.container}>
       <FlatList
+        style={{ marginVertical: 10 }}
         data={griddata}
         renderItem={({ item, index }) => (
           <Card
@@ -174,7 +175,7 @@ const GeneralCatalogList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 80,
         }}
         color="#000"
         icon="plus"

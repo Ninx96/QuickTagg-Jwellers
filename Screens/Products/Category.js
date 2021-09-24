@@ -153,7 +153,7 @@ const CategoryList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 80,
         }}
         icon="plus"
         color="#000"

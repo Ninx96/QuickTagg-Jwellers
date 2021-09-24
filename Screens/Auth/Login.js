@@ -25,27 +25,43 @@ const Login = () => {
   });
 
   return (
-    <ImageBackground style={{ flex: 1 }} source={require("../../assets/login-bg.jpg")}>
-      <SafeAreaView style={[MyStyles.container, { paddingTop: "40%", backgroundColor: "" }]}>
-        <View style={{ alignContent: "center" }}>
+    <ImageBackground
+      style={{ flex: 1 }}
+      source={require("../../assets/login-bg.jpg")}
+    >
+      <SafeAreaView
+        style={[MyStyles.container, { paddingTop: "45%", backgroundColor: "" }]}
+      >
+        <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../assets/logo.png")}
-            style={{ width: 350, resizeMode: "contain", marginBottom: 40 }}
+            style={{
+              width: 350,
+              resizeMode: "contain",
+              marginBottom: 40,
+            }}
           />
-          <KeyboardAvoidingView style={{ paddingHorizontal: 40 }}>
+          <KeyboardAvoidingView
+            style={{ paddingHorizontal: 40, width: "100%" }}
+          >
             <TextInput
               mode="outlined"
-              placeholder="Mobile"
+              placeholder="Mobile No."
               maxLength={10}
               keyboardType="number-pad"
               disabled={loading}
               style={{
-                //  backgroundColor: "rgba(255,255,255,0)",
+                backgroundColor: "rgba(255,255,255,0)",
                 marginBottom: 20,
               }}
-              left={
-                <TextInput.Icon color="#555" size={25} style={{ marginBottom: 0 }} name="phone" />
-              }
+              // left={
+              //   <TextInput.Icon
+              //     color="#555"
+              //     size={25}
+              //     style={{ marginBottom: 0 }}
+              //     name="phone"
+              //   />
+              // }
               value={param.user_name}
               onChangeText={(text) => setParam({ ...param, user_name: text })}
             />
@@ -56,12 +72,17 @@ const Login = () => {
               secureTextEntry={secureText}
               disabled={loading}
               style={{
-                //  backgroundColor: "rgba(255,255,255,0)",
+                backgroundColor: "rgba(255,255,255,0)",
                 marginBottom: 20,
               }}
-              left={
-                <TextInput.Icon color="#555" size={25} style={{ marginBottom: 0 }} name="lock" />
-              }
+              // left={
+              //   <TextInput.Icon
+              //     color="#555"
+              //     size={25}
+              //     style={{ marginBottom: 0 }}
+              //     name="lock"
+              //   />
+              // }
               right={
                 <TextInput.Icon
                   color="#aaa"
@@ -83,15 +104,25 @@ const Login = () => {
                 keyboardType="name-phone-pad"
                 disabled={loading}
                 secureTextEntry={false}
-                // style={{ backgroundColor: "rgba(255,255,255,0)" }}
-                left={
-                  <TextInput.Icon color="#555" size={25} style={{ marginBottom: 0 }} name="lock" />
-                }
+                style={{ backgroundColor: "rgba(255,255,255,0)" }}
+                // left={
+                //   <TextInput.Icon
+                //     color="#555"
+                //     size={25}
+                //     style={{ marginBottom: 0 }}
+                //     name="lock"
+                //   />
+                // }
                 value={param.otp}
                 onChangeText={(text) => setParam({ ...param, otp: text })}
               />
             )}
-            <View style={[MyStyles.row, { justifyContent: "center", marginTop: 20 }]}>
+            <View
+              style={[
+                MyStyles.row,
+                { justifyContent: "center", marginTop: 20 },
+              ]}
+            >
               <Button
                 color="#ffba3c"
                 mode="contained"
@@ -109,7 +140,10 @@ const Login = () => {
                           branchId: resp.data.branch_id,
                         });
                       } else {
-                        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+                        Alert.alert(
+                          "Error !",
+                          "Oops! \nSeems like we run into some Server Error"
+                        );
                       }
                       setLoading(false);
                     });
@@ -122,7 +156,10 @@ const Login = () => {
                           Alert.alert("Error !", resp.error);
                         }
                       } else {
-                        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+                        Alert.alert(
+                          "Error !",
+                          "Oops! \nSeems like we run into some Server Error"
+                        );
                       }
                       setLoading(false);
                     });

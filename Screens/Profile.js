@@ -140,7 +140,7 @@ const Profile = (props) => {
           autoPlay
           loop
           height={90}
-          width={90}
+          width={100}
         />
 
         <View style={MyStyles.profile_row}>
@@ -160,7 +160,7 @@ const Profile = (props) => {
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>
               {param.totalvcalls}
             </Text>
-            <Text>V Calls</Text>
+            <Text>Calls</Text>
           </View>
           <View style={{ alignItems: "center", paddingHorizontal: 10 }}>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>

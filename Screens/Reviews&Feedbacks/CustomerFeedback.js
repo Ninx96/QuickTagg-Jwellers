@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList } from "react-native";
-import { Text, Card, Button } from "react-native-paper";
+import { Text, Card, Button, Avatar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import moment from "moment";
 const CustomerFeedback = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,11 @@ const CustomerFeedback = (props) => {
   }, []);
 
   const Browse = () => {
-    postRequest("masters/dashboard/feedback", { from_date: "2020-01-01", to_date: "2021-09-01", branch_id: branchId }, userToken).then((resp) => {
+    postRequest(
+      "masters/dashboard/feedback",
+      { from_date: "2020-01-01", to_date: "2021-09-01", branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
         console.log(resp);
         setgriddata(resp.data);
@@ -39,6 +44,7 @@ const CustomerFeedback = (props) => {
     <View style={MyStyles.container}>
       <FlatList
         data={griddata}
+        style={{ marginVertical: 10 }}
         renderItem={({ item, index }) => (
           <Card
             style={{
@@ -51,28 +57,63 @@ const CustomerFeedback = (props) => {
           >
             <View>
               <View>
-                <Text style={{ fontSize: 15, color: "#FFF" }}>{item.full_name}</Text>
+                <View style={[MyStyles.row, { marginVertical: 0 }]}>
+                  <Text
+                    style={{ fontSize: 15, color: "#FFF", fontWeight: "bold" }}
+                  >
+                    {item.full_name}
+                  </Text>
+                  <Text style={{ fontSize: 15, color: "#FFF" }}>
+                    {item.datetime}
+                  </Text>
+                </View>
                 <View
                   style={[
                     MyStyles.row,
-                    { justifyContent: "flex-start", marginVertical: 0, color: "#FFF" },
+                    {
+                      justifyContent: "flex-start",
+                      marginVertical: 0,
+                      color: "#FFF",
+                    },
                   ]}
                 >
-                  <Text style={{ fontSize: 15, color: "#FFF" }}>{item.mobile}</Text>
+                  <Text style={{ fontSize: 15, color: "#FFF" }}>
+                    {item.mobile}
+                  </Text>
                   <View style={{ flexDirection: "row", marginHorizontal: 20 }}>
                     {ratingStar(item.stars)}
                   </View>
                 </View>
               </View>
 
-              <View style={[MyStyles.row, { marginVertical: 0 }]}>
-                <View style={{ backgroundColor: "#4297FE", padding: 5, borderColor: "#FFF", borderWidth: 1, borderRadius: 5 }}>
-                  <Text style={{ color: "#FFF", fontSize: 15 }}>{item.service1}</Text>
+              <View
+                style={[MyStyles.row, { marginVertical: 0, flexWrap: "wrap" }]}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#4297FE",
+                    padding: 5,
+                    borderColor: "#FFF",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "#FFF", fontSize: 15 }}>
+                    {item.service1}
+                  </Text>
                 </View>
+                <Avatar.Icon
+                  icon="whatsapp"
+                  color="#FFF"
+                  style={{ backgroundColor: "green" }}
+                  size={30}
+                />
               </View>
 
-              <View style={{ height: 70 }}>
-                <Text style={{ fontSize: 15, color: "#FFF" }}>{item.remarks}</Text>
+              <View style={{}}>
+                <Text style={{ fontSize: 15, color: "#FFF" }}>
+                  {item.remarks}
+                </Text>
               </View>
             </View>
           </Card>

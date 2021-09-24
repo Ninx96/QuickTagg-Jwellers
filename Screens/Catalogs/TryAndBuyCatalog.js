@@ -75,6 +75,7 @@ const TryAndBuyCatalogList = (props) => {
     <View style={MyStyles.container}>
       <FlatList
         data={griddata}
+        style={{ marginVertical: 10 }}
         renderItem={({ item, index }) => (
           <Card
             key={item.voucher_id}
@@ -169,7 +170,7 @@ const TryAndBuyCatalogList = (props) => {
         style={{
           position: "absolute",
           bottom: 20,
-          right: 20,
+          right: 80,
         }}
         icon="plus"
         color="#000"
@@ -512,7 +513,9 @@ const TryAndBuyCatalog = (props) => {
             source={require("../../assets/login-bg.jpg")}
           >
             <View style={{ flex: 1 }}>
-              <View style={MyStyles.row}>
+              <View
+                style={[MyStyles.row, MyStyles.primaryColor, { marginTop: 0 }]}
+              >
                 <IconButton
                   icon="chevron-left"
                   size={30}
@@ -522,11 +525,13 @@ const TryAndBuyCatalog = (props) => {
                     setRemarks(false);
                   }}
                 />
+                <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                  Enter Remarks
+                </Text>
               </View>
               <View style={MyStyles.cover}>
                 <TextInput
                   mode="outlined"
-                  label="Entry No"
                   placeholder="Entry No"
                   value={param.entry_no}
                   disabled={true}
@@ -534,7 +539,6 @@ const TryAndBuyCatalog = (props) => {
                 />
                 <TextInput
                   mode="outlined"
-                  label="Title"
                   placeholder="Title"
                   value={param.title}
                   onChangeText={(text) => {
@@ -544,7 +548,6 @@ const TryAndBuyCatalog = (props) => {
                 />
                 <TextInput
                   mode="outlined"
-                  label="Remarks"
                   placeholder="Remarks"
                   multiline
                   numberOfLines={3}
