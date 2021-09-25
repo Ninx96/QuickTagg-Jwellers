@@ -19,14 +19,17 @@ const RecentActivity = (props) => {
       if (resp.status == 200) {
         setrecentactivity(resp.data);
       } else {
-        Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
       }
     });
     setLoading(false);
   }, []);
 
   return (
-    <View>
+    <View style={{ backgroundColor: "#FFF" }}>
       <FlatList
         data={recentactivity}
         initialNumToRender={10}
@@ -39,23 +42,45 @@ const RecentActivity = (props) => {
               //description={item.mobile}
               description={() => (
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 14, color: "#777", marginRight: 50 }}>
+                  <Text
+                    style={{ fontSize: 14, color: "#777", marginRight: 50 }}
+                  >
                     {item.mobile}
                   </Text>
                   {item.dob == "true" && (
-                    <Icon name="cake" size={20} style={{ marginHorizontal: 2, color: "gold" }} />
+                    <Icon
+                      name="cake"
+                      size={20}
+                      style={{ marginHorizontal: 2, color: "gold" }}
+                    />
                   )}
                   {item.doa == "true" && (
-                    <Icon name="cake" size={20} style={{ marginHorizontal: 2, color: "gold" }} />
+                    <Icon
+                      name="cake"
+                      size={20}
+                      style={{ marginHorizontal: 2, color: "gold" }}
+                    />
                   )}
                   {item.missCall == "true" && (
-                    <Icon name="inbox" size={20} style={{ marginHorizontal: 2 }} />
+                    <Icon
+                      name="inbox"
+                      size={20}
+                      style={{ marginHorizontal: 2 }}
+                    />
                   )}
                   {item.vcall == "true" && (
-                    <Icon name="video" size={20} style={{ marginHorizontal: 2 }} />
+                    <Icon
+                      name="video"
+                      size={20}
+                      style={{ marginHorizontal: 2 }}
+                    />
                   )}
                   {item.wish == "true" && (
-                    <Icon name="heart" size={20} style={{ marginHorizontal: 2, color: "red" }} />
+                    <Icon
+                      name="heart"
+                      size={20}
+                      style={{ marginHorizontal: 2, color: "red" }}
+                    />
                   )}
                 </View>
               )}
@@ -65,7 +90,11 @@ const RecentActivity = (props) => {
                     <Icon
                       name="brightness-1"
                       size={10}
-                      style={{ marginHorizontal: 2, color: "lightgreen", alignSelf: "center" }}
+                      style={{
+                        marginHorizontal: 2,
+                        color: "lightgreen",
+                        alignSelf: "center",
+                      }}
                     />
                   ) : (
                     <Text> </Text>
@@ -80,8 +109,9 @@ const RecentActivity = (props) => {
                     }}
                   >
                     <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {" "}
-                      {item.customer_type == null ? "" : item.customer_type.charAt(0)}
+                      {item.customer_type == null
+                        ? ""
+                        : item.customer_type.charAt(0)}
                     </Text>
                   </TouchableRipple>
                 </>
@@ -97,7 +127,8 @@ const RecentActivity = (props) => {
                       marginLeft: 20,
                     }}
                   >
-                    {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
+                    {moment(item.datetime).format("DD/MM/YYYY") ===
+                    moment().format("DD/MM/YYYY")
                       ? moment(item.datetime).format("hh:mm")
                       : moment(item.datetime).format("DD/MM/YYYY")}
                   </Text>

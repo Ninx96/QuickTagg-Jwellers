@@ -337,8 +337,8 @@ const TryAndBuyCatalog = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <Loading isloading={false} />
-      <ScrollView>
-        <View style={MyStyles.cover}>
+      <View style={MyStyles.cover}>
+        <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
             <DropDown
               data={subcategorylist}
@@ -437,6 +437,8 @@ const TryAndBuyCatalog = (props) => {
                         width: 100,
                         alignItems: "center",
                         zIndex: 1,
+                        borderWidth: 0.5,
+                        borderColor: "#AAA",
                       }}
                     >
                       <Card.Cover
@@ -455,8 +457,8 @@ const TryAndBuyCatalog = (props) => {
               </View>
             );
           })}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       {/* ImagePath change direct Component se kr lena */}
 

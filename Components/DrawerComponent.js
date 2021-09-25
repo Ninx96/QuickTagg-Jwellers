@@ -158,9 +158,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails} // aise krke bhejna hai ok
         options={{
           headerShown: true,
-          header: (props) => (
-            <TitleBar {...props} title="Voucher List" disableSearch />
-          ),
+          header: (props) => <TitleBar {...props} title="Voucher List" />,
         }}
       />
       {/* --------------------- Products------------------- */}

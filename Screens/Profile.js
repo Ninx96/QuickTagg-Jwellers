@@ -132,18 +132,21 @@ const Profile = (props) => {
       <View
         style={[
           MyStyles.row,
-          { justifyContent: "space-evenly", marginTop: 10 },
+          {
+            justifyContent: "center",
+            marginTop: 10,
+          },
         ]}
       >
         <LottieView
           source={param.gender === "male" ? MaleAvatar : FemaleAvatar}
           autoPlay
           loop
-          height={90}
-          width={100}
+          resizeMode="cover"
+          style={{ width: 100, margin: -10, marginRight: -30 }}
         />
 
-        <View style={MyStyles.profile_row}>
+        <View style={[MyStyles.profile_row, { marginRight: 30 }]}>
           <View style={{ alignItems: "center", paddingHorizontal: 10 }}>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>
               {param.totalwishlist}
@@ -172,7 +175,7 @@ const Profile = (props) => {
       </View>
       <View style={{ margin: 10 }}>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          {param.full_name} {(true ? "♂️" : "♀️") + "      "}
+          {param.full_name} {(param.gender === "male" ? "♂️" : "♀️") + "      "}
           <Text style={{ color: "green" }}>{param.category_name}</Text>
         </Text>
         <View style={{ flexDirection: "row" }}>
@@ -327,7 +330,7 @@ const Wishlist = (props) => {
                   marginHorizontal: 10,
                 }}
               >
-                <Text>{resp.date}</Text>
+                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
                 <FlatList
                   //key={index}
                   data={resp.products}
@@ -416,7 +419,7 @@ const Uploaded = (props) => {
                   marginHorizontal: 10,
                 }}
               >
-                <Text>{resp.date}</Text>
+                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
                 <FlatList
                   key={index}
                   data={resp.products}
@@ -498,7 +501,7 @@ const Exhibition = (props) => {
                   marginHorizontal: 10,
                 }}
               >
-                <Text>{resp.date}</Text>
+                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
                 <FlatList
                   key={index}
                   data={resp.products}
@@ -606,6 +609,7 @@ const VideoCallRequest = (props) => {
       >
         <Card.Title
           title="Create Request"
+          titleStyle={{ marginLeft: -10 }}
           right={() => (
             <View>
               <Button
@@ -630,12 +634,15 @@ const VideoCallRequest = (props) => {
             <Card.Title
               title={item.status}
               right={() => (
-                <View style={{ marginHorizontal: 10 }}>
-                  <Text style={{ color: "green" }}>{item.date}</Text>
+                <View style={{ marginHorizontal: 10, marginVertical: 8 }}>
+                  <Text style={{ color: "green", marginLeft: "auto" }}>
+                    {item.date}
+                  </Text>
                   {item.status == "request" ? (
                     <Button
                       mode="contained"
                       compact
+                      style={{ marginTop: 5 }}
                       uppercase={false}
                       onPress={() => {
                         setrequestParam({
@@ -650,11 +657,11 @@ const VideoCallRequest = (props) => {
                     </Button>
                   ) : null}
                   {item.status == "accept" ? (
-                    <>
+                    <View style={{ flexDirection: "row", marginTop: 5 }}>
                       <Button
                         mode="contained"
-                        compact
                         uppercase={false}
+                        style={{ marginHorizontal: 10 }}
                         onPress={() => {
                           Alert.alert("Alert", "You want to delete?", [
                             {
@@ -692,7 +699,6 @@ const VideoCallRequest = (props) => {
                       </Button>
                       <Button
                         mode="contained"
-                        compact
                         uppercase={false}
                         onPress={() => {
                           requestParam.tran_id = item.tran_id;
@@ -706,7 +712,7 @@ const VideoCallRequest = (props) => {
                       >
                         Edit
                       </Button>
-                    </>
+                    </View>
                   ) : null}
                 </View>
               )}
@@ -808,12 +814,13 @@ const VideoCallRequest = (props) => {
               multiline
               numberOfLines={4}
             />
-            <View style={MyStyles.row}>
+            <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
                 mode="contained"
                 compact
                 uppercase={false}
-                style={{ backgroundColor: "red", width: "48%" }}
+                color="red"
+                style={{ width: "48%" }}
                 onPress={() => {
                   setrequestParam({
                     ...requestParam,
@@ -881,12 +888,13 @@ const VideoCallRequest = (props) => {
               }}
               disabled
             />
-            <View style={MyStyles.row}>
+            <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
                 mode="contained"
                 compact
                 uppercase={false}
-                style={{ backgroundColor: "red", width: "48%" }}
+                color="red"
+                style={{ width: "48%" }}
                 onPress={() => {
                   setVisible2(false);
                 }}
@@ -966,12 +974,15 @@ const CallRequest = (props) => {
             <Card.Title
               title={item.status}
               right={() => (
-                <View style={{ marginHorizontal: 10 }}>
-                  <Text style={{ color: "green" }}>{item.date}</Text>
+                <View style={{ marginHorizontal: 10, marginVertical: 8 }}>
+                  <Text style={{ color: "green", marginLeft: "auto" }}>
+                    {item.date}
+                  </Text>
                   {item.status == "request" ? (
                     <Button
                       mode="contained"
                       compact
+                      style={{ marginTop: 5 }}
                       uppercase={false}
                       onPress={() => {
                         setrequestParam({
@@ -986,10 +997,10 @@ const CallRequest = (props) => {
                     </Button>
                   ) : null}
                   {item.status == "accept" ? (
-                    <>
+                    <View style={{ flexDirection: "row", marginTop: 5 }}>
                       <Button
                         mode="contained"
-                        compact
+                        style={{ marginHorizontal: 10 }}
                         uppercase={false}
                         onPress={() => {
                           Alert.alert("Alert", "You want to Done Call?", [
@@ -1028,7 +1039,6 @@ const CallRequest = (props) => {
                       </Button>
                       <Button
                         mode="contained"
-                        compact
                         uppercase={false}
                         onPress={() => {
                           requestParam.tran_id = item.tran_id;
@@ -1042,7 +1052,7 @@ const CallRequest = (props) => {
                       >
                         Edit
                       </Button>
-                    </>
+                    </View>
                   ) : null}
                 </View>
               )}
@@ -1144,7 +1154,7 @@ const CallRequest = (props) => {
               multiline
               numberOfLines={4}
             />
-            <View style={MyStyles.row}>
+            <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
                 mode="contained"
                 compact
@@ -1233,6 +1243,7 @@ const CustomerVoucherList = (props) => {
     <View style={MyStyles.container}>
       <FlatList
         data={griddata}
+        style={{ marginVertical: 10 }}
         renderItem={({ item, index }) => (
           <Card
             key={item.voucher_id}
@@ -1243,6 +1254,12 @@ const CustomerVoucherList = (props) => {
               marginVertical: 5,
             }}
           >
+            <BadgeRibbon
+              text="Active"
+              color="green"
+              position="voucherRight"
+              textStyle={{ top: 20, left: -20 }}
+            />
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
               start={{ x: 0, y: 0 }}
