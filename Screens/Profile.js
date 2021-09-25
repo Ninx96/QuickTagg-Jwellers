@@ -320,7 +320,13 @@ const Wishlist = (props) => {
       {wishlist.length > 0
         ? wishlist.map((resp, index) => {
             return (
-              <>
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "#AAA",
+                  marginHorizontal: 10,
+                }}
+              >
                 <Text>{resp.date}</Text>
                 <FlatList
                   //key={index}
@@ -367,7 +373,7 @@ const Wishlist = (props) => {
                   numColumns={3}
                   keyExtractor={(item, index) => index.toString()}
                 />
-              </>
+              </View>
             );
           })
         : null}
@@ -403,7 +409,13 @@ const Uploaded = (props) => {
       {uploadlist.length > 0
         ? uploadlist.map((resp, index) => {
             return (
-              <>
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "#AAA",
+                  marginHorizontal: 10,
+                }}
+              >
                 <Text>{resp.date}</Text>
                 <FlatList
                   key={index}
@@ -444,7 +456,7 @@ const Uploaded = (props) => {
                   numColumns={3}
                   keyExtractor={(item, index) => index.toString()}
                 />
-              </>
+              </View>
             );
           })
         : null}
@@ -479,7 +491,13 @@ const Exhibition = (props) => {
       {exhibitionlist.length > 0
         ? exhibitionlist.map((resp, index) => {
             return (
-              <>
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "#AAA",
+                  marginHorizontal: 10,
+                }}
+              >
                 <Text>{resp.date}</Text>
                 <FlatList
                   key={index}
@@ -526,7 +544,7 @@ const Exhibition = (props) => {
                   numColumns={3}
                   keyExtractor={(item, index) => index.toString()}
                 />
-              </>
+              </View>
             );
           })
         : null}
@@ -579,7 +597,13 @@ const VideoCallRequest = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-      <Card style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
+      <Card
+        style={{
+          borderBottomColor: "black",
+          borderBottomWidth: 1,
+          paddingHorizontal: 10,
+        }}
+      >
         <Card.Title
           title="Create Request"
           right={() => (
@@ -602,14 +626,11 @@ const VideoCallRequest = (props) => {
         data={vcallslist}
         initialNumToRender={10}
         renderItem={({ item, index }) => (
-          <Card
-            style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
-            key={index}
-          >
+          <Card key={index}>
             <Card.Title
               title={item.status}
               right={() => (
-                <View>
+                <View style={{ marginHorizontal: 10 }}>
                   <Text style={{ color: "green" }}>{item.date}</Text>
                   {item.status == "request" ? (
                     <Button
@@ -690,7 +711,15 @@ const VideoCallRequest = (props) => {
                 </View>
               )}
             />
-            <View>
+            <View
+              style={{
+                borderTopWidth: 0.5,
+                borderTopColor: "#AAA",
+                borderBottomColor: "black",
+                borderBottomWidth: 1,
+                marginHorizontal: 10,
+              }}
+            >
               <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
                 {item.accept_date !== null ? (
                   <Button
@@ -929,141 +958,144 @@ const CallRequest = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-      <ScrollView>
-        <FlatList
-          data={misscallslist}
-          initialNumToRender={10}
-          renderItem={({ item, index }) => (
-            <Card
-              style={{ borderBottomColor: "black", borderBottomWidth: 1 }}
-              key={index}
-            >
-              <Card.Title
-                title={item.status}
-                right={() => (
-                  <View>
-                    <Text style={{ color: "green" }}>{item.date}</Text>
-                    {item.status == "request" ? (
+      <FlatList
+        data={misscallslist}
+        initialNumToRender={10}
+        renderItem={({ item, index }) => (
+          <Card key={index}>
+            <Card.Title
+              title={item.status}
+              right={() => (
+                <View style={{ marginHorizontal: 10 }}>
+                  <Text style={{ color: "green" }}>{item.date}</Text>
+                  {item.status == "request" ? (
+                    <Button
+                      mode="contained"
+                      compact
+                      uppercase={false}
+                      onPress={() => {
+                        setrequestParam({
+                          ...requestParam,
+                          tran_id: item.tran_id,
+                          status: "accept",
+                        });
+                        setVisible(true);
+                      }}
+                    >
+                      Accept
+                    </Button>
+                  ) : null}
+                  {item.status == "accept" ? (
+                    <>
                       <Button
                         mode="contained"
                         compact
                         uppercase={false}
                         onPress={() => {
-                          setrequestParam({
-                            ...requestParam,
-                            tran_id: item.tran_id,
-                            status: "accept",
-                          });
-                          setVisible(true);
+                          Alert.alert("Alert", "You want to Done Call?", [
+                            {
+                              text: "No",
+                              onPress: () => {},
+                              style: "cancel",
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                setLoading(true);
+                                let done_param = {
+                                  tran_id: item.tran_id,
+                                  status: "done",
+                                  accept_date: moment().format("YYYY-MM-DD"),
+                                  accept_time: moment().format("HH:mm"),
+                                  remarks: "",
+                                };
+                                postRequest(
+                                  "transactions/customer/missCall/update",
+                                  done_param,
+                                  userToken
+                                ).then((resp) => {
+                                  if (resp.status == 200) {
+                                    Refresh();
+                                    setLoading(false);
+                                  }
+                                });
+                              },
+                            },
+                          ]);
                         }}
                       >
-                        Accept
+                        Done
                       </Button>
-                    ) : null}
-                    {item.status == "accept" ? (
-                      <>
-                        <Button
-                          mode="contained"
-                          compact
-                          uppercase={false}
-                          onPress={() => {
-                            Alert.alert("Alert", "You want to Done Call?", [
-                              {
-                                text: "No",
-                                onPress: () => {},
-                                style: "cancel",
-                              },
-                              {
-                                text: "Yes",
-                                onPress: () => {
-                                  setLoading(true);
-                                  let done_param = {
-                                    tran_id: item.tran_id,
-                                    status: "done",
-                                    accept_date: moment().format("YYYY-MM-DD"),
-                                    accept_time: moment().format("HH:mm"),
-                                    remarks: "",
-                                  };
-                                  postRequest(
-                                    "transactions/customer/missCall/update",
-                                    done_param,
-                                    userToken
-                                  ).then((resp) => {
-                                    if (resp.status == 200) {
-                                      Refresh();
-                                      setLoading(false);
-                                    }
-                                  });
-                                },
-                              },
-                            ]);
-                          }}
-                        >
-                          Done
-                        </Button>
-                        <Button
-                          mode="contained"
-                          compact
-                          uppercase={false}
-                          onPress={() => {
-                            requestParam.tran_id = item.tran_id;
-                            requestParam.status = "accept";
-                            requestParam.accept_date = item.accept_date;
-                            requestParam.accept_time = item.accept_time;
-                            setrequestParam({ ...requestParam });
-                            setVisible(true);
-                            console.log(requestParam);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                      </>
-                    ) : null}
-                  </View>
-                )}
-              />
-              <View>
-                <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
-                  {item.accept_date !== null ? (
-                    <Button
-                      mode="outlined"
-                      color="black"
-                      compact
-                      uppercase={false}
-                      style={{ marginHorizontal: 5 }}
-                    >
-                      {moment(item.accept_date).format("DD-MM-YYYY")}
-                    </Button>
+                      <Button
+                        mode="contained"
+                        compact
+                        uppercase={false}
+                        onPress={() => {
+                          requestParam.tran_id = item.tran_id;
+                          requestParam.status = "accept";
+                          requestParam.accept_date = item.accept_date;
+                          requestParam.accept_time = item.accept_time;
+                          setrequestParam({ ...requestParam });
+                          setVisible(true);
+                          console.log(requestParam);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </>
                   ) : null}
+                </View>
+              )}
+            />
+            <View
+              style={{
+                borderTopWidth: 0.5,
+                borderTopColor: "#AAA",
+                borderBottomColor: "black",
+                borderBottomWidth: 1,
+                marginHorizontal: 10,
+              }}
+            >
+              <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
+                {item.accept_date !== null ? (
+                  <Button
+                    mode="outlined"
+                    color="black"
+                    compact
+                    uppercase={false}
+                    style={{ marginHorizontal: 5 }}
+                  >
+                    {moment(item.accept_date).format("DD-MM-YYYY")}
+                  </Button>
+                ) : null}
 
-                  {item.accept_time !== null ? (
-                    <Button
-                      mode="outlined"
-                      color="black"
-                      compact
-                      uppercase={false}
-                      style={{ marginHorizontal: 5 }}
-                    >
-                      {item.accept_time}
-                    </Button>
-                  ) : null}
-                </View>
-                <View>
-                  {item.remarks.length > 0
-                    ? item.remarks.map((item) => {
-                        return (
-                          <Text style={{ color: "#888" }}>{item.remark}</Text>
-                        );
-                      })
-                    : null}
-                  <Text style={{ color: "#888" }}>View All Remarks</Text>
-                </View>
+                {item.accept_time !== null ? (
+                  <Button
+                    mode="outlined"
+                    color="black"
+                    compact
+                    uppercase={false}
+                    style={{ marginHorizontal: 5 }}
+                  >
+                    {item.accept_time}
+                  </Button>
+                ) : null}
               </View>
-            </Card>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </ScrollView>
+              <View>
+                {item.remarks.length > 0
+                  ? item.remarks.map((item) => {
+                      return (
+                        <Text style={{ color: "#888" }}>{item.remark}</Text>
+                      );
+                    })
+                  : null}
+                <Text style={{ color: "#888" }}>View All Remarks</Text>
+              </View>
+            </View>
+          </Card>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
       <Portal>
         <Modal
           visible={visible}
