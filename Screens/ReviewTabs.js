@@ -17,6 +17,16 @@ const ReviewTabs = (props) => {
       >
         <Tab.Screen
           name="Customer Reviews"
+          children={() => <CustomerReviewList {...props} />}
+          // initialParams={props.route.params}
+        />
+        <Tab.Screen
+          name="Customer Feedback"
+          children={() => <CustomerFeedback {...props} />}
+          // initialParams={props.route.params}
+        />
+        {/* <Tab.Screen
+          name="Customer Reviews"
           component={CustomerReviewList}
           initialParams={props.route.params}
         />
@@ -24,7 +34,7 @@ const ReviewTabs = (props) => {
           name="Customer Feedback"
           component={CustomerFeedback}
           initialParams={props.route.params}
-        />
+        /> */}
       </Tab.Navigator>
     </View>
   );

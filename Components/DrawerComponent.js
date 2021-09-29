@@ -346,7 +346,7 @@ const DrawerComponent = ({ userDetails }) => {
         options={{
           headerShown: true,
           header: (props) => (
-            <TitleBar {...props} title="Reviews" disableSearch />
+            <TitleBar {...props} title="Reviews" />
           ),
         }}
       />
@@ -425,10 +425,11 @@ const DrawerComponent = ({ userDetails }) => {
       <Drawer.Screen
         component={TabToScan}
         name="TabToScan"
+        initialParams={userDetails}
         options={{
           headerShown: true,
           header: (props) => (
-            <TitleBar {...props} title="Tab to Scan" disableSearch />
+            <TitleBar {...props} title="Tab to Scan Banner" disableSearch />
           ),
         }}
       />
@@ -451,7 +452,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Recent Activity" />,
+          header: (props) => <TitleBar {...props} title="Recent Activity" disableSearch />,
         }}
       />
     </Drawer.Navigator>

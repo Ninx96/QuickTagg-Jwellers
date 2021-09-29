@@ -7,6 +7,7 @@ import {
   Alert,
   FlatList,
   Image,
+  StyleSheet
 } from "react-native";
 import {
   Button,
@@ -24,6 +25,7 @@ import CustomHeader from "../../Components/CustomHeader";
 import ImageUpload from "../../Components/ImageUpload";
 import DropDown from "../../Components/DropDown";
 import { postRequest } from "../../Services/RequestServices";
+import Autocomplete from "react-native-autocomplete-input";
 
 const SubCategoryList = (props) => {
   const { userToken, search } = props.route.params;
@@ -95,7 +97,7 @@ const SubCategoryList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -141,6 +143,8 @@ const SubCategoryForm = (props) => {
     subcategory_id: "0",
     subcategory_name: "",
   });
+  const [filteredData, setFilteredData] = useState([]);
+  const [suggestiondata, setSuggestionData] = useState([]);
 
   React.useEffect(() => {
     postRequest("masters/product/subcategory/getCategory", {}, userToken).then(
@@ -178,6 +182,19 @@ const SubCategoryForm = (props) => {
     setLoading(false);
   }, []);
 
+  const AutoSuggestion = () => {
+    postRequest("masters/product/subcategory/getSubcategory", { category_id: param.category_id, search: "" }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setSuggestionData(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+  }
+
   return (
     <ImageBackground
       style={MyStyles.container}
@@ -190,18 +207,49 @@ const SubCategoryForm = (props) => {
           ext_lbl="category_name"
           value={param.category_id}
           onChange={(val) => {
-            setparam({ ...param, category_id: val });
+            param.category_id = val;
+            setparam({ ...param });
+            AutoSuggestion();
           }}
           placeholder="Category"
         />
-        <TextInput
-          mode="outlined"
-          placeholder="SubCategory Name"
-          style={{ backgroundColor: "rgba(0,0,0,0)", marginTop: 20 }}
+        <Autocomplete
+          {...props}
+          autoCapitalize="none"
+          autoCorrect={false}
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
           value={param.subcategory_name}
-          onChangeText={(text) => {
-            setparam({ ...param, subcategory_name: text });
+          data={filteredData}
+          onChangeText={(query) => {
+            if (query) {
+              const regex = new RegExp(`${query.trim()}`, "i");
+              setFilteredData(
+                suggestiondata.filter((data) => data.subcategory_name.search(regex) >= 0)
+              );
+            } else {
+              setFilteredData([]);
+            }
+            setparam({ ...param, subcategory_name: query });
           }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.subcategory_name}
+              </Text>
+            ),
+          }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="SubCategory Name"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
         <View
           style={[
@@ -237,3 +285,30 @@ const SubCategoryForm = (props) => {
 };
 
 export { SubCategoryForm, SubCategoryList };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F5FCFF",
+    flex: 1,
+    padding: 16,
+    marginTop: 40,
+  },
+  autocompleteContainer: {
+    backgroundColor: "#ffffff",
+    borderWidth: 0,
+  },
+  descriptionContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  infoText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});

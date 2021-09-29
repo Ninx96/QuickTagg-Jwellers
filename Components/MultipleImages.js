@@ -5,7 +5,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { Button, IconButton, Modal, Portal, Text } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 
-const MultipleImages = ({ onSelect, data = [] }) => {
+const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
   const [images, setImages] = useState([]);
   const [header, setHeader] = useState(
     <Text style={{ flexGrow: 1, fontWeight: "bold", fontSize: 18 }}>
@@ -76,7 +76,7 @@ const MultipleImages = ({ onSelect, data = [] }) => {
           mode="contained"
           color="red"
           uppercase={false}
-          onPress={() => {}}
+          onPress={onClearImage}
         >
           Clear
         </Button>

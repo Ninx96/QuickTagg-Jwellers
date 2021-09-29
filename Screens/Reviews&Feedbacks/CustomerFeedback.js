@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
-import { Text, Card, Button, Avatar } from "react-native-paper";
+import { View, FlatList,Alert } from "react-native";
+import { Text, Card, TouchableRipple, Avatar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import * as Linking from "expo-linking";
 import moment from "moment";
+
 const CustomerFeedback = (props) => {
-  const { userToken, branchId } = props.route.params;
+  const { userToken, branchId, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
-  React.useEffect(() => {
+  React.useEffect(() => {   
     Browse();
-  }, []);
+  }, [search]);
 
   const Browse = () => {
     postRequest(
-      "masters/dashboard/feedback",
-      { from_date: "2020-01-01", to_date: "2021-09-01", branch_id: branchId },
+      "masters/dashboard/feedback_app",
+      { from_date: "", to_date: "", branch_id: branchId, search: search == undefined ? "" : search },
       userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        console.log(resp);
+    ).then((resp) => {     
+      if (resp.status == 200) {      
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -102,12 +103,14 @@ const CustomerFeedback = (props) => {
                     {item.service1}
                   </Text>
                 </View>
-                <Avatar.Icon
-                  icon="whatsapp"
-                  color="#FFF"
-                  style={{ backgroundColor: "green" }}
-                  size={30}
-                />
+                <TouchableRipple onPress={() => Linking.openURL("whatsapp://send?text=&phone=91" + item.mobile)}>
+                  <Avatar.Icon
+                    icon="whatsapp"
+                    color="#FFF"
+                    style={{ backgroundColor: "green" }}
+                    size={30}
+                  />
+                </TouchableRipple>
               </View>
 
               <View style={{}}>

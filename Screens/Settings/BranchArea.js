@@ -5,6 +5,7 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  StyleSheet
 } from "react-native";
 import {
   Button,
@@ -12,10 +13,12 @@ import {
   List,
   TextInput,
   TouchableRipple,
+  Text
 } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import Autocomplete from "react-native-autocomplete-input";
 const BranchAreaList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -85,7 +88,7 @@ const BranchAreaList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -130,8 +133,21 @@ const BranchArea = (props) => {
     area_id: "0",
     area_name: "",
   });
+  const [filteredData, setFilteredData] = useState([]);
+  const [suggestiondata, setSuggestionData] = useState([]);
 
   React.useEffect(() => {
+    postRequest("customervisit/SearchAreaList", { search: "" }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setSuggestionData(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+
     if (area_id != 0) {
       let param = {
         area_id: area_id,
@@ -158,7 +174,7 @@ const BranchArea = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
-        <TextInput
+        {/* <TextInput
           mode="outlined"
           placeholder="Branch Area"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -166,6 +182,44 @@ const BranchArea = (props) => {
           onChangeText={(text) => {
             setparam({ ...param, area_name: text });
           }}
+        /> */}
+         <Autocomplete
+          {...props}
+          autoCapitalize="none"
+          autoCorrect={false}
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
+          value={param.area_name}
+          data={filteredData}
+          onChangeText={(query) => {
+            if (query) {
+              const regex = new RegExp(`${query.trim()}`, "i");
+              setFilteredData(
+                suggestiondata.filter((data) => data.area_name.search(regex) >= 0)
+              );
+            } else {
+              setFilteredData([]);
+            }
+            setparam({ ...param, area_name: query });
+          }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.area_name}
+              </Text>
+            ),
+          }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="Branch Area"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
         <View
           style={[
@@ -200,3 +254,31 @@ const BranchArea = (props) => {
 };
 
 export { BranchArea, BranchAreaList };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F5FCFF",
+    flex: 1,
+    padding: 16,
+    marginTop: 40,
+  },
+  autocompleteContainer: {
+    backgroundColor: "#ffffff",
+    borderWidth: 0,
+  },
+  descriptionContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  infoText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});
+

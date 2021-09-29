@@ -5,6 +5,7 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  StyleSheet
 } from "react-native";
 import {
   Button,
@@ -12,10 +13,12 @@ import {
   List,
   TextInput,
   TouchableRipple,
+  Text
 } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import Autocomplete from "react-native-autocomplete-input";
 
 const BranchStaffList = (props) => {
   const { userToken, search } = props.route.params;
@@ -136,8 +139,21 @@ const BranchStaff = (props) => {
     name: "",
     mobile: "",
   });
+  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData2, setFilteredData2] = useState([]);
+  const [suggestiondata, setSuggestionData] = useState([]);
 
   React.useEffect(() => {
+    postRequest("customervisit/SearchStaffList", { search: "" }, userToken).then((resp) => {
+      if (resp.status == 200) {
+        setSuggestionData(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
     if (staff_id != 0) {
       let param = {
         staff_id: staff_id,
@@ -165,7 +181,7 @@ const BranchStaff = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
-        <TextInput
+        {/* <TextInput
           mode="outlined"
           placeholder="Staff Name"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -173,8 +189,46 @@ const BranchStaff = (props) => {
           onChangeText={(text) => {
             setparam({ ...param, name: text });
           }}
+        /> */}
+         <Autocomplete
+          {...props}
+          autoCapitalize="none"
+          autoCorrect={false}
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
+          value={param.name}
+          data={filteredData}
+          onChangeText={(query) => {
+            if (query) {
+              const regex = new RegExp(`${query.trim()}`, "i");
+              setFilteredData(
+                suggestiondata.filter((data) => data.name.search(regex) >= 0)
+              );
+            } else {
+              setFilteredData([]);
+            }
+            setparam({ ...param, name: query });
+          }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.name}
+              </Text>
+            ),
+          }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="Staff Name"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
-        <TextInput
+        {/* <TextInput
           mode="outlined"
           placeholder="Staff Mobile"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -184,6 +238,44 @@ const BranchStaff = (props) => {
           onChangeText={(text) => {
             setparam({ ...param, mobile: text });
           }}
+        /> */}
+          <Autocomplete
+          {...props}
+          autoCapitalize="none"
+          autoCorrect={false}
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
+          value={param.mobile}
+          data={filteredData2}
+          onChangeText={(query) => {
+            if (query) {
+              const regex = new RegExp(`${query.trim()}`, "i");
+              setFilteredData2(
+                suggestiondata.filter((data) => data.mobile.search(regex) >= 0)
+              );
+            } else {
+              setFilteredData2([]);
+            }
+            setparam({ ...param, mobile: query });
+          }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.mobile}
+              </Text>
+            ),
+          }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="Staff Mobile"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
         <View
           style={[
@@ -218,3 +310,31 @@ const BranchStaff = (props) => {
 };
 
 export { BranchStaff, BranchStaffList };
+
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F5FCFF",
+    flex: 1,
+    padding: 16,
+    marginTop: 40,
+  },
+  autocompleteContainer: {
+    backgroundColor: "#ffffff",
+    borderWidth: 0,
+  },
+  descriptionContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  infoText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});

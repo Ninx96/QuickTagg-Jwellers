@@ -58,8 +58,7 @@ const CategoryList = (props) => {
       "masters/product/category/delete",
       { category_id: id },
       userToken
-    ).then((resp) => {
-      console.log(resp);
+    ).then((resp) => {     
       if (resp.status == 200) {
         if (resp.data[0].valid) {
           Browse();
@@ -129,7 +128,7 @@ const CategoryList = (props) => {
                     Alert.alert("Alert", "You want to delete?", [
                       {
                         text: "No",
-                        onPress: () => {},
+                        onPress: () => { },
                         style: "cancel",
                       },
                       {
@@ -181,27 +180,23 @@ const CategoryForm = (props) => {
   const [Image, setImage] = React.useState(require("../../assets/upload.png"));
 
   // For Filtered Data
-  const [filteredFilms, setFilteredFilms] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
-  const [films, setFilms] = useState([
-    { userId: 1, id: 1, title: "Rings", completed: false },
-    {
-      userId: 1,
-      id: 2,
-      title: "Round",
-      completed: false,
-    },
-    { userId: 1, id: 3, title: "Red", completed: false },
-    { userId: 1, id: 3, title: "Rat", completed: false },
-  ]);
+  const [suggestiondata, setSuggestionData] = useState([]);
 
   React.useEffect(() => {
+    postRequest("masters/product/subcategory/search_list_category", { search: "" }, userToken).then((resp) => {
+      if (resp.status == 200) {       
+        setSuggestionData(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
     if (category_id != 0) {
-      postRequest(
-        "masters/product/category/preview",
-        { category_id: category_id },
-        userToken
-      ).then((resp) => {
+      postRequest("masters/product/category/preview", { category_id: category_id }, userToken).then((resp) => {
         if (resp.status == 200) {
           param.category_id = resp.data.category_id;
           param.image_path = resp.data.image_path;
@@ -218,6 +213,7 @@ const CategoryForm = (props) => {
     setLoading(false);
   }, []);
 
+
   return (
     <ImageBackground
       style={MyStyles.container}
@@ -232,9 +228,9 @@ const CategoryForm = (props) => {
           inputContainerStyle={{ borderWidth: 0 }}
           containerStyle={{ flex: 0, marginBottom: 20 }}
           //Default Value
-          defaultValue={param.category_name}
+          value={param.category_name}
           //data to show in suggestion
-          data={filteredFilms}
+          data={filteredData}
           // onchange of the text changing the state of the query
           // which will trigger the findFilm method
           // to show the suggestions
@@ -244,12 +240,12 @@ const CategoryForm = (props) => {
               // Making a case insensitive regular expression
               const regex = new RegExp(`${query.trim()}`, "i");
               // Setting the filtered film array according the query
-              setFilteredFilms(
-                films.filter((film) => film.title.search(regex) >= 0)
+              setFilteredData(
+                suggestiondata.filter((data) => data.category_name.search(regex) >= 0)
               );
             } else {
               // If the query is null then return blank
-              setFilteredFilms([]);
+              setFilteredData([]);
             }
             setparam({ ...param, category_name: query });
           }}
@@ -257,7 +253,7 @@ const CategoryForm = (props) => {
             keyExtractor: (_, idx) => idx.toString(),
             renderItem: ({ item, index }) => (
               <Text key={index} style={styles.itemText}>
-                {item.title}
+                {item.category_name}
               </Text>
             ),
           }}
@@ -288,8 +284,7 @@ const CategoryForm = (props) => {
               setImage({ uri: result.uri });
               param.image_path =
                 "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg";
-              setparam({ ...param });
-              console.log(param.image_path);
+              setparam({ ...param });             
             }}
           />
           <ImageUpload
@@ -321,7 +316,7 @@ const CategoryForm = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              console.log(param);
+             
               postRequest(
                 "masters/product/category/insert",
                 param,
@@ -329,9 +324,7 @@ const CategoryForm = (props) => {
               ).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
-                    if (Banner.uri) {
-                      console.log(param.banner_path);
-                      console.log(Banner.uri);
+                    if (Banner.uri) {                    
                       const form_data = new FormData();
                       form_data.append("files", {
                         uri: Banner.uri,
@@ -343,7 +336,7 @@ const CategoryForm = (props) => {
                       xhr.open(
                         "POST",
                         serviceUrl +
-                          "masters/branch/UploadProductCategoryBannerMob",
+                        "masters/branch/UploadProductCategoryBannerMob",
                         true
                       );
                       xhr.setRequestHeader("Accept", "application/json");
@@ -357,15 +350,14 @@ const CategoryForm = (props) => {
                         const resp = xhr.response;
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
-                            console.log("banner : " + resp.data[0].valid);
+                            //console.log("banner : " + resp.data[0].valid);
                           }
                         }
                       };
                       xhr.send(form_data);
                     }
                     if (Image.uri) {
-                      console.log(param.image_path);
-                      console.log(Image.uri);
+                   
                       const form_data = new FormData();
                       form_data.append("files", {
                         uri: Image.uri,
@@ -390,7 +382,7 @@ const CategoryForm = (props) => {
                         const resp = xhr.response;
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
-                            console.log("image : " + resp.data[0].valid);
+                            //console.log("image : " + resp.data[0].valid);
                           }
                         }
                       };

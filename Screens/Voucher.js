@@ -18,6 +18,7 @@ import {
   Portal,
   Modal,
   TouchableRipple,
+  List
 } from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import DatePicker from "../Components/DatePicker";
@@ -29,6 +30,7 @@ import { postRequest } from "../Services/RequestServices";
 import { serviceUrl } from "../Services/Constants";
 import { LinearGradient } from "expo-linear-gradient";
 import BadgeRibbon from "../Components/BadgeRibbon";
+import { head } from "lodash";
 
 const VoucherList = (props) => {
   const { userToken, search } = props.route.params;
@@ -86,12 +88,21 @@ const VoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <BadgeRibbon
-              text="Active"
-              color="green"
-              position="voucherRight"
-              textStyle={{ top: 20, left: -20 }}
-            />
+            {item.disable ?
+              <BadgeRibbon
+                text="Active"
+                color="green"
+                position="voucherRight"
+                textStyle={{ top: 20, left: -20 }}
+              />
+              : 
+              <BadgeRibbon
+                text="Expire"
+                color="red"
+                position="voucherRight"
+                textStyle={{ top: 20, left: -20 }}
+              />}
+
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
               start={{ x: 0, y: 0 }}
@@ -148,7 +159,7 @@ const VoucherList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -300,7 +311,7 @@ const VoucherForm = (props) => {
     if (param.voucher_type == "first time") {
       smsparam.var3visible = true;
       smsparam.template =
-        "you have just got a " +
+        "Dear Customer, you have just got a " +
         (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
         " gift " +
         (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
@@ -309,50 +320,29 @@ const VoucherForm = (props) => {
         ". Validity (" +
         (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
         "). T and C apply.";
-      param.voucher_sms =
-        "you have just got a " +
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        " gift " +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        " from " +
-        userName.toUpperCase() +
-        ". Validity (" +
-        (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
-        "). T and C apply.";
+
     } else if (param.voucher_type == "birthday") {
       smsparam.template =
-        userName.toUpperCase() +
+        "Dear Customer, " + userName.toUpperCase() +
         " wishes u Happy Birthday. Lets make it special by " +
         (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
         ". Validity (" +
         (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
         "). T and C apply.";
-      param.voucher_sms =
-        userName.toUpperCase() +
-        " wishes u Happy Birthday. Lets make it special by " +
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        ". Validity (" +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        "). T and C apply.";
+
     } else if (param.voucher_type == "anniversary") {
       smsparam.template =
-        userName.toUpperCase() +
-        " wishes u Happy Anniversary. Lets make it special by " +
+        "Dear Customer, " + userName.toUpperCase() +
+        "wishes u Happy Anniversary. Lets make it special by " +
         (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
         ". Validity (" +
         (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
         "). T and C apply.";
-      param.voucher_sms =
-        userName.toUpperCase() +
-        " wishes u Happy Anniversary. Lets make it special by " +
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        ". Validity (" +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        "). T and C apply.";
+
     } else if (param.voucher_type == "referral") {
       smsparam.var3visible = true;
       smsparam.template =
-        "thanks for referring $$MemberName$$ to " +
+        "Dear Customer, thanks for referring $$MemberName$$ to " +
         userName.toUpperCase() +
         ". To honour, we offer " +
         (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
@@ -361,20 +351,11 @@ const VoucherForm = (props) => {
         ". Validity (" +
         (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
         "). T and C apply.";
-      param.voucher_sms =
-        "thanks for referring $$MemberName$$ to " +
-        userName.toUpperCase() +
-        ". To honour, we offer " +
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        " gift " +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        ". Validity (" +
-        (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
-        "). T and C apply.";
+
     } else if (param.voucher_type == "upload design") {
       smsparam.var3visible = true;
       smsparam.template =
-        "thanks for sharing designs. We appreciate and offer " +
+        "Dear Customer, thanks for sharing designs. We appreciate and offer " +
         (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
         " gift " +
         (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
@@ -383,21 +364,12 @@ const VoucherForm = (props) => {
         "). Team " +
         userName.toUpperCase() +
         ".";
-      param.voucher_sms =
-        "thanks for sharing designs. We appreciate and offer " +
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        " gift " +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        ". Validity (" +
-        (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
-        "). Team " +
-        userName.toUpperCase() +
-        ".";
+
     } else if (param.voucher_type == "other") {
       smsparam.var3visible = true;
       smsparam.var4visible = true;
       smsparam.template =
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
+        "Dear Customer, " + (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
         " celebrate this special " +
         (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
         " with " +
@@ -407,17 +379,7 @@ const VoucherForm = (props) => {
         "). Team " +
         userName.toUpperCase() +
         ". T and C apply.";
-      param.voucher_sms =
-        (smsparam.var1 == "" ? "#var1" : smsparam.var1) +
-        " celebrate this special " +
-        (smsparam.var2 == "" ? "#var2" : smsparam.var2) +
-        " with " +
-        (smsparam.var3 == "" ? "#var3" : smsparam.var3) +
-        ". Validity (" +
-        (smsparam.var4 == "" ? "#var4" : smsparam.var4) +
-        "). Team " +
-        userName.toUpperCase() +
-        ". T and C apply.";
+
     }
     setsmsparam({ ...smsparam });
     setparam({ ...param });
@@ -458,7 +420,14 @@ const VoucherForm = (props) => {
             value={param.voucher_type}
             onChange={(val) => {
               param.voucher_type = val;
+              param.voucher_sms = "";
               setparam({ ...param });
+              smsparam.var1 = "";
+              smsparam.var2 = "";
+              smsparam.var3 = "";
+              smsparam.var4 = "";
+              setsmsparam({ ...smsparam });
+
               SmsTemplete();
             }}
             placeholder="Voucher Type"
@@ -541,20 +510,74 @@ const VoucherForm = (props) => {
             />
           )}
 
-          <TouchableRipple
-            onPress={() => {
-              setvisibletemp(true);
-            }}
-          >
-            <TextInput
-              mode="outlined"
-              multiline
-              numberOfLines={4}
-              editable={false}
-              value={param.voucher_sms}
-              style={{ backgroundColor: "rgba(0,0,0,0)" }}
-            />
-          </TouchableRipple>
+          {param.voucher_sms == "" ? (
+            <TouchableRipple
+              onPress={() => {
+                if (param.voucher_type == "") {
+                  Alert.alert("select voucher type");
+                }
+                else {
+                  setvisibletemp(true);
+                }
+              }}
+            >
+              <View style={{
+                backgroundColor: "rgba(0,0,0,0)",
+                padding: 5,
+                borderColor: "gray",
+                height: 120,
+                borderWidth: 1,
+                borderRadius: 5,
+                marginVertical: 5,
+              }}>
+                <Text style={{ textAlign: "center", top: 40, fontSize: 20 }}>Insert SMS Templete</Text>
+
+                <List.Icon style={{ position: "absolute", bottom: 0, alignSelf: "flex-end" }} icon="pencil" color="#aaa" />
+              </View>
+
+            </TouchableRipple>
+          ) :
+            <TouchableRipple
+              onPress={() => {
+                if (param.voucher_type == "") {
+                  Alert.alert("select voucher type");
+                }
+                else {
+                  setvisibletemp(true);
+                }
+              }}
+            >
+              <View style={{
+                backgroundColor: "rgba(0,0,0,0)",
+                padding: 5,
+                borderColor: "gray",
+                height: 120,
+                borderWidth: 1,
+                borderRadius: 5,
+                marginVertical: 5,
+              }}>
+                <Text style={{ textAlign: "center" }}>{param.voucher_sms}</Text>
+
+                <List.Icon style={{ position: "absolute", bottom: 0, alignSelf: "flex-end" }} icon="pencil" color="#aaa" />
+              </View>
+
+            </TouchableRipple>
+          }
+          {/* <TouchableRipple
+              onPress={() => {
+                setvisibletemp(true);
+              }}
+            >
+              <TextInput
+                mode="outlined"
+                multiline
+                numberOfLines={4}
+                editable={false}
+                value={param.voucher_sms}
+                style={{ backgroundColor: "rgba(0,0,0,0)" }}
+              />
+            </TouchableRipple> */}
+
           <Checkbox.Item
             label="Disable"
             status={param.disable ? "checked" : "unchecked"}
@@ -643,7 +666,7 @@ const VoucherForm = (props) => {
                         xhr.open(
                           "POST",
                           serviceUrl +
-                            "masters/customer/UploadvoucherBannerMob",
+                          "masters/customer/UploadvoucherBannerMob",
                           true
                         );
                         xhr.setRequestHeader("Accept", "application/json");
@@ -707,20 +730,6 @@ const VoucherForm = (props) => {
           </View>
         </View>
       </ScrollView>
-
-      {/* <MessageTemplate
-        visible={visibletemp}
-        onDone={(vars) => {
-          console.log(vars);
-          let temp = "Dear (Customer Name), (Brand Name) wish you a wonderful BIRHDAY! May this day be filled with happy hours and life with many birthdays. Team Quicktagg";
-          setvisibletemp(false);
-        }}
-        onClose={() => {
-          setvisibletemp(false);
-        }}
-        type={param.voucher_type}
-        company={userName}
-      /> */}
       <Portal>
         <Modal visible={visibletemp} contentContainerStyle={MyStyles.container}>
           <View
@@ -736,11 +745,11 @@ const VoucherForm = (props) => {
               icon="arrow-left"
               onPress={() => {
                 param.voucher_sms = smsparam.template;
-                smsparam.var1 = "";
-                smsparam.var2 = "";
-                smsparam.var3 = "";
-                smsparam.var4 = "";
-                setsmsparam({ ...smsparam });
+                // smsparam.var1 = "";
+                // smsparam.var2 = "";
+                // smsparam.var3 = "";
+                // smsparam.var4 = "";
+                // setsmsparam({ ...smsparam });
                 setvisibletemp(false);
               }}
             />
@@ -820,11 +829,12 @@ const VoucherForm = (props) => {
               color="#000"
               onPress={() => {
                 param.voucher_sms = smsparam.template;
-                smsparam.var1 = "";
-                smsparam.var2 = "";
-                smsparam.var3 = "";
-                smsparam.var4 = "";
-                setsmsparam({ ...smsparam });
+                setparam({ ...param });
+                // smsparam.var1 = "";
+                // smsparam.var2 = "";
+                // smsparam.var3 = "";
+                // smsparam.var4 = "";
+                // setsmsparam({ ...smsparam });
                 setvisibletemp(false);
               }}
             />
@@ -835,95 +845,5 @@ const VoucherForm = (props) => {
   );
 };
 
-const MessageTemplate = ({ visible, onDone, onClose, type, company }) => {
-  const [param, setParam] = useState({
-    var1: "",
-    var2: "",
-    var3: "",
-    var4: "",
-    templete: "",
-  });
-
-  return (
-    <Portal>
-      <Modal visible={visible} contentContainerStyle={MyStyles.container}>
-        <View
-          style={[
-            MyStyles.row,
-            MyStyles.primaryColor,
-            {
-              marginVertical: 0,
-            },
-          ]}
-        >
-          <IconButton
-            icon="arrow-left"
-            onPress={() => {
-              onClose();
-            }}
-          />
-        </View>
-        <ImageBackground
-          source={require("../assets/login-bg.jpg")}
-          style={MyStyles.container}
-        >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "rgba(255,255,255,0.6)",
-              margin: 20,
-              borderRadius: 10,
-              padding: 10,
-            }}
-          >
-            <TextInput
-              mode="outlined"
-              placeholder="Voucher Name"
-              style={{ backgroundColor: "rgba(0,0,0,0)" }}
-              value={param.var1}
-              onChangeText={(text) => {
-                setParam({ ...param, var1: text });
-              }}
-            />
-            <TextInput
-              mode="outlined"
-              placeholder="Voucher Name"
-              style={{ backgroundColor: "rgba(0,0,0,0)" }}
-              value={param.var2}
-              onChangeText={(text) => {
-                setParam({ ...param, var2: text });
-              }}
-            />
-            <TextInput
-              mode="outlined"
-              placeholder="Voucher Name"
-              style={{ backgroundColor: "rgba(0,0,0,0)" }}
-              value={param.var3}
-              onChangeText={(text) => {
-                setParam({ ...param, var3: text });
-              }}
-            />
-            <View style={{ marginTop: 100 }}>
-              <Text style={{ textAlign: "center" }}>SMS Templete</Text>
-              <View
-                style={{ borderColor: "gray", borderWidth: 1, borderRadius: 4 }}
-              >
-                <Text style={{ margin: 10 }}>{param.templete}</Text>
-              </View>
-            </View>
-          </View>
-          <FAB
-            style={{ position: "absolute", bottom: 20, right: 20 }}
-            icon="check"
-            color="#000"
-            onPress={() => {
-              onDone(param);
-            }}
-          />
-        </ImageBackground>
-      </Modal>
-    </Portal>
-  );
-};
 
 export { VoucherList, VoucherForm };

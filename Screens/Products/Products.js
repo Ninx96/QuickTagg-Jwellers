@@ -25,7 +25,7 @@ import MultipleImages from "../../Components/MultipleImages";
 import { postRequest } from "../../Services/RequestServices";
 import BadgeRibbon from "../../Components/BadgeRibbon";
 import { serviceUrl } from "../../Services/Constants";
-
+import * as Sharing from "expo-sharing";
 const ProductsList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -178,24 +178,10 @@ const ProductsPreview = (props) => {
     });
     setLoading(false);
   }, []);
-
+ 
   return (
     <View style={MyStyles.container}>
-      <ScrollView>
-        {/* <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <IconButton
-            icon="chevron-left"
-            size={30}
-            color="black"
-            onPress={() => props.navigation.goBack()}
-          />
-        </View> */}
+      <ScrollView>      
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
           <Text style={{ fontWeight: "bold", fontSize: 22 }}>
             {param.product_name}
@@ -227,24 +213,23 @@ const ProductsPreview = (props) => {
                 textAlign: "right",
                 marginLeft: "auto",
               }}
-              onPress={() => {
-                shareOptions.title = param.product_name;
-                shareOptions.message = param.product_name;
-                shareOptions.url = "www.google.com/";
-                setshareOptions({ ...shareOptions });
-                Share.share(shareOptions);
-              }}
+              // onPress={() => {
+              //   shareOptions.title = param.product_name;
+              //   shareOptions.message = param.product_name;
+              //   shareOptions.url = "www.google.com/";
+              //   setshareOptions({ ...shareOptions });
+              //   Share.share(shareOptions);
+              // }}
             />
           </View>
         </View>
 
         <View style={{ height: 300 }}>
-          <Swiper loop={false} activeDotColor="#ffba3c">
+          <Swiper key={productImages.length} loop={false} activeDotColor="#ffba3c">
             {productImages.length > 0 ? (
               productImages.map((resp, index) => {
                 return (
-                  <Image
-                    key={index}
+                  <Image                  
                     source={{ uri: resp.url + "" + resp.image_path }}
                     style={[{ height: 250, width: "100%" }]}
                   />
@@ -256,6 +241,7 @@ const ProductsPreview = (props) => {
                 style={[{ height: 250, width: "100%" }]}
               />
             )}
+           
           </Swiper>
         </View>
         <View style={[MyStyles.wrapper, { paddingHorizontal: 10 }]}>

@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, Dimensions, Alert } from "react-native";
-import { List, Text, TouchableRipple } from "react-native-paper";
+import { List, Text, TouchableRipple, Portal, Modal, IconButton } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { postRequest } from "../../Services/RequestServices";
+import DatePicker from "../../Components/DatePicker";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
 
 const Calls = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
+  const [param, setparam] = useState({
+    from_date: moment(),
+    to_date: moment(),
+  });
+  const [dateModal, setDateModal] = useState(false);
   React.useEffect(() => {
     Refresh();
     setLoading(false);
@@ -18,7 +26,7 @@ const Calls = (props) => {
   const Refresh = () => {
     postRequest(
       "masters/dashboard/app_call_list",
-      { branch_id: branchId, from_date: "2020-01-01", to_date: "2021-09-01" },
+      { branch_id: branchId, from_date: param.from_date, to_date: param.to_date, search: "" },
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
@@ -34,6 +42,67 @@ const Calls = (props) => {
 
   return (
     <View style={MyStyles.container}>
+      <Portal>
+        <Modal
+          visible={dateModal}
+          contentContainerStyle={{
+            backgroundColor: "#FFF",
+            marginHorizontal: 20,
+            paddingHorizontal: 10,
+          }}
+          onDismiss={() => setDateModal(false)}
+        >
+          <View style={MyStyles.row}>
+            <DatePicker
+              mode="text"
+              value={param.from_date}
+              onValueChange={(date) => {
+                param.from_date = date;
+                setparam({ ...param });
+                Refresh();
+              }}
+            />
+            <Text>To</Text>
+            <DatePicker
+              mode="text"
+              value={param.to_date}
+              onValueChange={(date) => {
+                param.to_date = date;
+                setparam({ ...param });
+                Refresh();
+              }}
+            />
+          </View>
+        </Modal>
+      </Portal>
+      <View style={MyStyles.row}>
+        <TouchableRipple onPress={() => setDateModal(true)}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <IconButton icon="calendar" />
+            <Text>
+              {moment(param.from_date).format("DD/MM/YYYY") +
+                " - " +
+                moment(param.to_date).format("DD/MM/YYYY")}
+            </Text>
+          </View>
+        </TouchableRipple>
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            borderRadius: 10,
+            backgroundColor: "orange",
+
+            marginRight: 10,
+          }}
+          onPress={() => {
+            props.navigation.navigate("RecentActivity");
+          }}
+        >
+          <Icon name="circle-medium" color="red" size={20} />
+          <Text style={{ color: "#FFF" }}>Live</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={griddata}
         initialNumToRender={10}
@@ -54,7 +123,7 @@ const Calls = (props) => {
                 </Text>
               }
               titleStyle={{ fontWeight: "bold" }}
-              description={item.mobile + "          " + item.customer_category + "          " + item.type}
+              description={item.mobile + "          " + item.customer_category}
               left={() => {
                 return (
                   <TouchableRipple
@@ -73,11 +142,27 @@ const Calls = (props) => {
                 );
               }}
               right={() => (
-                <Text style={{ color: "#999", alignSelf: "center" }}>
-                  {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
-                    ? moment(item.datetime).format("hh:mm")
-                    : moment(item.datetime).format("DD/MM/YYYY")}
-                </Text>
+                <>
+                  {item.type == "miss call" && (
+                    <Icon
+                      name="inbox"
+                      size={20}
+                      style={{ alignSelf: "center", right: 20 }}
+                    />
+                  )}
+                  {item.type == "video call" && (
+                    <Icon
+                      name="video"
+                      size={20}
+                      style={{ alignSelf: "center", right: 20 }}
+                    />
+                  )}
+                  <Text style={{ color: "#999", alignSelf: "center" }}>
+                    {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
+                      ? moment(item.datetime).format("hh:mm")
+                      : moment(item.datetime).format("DD/MM/YYYY")}
+                  </Text>
+                </>
               )}
             />
             <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>

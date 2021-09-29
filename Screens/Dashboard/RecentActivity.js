@@ -10,10 +10,8 @@ const RecentActivity = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [recentactivity, setrecentactivity] = useState([]);
-  React.useEffect(() => {
-    postRequest(
-      "masters/dashboard/recentActivity",
-      { branch_id: branchId, from_date: "2020/01/01", to_date: "2021/08/30" },
+  React.useEffect(() => {   
+    postRequest("masters/dashboard/recentActivity", { branch_id: branchId, from_date: moment().subtract(3, 'days').format('YYYY-MM-DD'), to_date: moment().format('YYYY-MM-DD') },
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
@@ -128,7 +126,7 @@ const RecentActivity = (props) => {
                     }}
                   >
                     {moment(item.datetime).format("DD/MM/YYYY") ===
-                    moment().format("DD/MM/YYYY")
+                      moment().format("DD/MM/YYYY")
                       ? moment(item.datetime).format("hh:mm")
                       : moment(item.datetime).format("DD/MM/YYYY")}
                   </Text>

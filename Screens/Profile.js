@@ -191,8 +191,8 @@ const Profile = (props) => {
             }}
           />
         </View>
-        <Text>DOB: {param.dob} </Text>
-        <Text>DOA: {param.doa}</Text>
+        <Text>DOB: {moment(param.dob).format("Do MMM YYYY")} </Text>
+        <Text>DOA: {moment(param.doa).format("Do MMM YYYY")}</Text>
         <Text>{param.area_name}</Text>
         <Text>{param.profession}</Text>
       </View>
@@ -1254,12 +1254,20 @@ const CustomerVoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            <BadgeRibbon
-              text="Active"
-              color="green"
-              position="voucherRight"
-              textStyle={{ top: 20, left: -20 }}
-            />
+            {item.disable ?
+              <BadgeRibbon
+                text="Active"
+                color="green"
+                position="voucherRight"
+                textStyle={{ top: 20, left: -20 }}
+              />
+              : 
+              <BadgeRibbon
+                text="Expire"
+                color="red"
+                position="voucherRight"
+                textStyle={{ top: 20, left: -20 }}
+              />}
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
               start={{ x: 0, y: 0 }}

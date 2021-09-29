@@ -5,7 +5,7 @@ import {
   View,
   Image,
   FlatList,
-  TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   Button,
@@ -383,14 +383,34 @@ const TryAndBuyCatalog = (props) => {
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setProduct(true)}
+                onPress={() => {
+                  if (param.subcategory_id == "") {
+                    Alert.alert("select subcategory!");
+                  }
+                  else if (param.min_amount == "") {
+                    Alert.alert("select min. amount!");
+                  }
+                  else if (param.max_amount == "") {
+                    Alert.alert("select max. amount!");
+                  }
+                  else {
+                    setProduct(true);
+                  }
+                }}
               >
                 Add Products
               </Button>
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setContact(true)}
+                onPress={() => {
+                  if (selectedProducts.length == "0") {
+                    Alert.alert("add products!");
+                  }
+                  else {
+                    setContact(true);
+                  }
+                }}
               >
                 Next
               </Button>
@@ -467,7 +487,10 @@ const TryAndBuyCatalog = (props) => {
         data={productList}
         onDone={(items) => {
           items.map((item, i) => {
-            param.product_ids.push(item);
+            let checkproduct = param.product_ids.findIndex(e => e.product_id == item.product_id) > -1 ? false : true;
+            if (checkproduct) {
+              param.product_ids.push(item);
+            }
           });
           setparam({ ...param, product_ids: param.product_ids });
 
@@ -569,18 +592,23 @@ const TryAndBuyCatalog = (props) => {
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
-                      setLoading(true);
-                      postRequest(
-                        "transactions/customer/trial/insert",
-                        param,
-                        userToken
-                      ).then((resp) => {
-                        console.log(resp);
-                        if (resp.status == 200) {
-                          props.navigation.navigate("TryAndBuyCatalogList");
-                          setLoading(false);
-                        }
-                      });
+                      if (param.title == "") {
+                        Alert.alert("please fill title !");
+                      }
+                      else {
+                        setLoading(true);
+                        postRequest(
+                          "transactions/customer/trial/insert",
+                          param,
+                          userToken
+                        ).then((resp) => {
+                          console.log(resp);
+                          if (resp.status == 200) {
+                            props.navigation.navigate("TryAndBuyCatalogList");
+                            setLoading(false);
+                          }
+                        });
+                      }
                     }}
                   >
                     Submit

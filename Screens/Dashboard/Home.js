@@ -134,7 +134,6 @@ const Home = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
-        // console.log(resp.data[0]);
         figures.total_customers = resp.data[0].total_customers;
         figures.total_customer_visits = resp.data[0].total_customer_visits;
         figures.total_customer_estore = resp.data[0].total_customer_estore;
@@ -174,8 +173,9 @@ const Home = (props) => {
         figures.missedCall_done = resp.data[0].missedCall_done;
 
         figures.total_products_count = resp.data[0].total_products_count;
-        figures.total_products_qty_count =
-          resp.data[0].total_products_qty_count;
+        figures.total_products_qty_count = resp.data[0].total_products_qty_count;
+
+        figures.total_customer_reviews = resp.data[0].total_customer_reviews;
         setfigures({ ...figures });
       } else {
         Alert.alert(
@@ -1103,83 +1103,83 @@ const Home = (props) => {
           </View>
           {showProducts
             ? categoryscountlist.map((item, index) => (
-                <LinearGradient
-                  key={index}
-                  colors={["#FF5F50", "#FF7F70"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{
-                    //marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                  }}
+              <LinearGradient
+                key={index}
+                colors={["#FF5F50", "#FF7F70"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  //marginHorizontal: 15,
+                  borderRadius: 10,
+                  padding: 0,
+                  marginVertical: 5,
+                }}
+              >
+                <View
+                  style={[
+                    MyStyles.row,
+                    {
+                      justifyContent: "space-between",
+                    },
+                  ]}
                 >
-                  <View
-                    style={[
-                      MyStyles.row,
-                      {
-                        justifyContent: "space-between",
-                      },
-                    ]}
+                  <Text
+                    style={{
+                      //textAlign: "center",
+                      color: "#FFF",
+                      fontSize: 20,
+                      marginVertical: 5,
+                      marginLeft: 30,
+                    }}
                   >
-                    <Text
-                      style={{
-                        //textAlign: "center",
-                        color: "#FFF",
-                        fontSize: 20,
-                        marginVertical: 5,
-                        marginLeft: 30,
-                      }}
-                    >
-                      {item.category_name + "   (" + item.product + ")"}
-                    </Text>
-                    <IconButton
-                      icon={item.show ? "chevron-down" : "chevron-right"}
-                      color="white"
-                      style={
-                        {
-                          //flex: 1,
-                        }
+                    {item.category_name + "   (" + item.product + ")"}
+                  </Text>
+                  <IconButton
+                    icon={item.show ? "chevron-down" : "chevron-right"}
+                    color="white"
+                    style={
+                      {
+                        //flex: 1,
                       }
-                      onPress={() => {
-                        item.show = !item.show;
-                        setcategoryscountlist([...categoryscountlist]);
-                      }}
-                    />
-                  </View>
-                  <View style={item.show ? null : { display: "none" }}>
-                    {item.innerTable.length > 0
-                      ? item.innerTable.map((item2, index) => (
-                          <View
-                            key={index}
-                            style={[
-                              MyStyles.row,
-                              {
-                                //justifyContent: "center",
-                              },
-                            ]}
-                          >
-                            <Text
-                              style={{
-                                color: "#FFF",
-                                fontSize: 18,
-                                marginVertical: 5,
-                                width: "80%",
-                                marginLeft: 40,
-                              }}
-                            >
-                              {item2.subcategory_name +
-                                "      (" +
-                                item.product +
-                                ")"}
-                            </Text>
-                          </View>
-                        ))
-                      : null}
-                  </View>
-                </LinearGradient>
-              ))
+                    }
+                    onPress={() => {
+                      item.show = !item.show;
+                      setcategoryscountlist([...categoryscountlist]);
+                    }}
+                  />
+                </View>
+                <View style={item.show ? null : { display: "none" }}>
+                  {item.innerTable.length > 0
+                    ? item.innerTable.map((item2, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          MyStyles.row,
+                          {
+                            //justifyContent: "center",
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={{
+                            color: "#FFF",
+                            fontSize: 18,
+                            marginVertical: 5,
+                            width: "80%",
+                            marginLeft: 40,
+                          }}
+                        >
+                          {item2.subcategory_name +
+                            "      (" +
+                            item.product +
+                            ")"}
+                        </Text>
+                      </View>
+                    ))
+                    : null}
+                </View>
+              </LinearGradient>
+            ))
             : null}
         </LinearGradient>
 
@@ -1192,6 +1192,7 @@ const Home = (props) => {
             borderRadius: 10,
             padding: 0,
             marginVertical: 10,
+            marginBottom: 20,
           }}
         >
           <View>
@@ -1206,31 +1207,16 @@ const Home = (props) => {
                 },
               ]}
             >
-              <View style={{ flexGrow: 1 }}></View>
               <Text
                 style={{
                   textAlign: "center",
                   color: "#FFF",
                   fontSize: 20,
                   marginVertical: 5,
-                  width: "50%",
                 }}
               >
                 Stock
               </Text>
-              <IconButton
-                icon="trending-up"
-                color="white"
-                style={{
-                  backgroundColor: "#F6356F",
-                  flex: 1,
-                  borderColor: "#FFF",
-                  borderWidth: 1,
-                }}
-                onPress={() =>
-                  setVisible({ ...visible, stock_graph: !visible.stock_graph })
-                }
-              />
             </View>
 
             <View
@@ -1243,20 +1229,19 @@ const Home = (props) => {
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Transfer</Text>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_cart_wishlist}
+                  {figures.stock_transfer}
                 </Text>
               </View>
 
               <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Accept</Text>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {figures.total_cart_upload}
+                  {figures.stock_accept}
                 </Text>
               </View>
             </View>
           </View>
         </LinearGradient>
-
         <LinearGradient
           colors={["#F6356F", "#FF5F50"]}
           start={{ x: 0, y: 0 }}
@@ -1311,6 +1296,59 @@ const Home = (props) => {
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Total</Text>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>
                   {figures.today_sms_count}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </LinearGradient>
+
+        <LinearGradient
+          colors={["#F6356F", "#FF5F50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            marginHorizontal: 15,
+            borderRadius: 10,
+            padding: 0,
+            marginVertical: 10,
+            marginBottom: 20,
+          }}
+        >
+          <View>
+            <View
+              style={[
+                MyStyles.row,
+                {
+                  justifyContent: "center",
+                  borderBottomColor: "#FFF",
+                  borderBottomWidth: 1,
+                  marginHorizontal: 15,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#FFF",
+                  fontSize: 20,
+                  marginVertical: 5,
+                }}
+              >
+                Feedback
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: 10,
+              }}
+            >
+              <View style={{ alignItems: "center" }}>
+                {/* <Text style={{ color: "#FFF", fontSize: 20 }}>Daily</Text> */}
+                <Text style={{ color: "#FFF", fontSize: 20 }}>
+                  {figures.total_customer_reviews}
                 </Text>
               </View>
             </View>

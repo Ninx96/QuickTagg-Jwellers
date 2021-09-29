@@ -5,6 +5,7 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  StyleSheet
 } from "react-native";
 import {
   Button,
@@ -12,10 +13,13 @@ import {
   List,
   TextInput,
   TouchableRipple,
+  Text
 } from "react-native-paper";
 import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import Autocomplete from "react-native-autocomplete-input";
+
 const CustomerCategoryList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -133,8 +137,13 @@ const CustomerCategory = (props) => {
     category_id: "0",
     category_name: "",
   });
+  const [filteredData, setFilteredData] = useState([]);
+  const [suggestiondata, setSuggestionData] = useState([]);
 
   React.useEffect(() => {
+    postRequest("masters/customer/category/getCategory", { search: "" }, userToken).then((resp) => {
+      setSuggestionData(resp);      
+    });
     if (category_id != 0) {
       let param = {
         category_id: category_id,
@@ -163,7 +172,7 @@ const CustomerCategory = (props) => {
       source={require("../../assets/login-bg.jpg")}
     >
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
-        <TextInput
+        {/* <TextInput
           mode="outlined"
           placeholder="Customer Category"
           style={{ backgroundColor: "rgba(0,0,0,0)" }}
@@ -171,6 +180,44 @@ const CustomerCategory = (props) => {
           onChangeText={(text) => {
             setparam({ ...param, category_name: text });
           }}
+        /> */}
+         <Autocomplete
+          {...props}
+          autoCapitalize="none"
+          autoCorrect={false}
+          inputContainerStyle={{ borderWidth: 0 }}
+          containerStyle={{ flex: 0, marginBottom: 20 }}
+          value={param.category_name}
+          data={filteredData}
+          onChangeText={(query) => {
+            if (query) {
+              const regex = new RegExp(`${query.trim()}`, "i");
+              setFilteredData(
+                suggestiondata.filter((data) => data.category_name.search(regex) >= 0)
+              );
+            } else {
+              setFilteredData([]);
+            }
+            setparam({ ...param, category_name: query });
+          }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx.toString(),
+            renderItem: ({ item, index }) => (
+              <Text key={index} style={styles.itemText}>
+                {item.category_name}
+              </Text>
+            ),
+          }}
+          renderTextInput={(props) => (
+            <TextInput
+              {...props}
+              mode="outlined"
+              placeholder="Customer Category"
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+            />
+          )}
         />
         <View
           style={[
@@ -207,3 +254,30 @@ const CustomerCategory = (props) => {
 };
 
 export { CustomerCategory, CustomerCategoryList };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#F5FCFF",
+    flex: 1,
+    padding: 16,
+    marginTop: 40,
+  },
+  autocompleteContainer: {
+    backgroundColor: "#ffffff",
+    borderWidth: 0,
+  },
+  descriptionContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  infoText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});

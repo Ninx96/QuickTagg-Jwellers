@@ -66,7 +66,14 @@ const SelectCustomer = ({
                     ) {
                       return true;
                     }
-                    return false;
+                    else if (item.mobile &&
+                      item.mobile.toLowerCase().match(keyword)
+                    ) {
+                      return true;
+                    }
+                    else {
+                      return false;
+                    }
                   });
                   setListData(filter);
                 }}
@@ -91,18 +98,18 @@ const SelectCustomer = ({
                 onPress={
                   multiple
                     ? () => {
-                        const isSelected = !item.selected;
-                        item.selected = isSelected;
-                        data[index].selected = isSelected;
-                        setListData([...listData]);
-                      }
+                      const isSelected = !item.selected;
+                      item.selected = isSelected;
+                      data[index].selected = isSelected;
+                      setListData([...listData]);
+                    }
                     : () => {
-                        if (selectedIndex == index) {
-                          setselectedIndex(null);
-                        } else {
-                          setselectedIndex(index);
-                        }
+                      if (selectedIndex == index) {
+                        setselectedIndex(null);
+                      } else {
+                        setselectedIndex(index);
                       }
+                    }
                 }
                 title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
@@ -141,19 +148,19 @@ const SelectCustomer = ({
           onPress={
             multiple
               ? () => {
-                  const selectedCustomers = data.filter(
-                    (item) => item.selected
-                  );
-                  onDone(selectedCustomers);
-                  onClose();
-                }
+                const selectedCustomers = data.filter(
+                  (item) => item.selected
+                );
+                onDone(selectedCustomers);
+                onClose();
+              }
               : () => {
-                  const selectedCustomer = data.filter(
-                    (item, index) => index == selectedIndex
-                  );
-                  onDone(selectedCustomer);
-                  onClose();
-                }
+                const selectedCustomer = data.filter(
+                  (item, index) => index == selectedIndex
+                );
+                onDone(selectedCustomer);
+                onClose();
+              }
           }
         />
         <FAB

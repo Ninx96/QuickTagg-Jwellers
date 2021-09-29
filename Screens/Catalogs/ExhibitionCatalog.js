@@ -5,7 +5,7 @@ import {
   View,
   Image,
   FlatList,
-  TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   Button,
@@ -388,14 +388,34 @@ const ExhibitionCatalog = (props) => {
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setProduct(true)}
+                onPress={() => {
+                  if (param.subcategory_id == "") {
+                    Alert.alert("select subcategory!");
+                  }
+                  else if (param.min_amount == "") {
+                    Alert.alert("select min. amount!");
+                  }
+                  else if (param.max_amount == "") {
+                    Alert.alert("select max. amount!");
+                  }
+                  else {
+                    setProduct(true);
+                  }
+                }}
               >
                 Add Products
               </Button>
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setContact(true)}
+                onPress={() => {
+                  if (selectedProducts.length == "0") {
+                    Alert.alert("add products!");
+                  }
+                  else {
+                    setContact(true);
+                  }
+                }}
               >
                 Next
               </Button>
@@ -471,21 +491,11 @@ const ExhibitionCatalog = (props) => {
         visible={product}
         data={productList}
         onDone={(items) => {
-          // selectedProducts.push({
-          //   subCategory: param.subCategory,
-          //   data: items,
-          // });
-          // setSelectedProducts([...selectedProducts]);
-          // items.map((item, index) => {
-          //   param.product_ids.push({
-          //     subcategory_id: item.subcategory_id,
-          //     category_id: item.category_id,
-          //     product_id: item.product_id,
-          //   });
-          //   setparam({ ...param, product_ids: param.product_ids });
-          // });
           items.map((item, i) => {
-            param.product_ids.push(item);
+            let checkproduct = param.product_ids.findIndex(e => e.product_id == item.product_id) > -1 ? false : true;
+            if (checkproduct) {
+              param.product_ids.push(item);
+            }
           });
           setparam({ ...param, product_ids: param.product_ids });
 
@@ -587,19 +597,24 @@ const ExhibitionCatalog = (props) => {
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
-                      setLoading(true);
+                      if (param.title == "") {
+                        Alert.alert("please fill title !");
+                      }
+                      else {
+                        setLoading(true);
 
-                      postRequest(
-                        "transactions/customer/exhibition/insert",
-                        param,
-                        userToken
-                      ).then((resp) => {
-                        console.log(resp);
-                        if (resp.status == 200) {
-                          props.navigation.navigate("ExhibitionCatalogList");
-                          setLoading(false);
-                        }
-                      });
+                        postRequest(
+                          "transactions/customer/exhibition/insert",
+                          param,
+                          userToken
+                        ).then((resp) => {
+                          console.log(resp);
+                          if (resp.status == 200) {
+                            props.navigation.navigate("ExhibitionCatalogList");
+                            setLoading(false);
+                          }
+                        });
+                      }
                     }}
                   >
                     Submit

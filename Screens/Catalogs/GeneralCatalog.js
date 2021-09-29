@@ -150,7 +150,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -391,14 +391,34 @@ const GeneralCatalog = (props) => {
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setProduct(true)}
+                onPress={() => {
+                  if (param.subcategory_id == "") {
+                    Alert.alert("select subcategory!");
+                  }
+                  else if (param.min_amount == "") {
+                    Alert.alert("select min. amount!");
+                  }
+                  else if (param.max_amount == "") {
+                    Alert.alert("select max. amount!");
+                  }
+                  else {
+                    setProduct(true);
+                  }
+                }}
               >
                 Add Products
               </Button>
               <Button
                 mode="contained"
                 uppercase={false}
-                onPress={() => setContact(true)}
+                onPress={() => {
+                  if (selectedProducts.length == "0") {
+                    Alert.alert("add products!");
+                  }
+                  else {
+                    setContact(true);
+                  }
+                }}
               >
                 Next
               </Button>
@@ -482,7 +502,10 @@ const GeneralCatalog = (props) => {
         data={productList}
         onDone={(items) => {
           items.map((item, i) => {
-            param.customer_session_products.push(item);
+            let checkproduct = param.customer_session_products.findIndex(e => e.product_id == item.product_id) > -1 ? false : true;
+            if (checkproduct) {
+              param.customer_session_products.push(item);
+            }
           });
           setparam({
             ...param,
@@ -584,19 +607,24 @@ const GeneralCatalog = (props) => {
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
-                      setLoading(true);
-                      postRequest(
-                        "transactions/customer/generalsession/insert",
-                        param,
-                        userToken
-                      ).then((resp) => {
-                        if (resp.status == 200) {
-                          if (resp.data[0].valid) {
-                            props.navigation.navigate("GeneralCatalogList");
+                      if (param.title == "") {
+                        Alert.alert("please fill title !");
+                      }
+                      else {
+                        setLoading(true);
+                        postRequest(
+                          "transactions/customer/generalsession/insert",
+                          param,
+                          userToken
+                        ).then((resp) => {
+                          if (resp.status == 200) {
+                            if (resp.data[0].valid) {
+                              props.navigation.navigate("GeneralCatalogList");
+                            }
+                            setLoading(false);
                           }
-                          setLoading(false);
-                        }
-                      });
+                        });
+                      }
                     }}
                   >
                     Submit
