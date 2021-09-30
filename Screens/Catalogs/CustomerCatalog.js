@@ -147,7 +147,7 @@ const CustomerCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -385,14 +385,11 @@ const CustomerCatalog = (props) => {
                 onPress={() => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
-                  }
-                  else if (param.min_amount == "") {
+                  } else if (param.min_amount == "") {
                     Alert.alert("select min. amount!");
-                  }
-                  else if (param.max_amount == "") {
+                  } else if (param.max_amount == "") {
                     Alert.alert("select max. amount!");
-                  }
-                  else {
+                  } else {
                     setProduct(true);
                   }
                 }}
@@ -405,8 +402,7 @@ const CustomerCatalog = (props) => {
                 onPress={() => {
                   if (selectedProducts.length == "0") {
                     Alert.alert("add products!");
-                  }
-                  else {
+                  } else {
                     setContact(true);
                   }
                 }}
@@ -429,7 +425,7 @@ const CustomerCatalog = (props) => {
                   {item.subcategory_name}
                 </Subheading>
                 {item.data.map((item, i) => (
-                  <View>
+                  <View key={i}>
                     <IconButton
                       icon="close"
                       style={{
@@ -487,7 +483,12 @@ const CustomerCatalog = (props) => {
         data={productList}
         onDone={(items) => {
           items.map((item, i) => {
-            let checkproduct = param.customer_session_products.findIndex(e => e.product_id == item.product_id) > -1 ? false : true;
+            let checkproduct =
+              param.customer_session_products.findIndex(
+                (e) => e.product_id == item.product_id
+              ) > -1
+                ? false
+                : true;
             if (checkproduct) {
               param.customer_session_products.push(item);
             }
@@ -597,8 +598,7 @@ const CustomerCatalog = (props) => {
                     onPress={() => {
                       if (param.title == "") {
                         Alert.alert("please fill title !");
-                      }
-                      else {
+                      } else {
                         setLoading(true);
                         postRequest(
                           "transactions/customer/session/insert",

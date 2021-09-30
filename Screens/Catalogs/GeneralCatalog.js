@@ -150,7 +150,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => { },
+                          onPress: () => {},
                           style: "cancel",
                         },
                         {
@@ -394,14 +394,11 @@ const GeneralCatalog = (props) => {
                 onPress={() => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
-                  }
-                  else if (param.min_amount == "") {
+                  } else if (param.min_amount == "") {
                     Alert.alert("select min. amount!");
-                  }
-                  else if (param.max_amount == "") {
+                  } else if (param.max_amount == "") {
                     Alert.alert("select max. amount!");
-                  }
-                  else {
+                  } else {
                     setProduct(true);
                   }
                 }}
@@ -414,8 +411,7 @@ const GeneralCatalog = (props) => {
                 onPress={() => {
                   if (selectedProducts.length == "0") {
                     Alert.alert("add products!");
-                  }
-                  else {
+                  } else {
                     setContact(true);
                   }
                 }}
@@ -441,7 +437,7 @@ const GeneralCatalog = (props) => {
                 </Subheading>
 
                 {item.data.map((item, i) => (
-                  <View>
+                  <View key={i}>
                     <IconButton
                       icon="close"
                       style={{
@@ -502,7 +498,12 @@ const GeneralCatalog = (props) => {
         data={productList}
         onDone={(items) => {
           items.map((item, i) => {
-            let checkproduct = param.customer_session_products.findIndex(e => e.product_id == item.product_id) > -1 ? false : true;
+            let checkproduct =
+              param.customer_session_products.findIndex(
+                (e) => e.product_id == item.product_id
+              ) > -1
+                ? false
+                : true;
             if (checkproduct) {
               param.customer_session_products.push(item);
             }
@@ -609,8 +610,7 @@ const GeneralCatalog = (props) => {
                     onPress={() => {
                       if (param.title == "") {
                         Alert.alert("please fill title !");
-                      }
-                      else {
+                      } else {
                         setLoading(true);
                         postRequest(
                           "transactions/customer/generalsession/insert",

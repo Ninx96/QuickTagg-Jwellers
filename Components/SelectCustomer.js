@@ -22,6 +22,7 @@ const SelectCustomer = ({
   onDone,
   onClose,
 }) => {
+  const [selectAll, setSelectAll] = useState(true);
   const [listData, setListData] = useState(data);
   const [selectedIndex, setselectedIndex] = useState(null);
   const [show, setShow] = useState(false);
@@ -65,13 +66,12 @@ const SelectCustomer = ({
                       item.full_name.toLowerCase().match(keyword)
                     ) {
                       return true;
-                    }
-                    else if (item.mobile &&
+                    } else if (
+                      item.mobile &&
                       item.mobile.toLowerCase().match(keyword)
                     ) {
                       return true;
-                    }
-                    else {
+                    } else {
                       return false;
                     }
                   });
@@ -98,18 +98,18 @@ const SelectCustomer = ({
                 onPress={
                   multiple
                     ? () => {
-                      const isSelected = !item.selected;
-                      item.selected = isSelected;
-                      data[index].selected = isSelected;
-                      setListData([...listData]);
-                    }
-                    : () => {
-                      if (selectedIndex == index) {
-                        setselectedIndex(null);
-                      } else {
-                        setselectedIndex(index);
+                        const isSelected = !item.selected;
+                        item.selected = isSelected;
+                        data[index].selected = isSelected;
+                        setListData([...listData]);
                       }
-                    }
+                    : () => {
+                        if (selectedIndex == index) {
+                          setselectedIndex(null);
+                        } else {
+                          setselectedIndex(index);
+                        }
+                      }
                 }
                 title={item.full_name}
                 titleStyle={{ fontWeight: "bold" }}
@@ -148,40 +148,52 @@ const SelectCustomer = ({
           onPress={
             multiple
               ? () => {
-                const selectedCustomers = data.filter(
-                  (item) => item.selected
-                );
-                onDone(selectedCustomers);
-                onClose();
-              }
+                  const selectedCustomers = data.filter(
+                    (item) => item.selected
+                  );
+                  onDone(selectedCustomers);
+                  onClose();
+                }
               : () => {
-                const selectedCustomer = data.filter(
-                  (item, index) => index == selectedIndex
-                );
-                onDone(selectedCustomer);
-                onClose();
-              }
+                  const selectedCustomer = data.filter(
+                    (item, index) => index == selectedIndex
+                  );
+                  onDone(selectedCustomer);
+                  onClose();
+                }
           }
         />
-        <FAB
-          style={{ position: "absolute", bottom: 20, right: 110 }}
-          icon="select-all"
-          color="#000"
-          onPress={() => {
-            let _selecteddata = [];
-            listData.map((resp, index) => {
-              _selecteddata.push({
-                category_name: resp.category_name,
-                customer_id: resp.customer_id,
-                full_name: resp.full_name,
-                mobile: resp.mobile,
-                type: resp.type,
-                selected: true,
-              });
-            });
-            setListData(_selecteddata);
-          }}
-        />
+        {multiple ? (
+          selectAll ? (
+            <FAB
+              style={{ position: "absolute", bottom: 20, right: 100 }}
+              icon="select"
+              color="#000"
+              onPress={() => {
+                listData.forEach((item, index) => {
+                  item.selected = true;
+                  data[index].selected = true;
+                });
+                setListData([...listData]);
+                setSelectAll(false);
+              }}
+            />
+          ) : (
+            <FAB
+              style={{ position: "absolute", bottom: 20, right: 100 }}
+              icon="selection-off"
+              color="#000"
+              onPress={() => {
+                listData.forEach((item, index) => {
+                  item.selected = false;
+                  data[index].selected = false;
+                });
+                setListData([...listData]);
+                setSelectAll(true);
+              }}
+            />
+          )
+        ) : null}
       </Modal>
     </Portal>
   );

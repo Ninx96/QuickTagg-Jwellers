@@ -15,6 +15,7 @@ import MyStyles from "../Styles/MyStyles";
 import BadgeRibbon from "./BadgeRibbon";
 
 const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
+  const [selectAll, setSelectAll] = useState(true);
   const [show, setShow] = useState(false);
   const [listData, setListData] = useState(data);
   useEffect(() => {
@@ -135,40 +136,35 @@ const SelectMultiple = ({ visible, data = [], onDone, onClose }) => {
             onClose();
           }}
         />
-        <FAB
-          style={{ position: "absolute", bottom: 20, right: 100 }}
-          icon="select-all"
-          color="#000"
-          onPress={() => {
-            let _selecteddata = [];
-            listData.map((resp, index) => {
-              _selecteddata.push({
-                Metal: resp.Metal,
-                category_id: resp.category_id,
-                category_name: resp.category_name,
-                discounted_price: resp.discounted_price,
-                exhibition: resp.exhibition,
-                gender: resp.gender,
-                image_path: resp.image_path,
-                material: resp.material,
-                on_demand: resp.on_demand,
-                price: resp.price,
-                product_code: resp.product_code,
-                product_id: resp.product_id,
-                product_name: resp.product_name,
-                remarks: resp.remarks,
-                size_length: resp.size_length,
-                subcategory_id: resp.subcategory_id,
-                subcategory_name: resp.subcategory_name,
-                trial: resp.trial,
-                url_image: resp.url_image,
-                weight: resp.weight,
-                selected: true,
+        {selectAll ? (
+          <FAB
+            style={{ position: "absolute", bottom: 20, right: 100 }}
+            icon="select"
+            color="#000"
+            onPress={() => {
+              listData.forEach((item, index) => {
+                item.selected = true;
+                data[index].selected = true;
               });
-            });
-            setListData(_selecteddata);
-          }}
-        />
+              setListData([...listData]);
+              setSelectAll(false);
+            }}
+          />
+        ) : (
+          <FAB
+            style={{ position: "absolute", bottom: 20, right: 100 }}
+            icon="selection-off"
+            color="#000"
+            onPress={() => {
+              listData.forEach((item, index) => {
+                item.selected = false;
+                data[index].selected = false;
+              });
+              setListData([...listData]);
+              setSelectAll(true);
+            }}
+          />
+        )}
       </Modal>
     </Portal>
   );
