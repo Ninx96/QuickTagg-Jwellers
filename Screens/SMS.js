@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Alert, ImageBackground, View } from "react-native";
+import { Alert, ImageBackground, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Card, Checkbox, Text } from "react-native-paper";
+import {
+  Button,
+  Card,
+  Checkbox,
+  IconButton,
+  Text,
+  TextInput,
+} from "react-native-paper";
 import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 
 const SMS = (props) => {
+  const [param, setParam] = useState({
+    var_1: "",
+    var_2: "",
+  });
+  const [selected, setSelected] = useState(false);
   return (
     <ImageBackground
       style={MyStyles.container}
@@ -21,11 +33,25 @@ const SMS = (props) => {
             marginHorizontal: 10,
           }}
         >
-          <Card.Title title="OTP" />
+          <Card.Title
+            title="OTP"
+            right={() => (
+              <IconButton
+                icon="pencil"
+                onPress={() => {
+                  if (selected != 1) {
+                    return setSelected(1);
+                  }
+                  setSelected(false);
+                }}
+              />
+            )}
+          />
           <Card.Content>
             <Text>
-              Dear #var#, #var# is your one-time password (OTP) for login.
-              Please enter the OTP to proceed. Team MALIRAM JEWELLERS.
+              Dear {param?.var_1 || "#VAR1#"},this is your one-time password
+              (OTP) for login. Please enter the OTP to proceed. Team{" "}
+              {param?.var_2 || "#VAR2#"}.
             </Text>
             <Checkbox.Item
               label="Active"
@@ -48,6 +74,38 @@ const SMS = (props) => {
                 );
               }}
             />
+
+            {selected == 1 && (
+              <View style={styles.form}>
+                <View style={styles.form__control}>
+                  <Text style={styles.form__control__label}>Var 1</Text>
+                  <TextInput
+                    mode="flat"
+                    placeholder="Var 1"
+                    style={styles.form__control__input}
+                    onChangeText={(text) => setParam({ ...param, var_1: text })}
+                  />
+                </View>
+
+                <View style={styles.form__control}>
+                  <Text style={styles.form__control__label}>Var 2</Text>
+                  <TextInput
+                    mode="flat"
+                    placeholder="Var 1"
+                    style={styles.form__control__input}
+                    onChangeText={(text) => setParam({ ...param, var_2: text })}
+                  />
+                </View>
+
+                <Button
+                  mode="contained"
+                  style={styles.form__control__submit}
+                  onPress={() => setSelected(false)}
+                >
+                  Save
+                </Button>
+              </View>
+            )}
           </Card.Content>
         </Card>
 
@@ -228,5 +286,23 @@ const SMS = (props) => {
     </ImageBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  form: {},
+  form__control: {
+    marginBottom: 10,
+  },
+  form__control__input: {
+    height: 40,
+    backgroundColor: "#FFF",
+  },
+  form__control__submit: {
+    marginTop: 20,
+    marginHorizontal: 20,
+  },
+  form__control__label: {
+    paddingLeft: 10,
+  },
+});
 
 export default SMS;
