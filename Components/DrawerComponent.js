@@ -65,6 +65,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RecentActivity from "../Screens/Dashboard/RecentActivity";
 import Catalogs from "../Screens/Catalogs";
 import MyStyles from "../Styles/MyStyles";
+import { StockTransfer } from "../Screens/Stock/StockTransfer";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -345,8 +346,19 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
+          header: (props) => <TitleBar {...props} title="Reviews" />,
+        }}
+      />
+
+      {/* --------------------- Stocks------------------- */}
+      <Drawer.Screen
+        component={StockTransfer}
+        name="StockTransfer"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
           header: (props) => (
-            <TitleBar {...props} title="Reviews" />
+            <TitleBar {...props} title="Stock Transfer" disableSearch />
           ),
         }}
       />
@@ -452,7 +464,9 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Recent Activity" disableSearch />,
+          header: (props) => (
+            <TitleBar {...props} title="Recent Activity" disableSearch />
+          ),
         }}
       />
     </Drawer.Navigator>
@@ -523,6 +537,13 @@ const DrawerContent = (props) => {
           label="Reviews"
           onPress={() => {
             props.navigation.navigate("ReviewFeedback");
+          }}
+        />
+
+        <Drawer.Item
+          label="StockTransfer"
+          onPress={() => {
+            props.navigation.navigate("StockTransfer");
           }}
         />
 

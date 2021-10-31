@@ -5,8 +5,8 @@ import {
   View,
   Image,
   FlatList,
-  TouchableOpacity,
   Alert,
+  TextInput as Input,
 } from "react-native";
 import {
   Button,
@@ -18,197 +18,235 @@ import {
   Portal,
   Modal,
   Subheading,
-  Divider,
+  ToggleButton,
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
 import MultipleImages from "../../Components/MultipleImages";
 import CustomHeader from "../../Components/CustomHeader";
 import SelectMultiple from "../../Components/SelectMultiple";
+import SelectCustomer from "../../Components/SelectCustomer";
 import DatePicker from "../../Components/DatePicker";
 import moment from "moment";
 import Loading from "../../Components/Loading";
-import SelectCustomer from "../../Components/SelectCustomer";
 import { postRequest } from "../../Services/RequestServices";
 import { LinearGradient } from "expo-linear-gradient";
 
-const GeneralCatalogList = (props) => {
-  const { userToken, search } = props.route.params;
-  const [loading, setLoading] = useState(true);
-  const [griddata, setgriddata] = useState([]);
-
-  React.useEffect(() => {
-    Browse();
-  }, [search]);
-
-  const Browse = (id) => {
-    postRequest(
-      "transactions/customer/generalsession/browse_app",
-      { search: search == undefined ? "" : search },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        setgriddata(resp.data);
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
-      }
-    });
-    setLoading(false);
-  };
-  const Delete = (id) => {
-    setLoading(true);
-    postRequest(
-      "transactions/customer/generalsession/delete",
-      { tran_id: id },
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        if (resp.data[0].valid) {
-          Browse();
-        }
-        setLoading(false);
-      }
-    });
-  };
-  return (
-    <View style={MyStyles.container}>
-      <FlatList
-        style={{ marginVertical: 10 }}
-        data={griddata}
-        renderItem={({ item, index }) => (
-          <Card
-            key={item.voucher_id}
-            style={{
-              marginHorizontal: 20,
-              padding: 0,
-              borderRadius: 10,
-              marginVertical: 5,
-            }}
-          >
-            <LinearGradient
-              colors={["#F6356F", "#FF5F50"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                backgroundColor: "pink",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-                margin: 0,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                {item.title}
-              </Text>
-            </LinearGradient>
-            <Card.Content>
-              <View style={MyStyles.row}>
-                <View style={{ maxWidth: "80%" }}>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.entry_no} {"                "} {item.date}
-                  </Text>
-
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    {item.no_of_customer} {"Customers"}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      marginBottom: 10,
-                    }}
-                  >
-                    {item.no_of_product} {"Products"}
-                  </Text>
-                  <Text>{item.remarks}</Text>
-                </View>
-                <View>
-                  <IconButton
-                    icon="pencil"
-                    color="#AAA"
-                    onPress={() =>
-                      props.navigation.navigate("GeneralCatalog", {
-                        tran_id: item.tran_id,
-                      })
-                    }
-                    color="#aaa"
-                  />
-                  <IconButton
-                    icon="delete"
-                    color="#AAA"
-                    onPress={() => {
-                      Alert.alert("Alert", "You want to delete?", [
-                        {
-                          text: "No",
-                          onPress: () => {},
-                          style: "cancel",
-                        },
-                        {
-                          text: "Yes",
-                          onPress: () => {
-                            Delete(item.tran_id);
-                          },
-                        },
-                      ]);
-                    }}
-                    color="#aaa"
-                  />
-                </View>
-              </View>
-            </Card.Content>
-          </Card>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
-
-      <FAB
-        style={{
-          position: "absolute",
-          bottom: 20,
-          right: 80,
-        }}
-        color="#000"
-        icon="plus"
-        onPress={() =>
-          props.navigation.navigate("GeneralCatalog", { tran_id: 0 })
-        }
-      />
-    </View>
-  );
-};
-
-const GeneralCatalog = (props) => {
+const StockTransfer = (props) => {
   const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
+    tran_id: "0",
     subcategory_id: "",
     min_amount: "",
     max_amount: "",
+    customer_name: "",
+    customer_id: "",
     title: "",
     entry_no: "",
     remarks: "",
     customer_session_products: [],
-    customers: [],
   });
   const [product, setProduct] = useState(false);
   const [contact, setContact] = useState(false);
   const [remarks, setRemarks] = useState(false);
   const [productList, setProductList] = useState([]);
   const [customerList, setCustomerList] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([
+    {
+      data: [
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-8240f2e1-5048-449e-bbf5-e93a822b6a9d.jpg",
+          mtran_id: 350,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 40000,
+          product_code: "10056",
+          product_id: 57,
+          product_name: "Jjd",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-6dc6f56d-0f79-460d-be70-0396ea7f6912.jpg",
+          mtran_id: 351,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 100,
+          product_code: "10047",
+          product_id: 48,
+          product_name: "Alocasia Leaf Drop Earrings",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-8240f2e1-5048-449e-bbf5-e93a822b6a9d.jpg",
+          mtran_id: 352,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 65000,
+          product_code: "10048",
+          product_id: 49,
+          product_name: "Reveka",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-6dc6f56d-0f79-460d-be70-0396ea7f6912.jpg",
+          mtran_id: 353,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 100,
+          product_code: "10046",
+          product_id: 47,
+          product_name: "Alocasia Leaf Drop Earrings",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-6dc6f56d-0f79-460d-be70-0396ea7f6912.jpg",
+          mtran_id: 354,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 100,
+          product_code: "10011",
+          product_id: 12,
+          product_name: "Alocasia Leaf Drop Earrings",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 8,
+          gender: "Women",
+          image_path: "image-ce2a4009-fbf7-4483-af7c-746413874630.jpg",
+          mtran_id: 355,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 1000,
+          product_code: "10037",
+          product_id: 38,
+          product_name: "Testing",
+          subcategory_id: 4,
+          text: "Engagment(Earings)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+      ],
+      subcategory_name: "Engagment(Earings)",
+    },
+    {
+      data: [
+        {
+          category_id: 4,
+          gender: "Kid",
+          image_path: "image-1ad31595-4808-4c27-ab8d-83888e3f0514.png",
+          mtran_id: 356,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 600,
+          product_code: "10041",
+          product_id: 42,
+          product_name: "testing 1",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 4,
+          gender: "Man",
+          image_path: "image-8240f2e1-5048-449e-bbf5-e93a822b6a9d.jpg",
+          mtran_id: 357,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 500,
+          product_code: "1234",
+          product_id: 59,
+          product_name: "test",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 4,
+          gender: "Women",
+          image_path: "image-a4426398-7a7d-4635-b591-d597cb443279.png",
+          mtran_id: 358,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 324,
+          product_code: "12312",
+          product_id: 58,
+          product_name: "12312",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 4,
+          gender: "Kid",
+          image_path: "image-1ad31595-4808-4c27-ab8d-83888e3f0514.png",
+          mtran_id: 359,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 600,
+          product_code: "10041",
+          product_id: 42,
+          product_name: "testing 1",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 4,
+          gender: "Man",
+          image_path: "image-8240f2e1-5048-449e-bbf5-e93a822b6a9d.jpg",
+          mtran_id: 360,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 500,
+          product_code: "1234",
+          product_id: 59,
+          product_name: "test",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+        {
+          category_id: 4,
+          gender: "Women",
+          image_path: "image-a4426398-7a7d-4635-b591-d597cb443279.png",
+          mtran_id: 361,
+          no_of_customers: 107,
+          no_of_product: 12,
+          price: 324,
+          product_code: "12312",
+          product_id: 58,
+          product_name: "12312",
+          subcategory_id: 8,
+          text: "Beating Heart Ring(Ring)",
+          url_image: "https://jewellerapi.quickgst.in/Images/",
+        },
+      ],
+      subcategory_name: "Beating Heart Ring(Ring)",
+    },
+  ]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [subcategorylist, setsubcategorylist] = useState([]);
-  const [testlist, settestlist] = useState([]);
+
   React.useEffect(() => {
     postRequest(
       "transactions/customer/session/getSubcategory",
@@ -250,7 +288,7 @@ const GeneralCatalog = (props) => {
     }
 
     postRequest(
-      "transactions/customer/generalsession/preview",
+      "transactions/customer/session/preview",
       { tran_id: tran_id },
       userToken
     ).then((resp) => {
@@ -260,11 +298,14 @@ const GeneralCatalog = (props) => {
           setparam({ ...param });
         } else {
           param.tran_id = resp.data[0].tran_id;
+          param.customer_id = resp.data[0].customer_id;
+          param.customer_name = resp.data[0].customer_name;
           param.title = resp.data[0].title;
           param.entry_no = resp.data[0].entry_no;
           param.remarks = resp.data[0].remarks;
-
+          param.subcategory_id = resp.data[0].products[0].subcategory_id;
           param.customer_session_products = resp.data[0].products;
+          setparam({ ...param });
 
           postRequest(
             "transactions/customer/customerListMob",
@@ -276,11 +317,7 @@ const GeneralCatalog = (props) => {
               listData = items.data;
               listData.map((item, index) => {
                 listData[index].selected =
-                  resp.data[0].customers.findIndex(
-                    (e) => e.customer_id === item.customer_id
-                  ) > -1
-                    ? true
-                    : false;
+                  item.customer_id === resp.data[0].customer_id ? true : false;
               });
               setCustomerList(listData);
             } else {
@@ -304,17 +341,9 @@ const GeneralCatalog = (props) => {
           );
 
           setSelectedProducts(tempData);
-
-          console.log(tempData);
         }
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
       }
     });
-
     setLoading(false);
   }, []);
 
@@ -340,14 +369,13 @@ const GeneralCatalog = (props) => {
     });
     setLoading(false);
   };
-
   return (
     <ImageBackground
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
       <Loading isloading={false} />
-      <View style={[MyStyles.cover]}>
+      <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
             <DropDown
@@ -430,26 +458,77 @@ const GeneralCatalog = (props) => {
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                  borderBottomWidth: 0.8,
-                  borderBottomColor: "#AAA",
                 }}
               >
                 <Subheading style={{ width: "100%", color: "#000" }}>
                   {item.subcategory_name}
                 </Subheading>
-
                 {item.data.map((item, i) => (
-                  <View key={i}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: "100%",
+                      marginVertical: 5,
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item.url_image + "" + item.image_path }}
+                      style={{
+                        height: 100,
+                        width: 80,
+                        marginHorizontal: 5,
+                        borderRadius: 5,
+                      }}
+                    />
+                    <View>
+                      <Text numberOfLines={1} style={{ paddingRight: 120 }}>
+                        {item.product_name}
+                      </Text>
+                      <Text numberOfLines={1}>{item.product_code}</Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          marginTop: 20,
+                        }}
+                      >
+                        <ToggleButton
+                          icon="minus"
+                          style={{
+                            borderWidth: 1,
+                            borderRightWidth: 0,
+                            borderColor: "#000",
+                          }}
+                          onPress={() => {}}
+                        />
+
+                        <Input
+                          mode="outlined"
+                          style={{
+                            borderWidth: 1,
+                            height: 42,
+                            width: 60,
+                            marginHorizontal: -2,
+                            textAlign: "center",
+                          }}
+                          value="100"
+                        />
+
+                        <ToggleButton
+                          icon="plus"
+                          style={{
+                            borderWidth: 1,
+                            borderColor: "#000",
+                            borderLeftWidth: 0,
+                          }}
+                          onPress={() => {}}
+                        />
+                      </View>
+                    </View>
                     <IconButton
                       icon="close"
-                      style={{
-                        backgroundColor: "red",
-                        position: "relative",
-                        left: 85,
-                        top: 18,
-                        zIndex: 10,
-                      }}
-                      size={10}
+                      size={15}
+                      style={{ marginLeft: "auto" }}
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
@@ -459,32 +538,7 @@ const GeneralCatalog = (props) => {
                         );
                         setparam([...param]);
                       }}
-                      color="#aaa"
                     />
-                    <View
-                      key={i}
-                      style={{
-                        backgroundColor: "#FFF",
-                        margin: 5,
-                        borderRadius: 10,
-                        width: 100,
-                        alignItems: "center",
-                        zIndex: 1,
-                        borderWidth: 0.5,
-                        borderColor: "#AAA",
-                      }}
-                    >
-                      <Card.Cover
-                        source={{ uri: item.url_image + "" + item.image_path }}
-                        style={{ width: 98, height: 80, borderRadius: 10 }}
-                      />
-
-                      <View style={{ padding: 5 }}>
-                        <Text>
-                          {item.product_name} {item.product_code}
-                        </Text>
-                      </View>
-                    </View>
                   </View>
                 ))}
               </View>
@@ -492,8 +546,6 @@ const GeneralCatalog = (props) => {
           })}
         </ScrollView>
       </View>
-
-      {/* ImagePath change direct Component se kr lena */}
 
       <SelectMultiple
         visible={product}
@@ -532,20 +584,6 @@ const GeneralCatalog = (props) => {
         onClose={() => setProduct(false)}
       />
 
-      <SelectCustomer
-        visible={contact}
-        data={customerList}
-        onDone={(items) => {
-          setSelectedContacts(items);
-          setRemarks(true);
-          if (items.length == 0) {
-            setparam({ ...param, customers: [] });
-          } else {
-            setparam({ ...param, customers: items });
-          }
-        }}
-        onClose={() => setContact(false)}
-      />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
           <ImageBackground
@@ -554,10 +592,7 @@ const GeneralCatalog = (props) => {
           >
             <View style={{ flex: 1 }}>
               <View
-                style={[
-                  MyStyles.row,
-                  { backgroundColor: "#ffba3c", marginTop: 0 },
-                ]}
+                style={[MyStyles.row, MyStyles.primaryColor, { marginTop: 0 }]}
               >
                 <IconButton
                   icon="chevron-left"
@@ -572,7 +607,7 @@ const GeneralCatalog = (props) => {
                   Enter Remarks
                 </Text>
               </View>
-              <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+              <View style={MyStyles.cover}>
                 <TextInput
                   mode="outlined"
                   placeholder="Entry No"
@@ -580,14 +615,28 @@ const GeneralCatalog = (props) => {
                   disabled={true}
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
-                <TextInput
-                  mode="outlined"
-                  placeholder="Title"
-                  value={param.title}
-                  onChangeText={(text) => {
-                    setparam({ ...param, title: text });
+                <DatePicker
+                  label=" Date"
+                  inputStyles={{
+                    backgroundColor: "rgba(0,0,0,0)",
                   }}
-                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  value={param.start_date}
+                  onValueChange={(date) => {
+                    setparam({ ...param, start_date: date });
+                  }}
+                />
+
+                <DropDown
+                  data={[]}
+                  ext_val="subcategory_id"
+                  ext_lbl="subcategory_name"
+                  value={param.subCategory}
+                  onChange={(val) => {
+                    param.subcategory_id = val;
+                    setparam({ ...param });
+                    ProductList();
+                  }}
+                  placeholder="To Branch"
                 />
                 <TextInput
                   mode="outlined"
@@ -615,13 +664,13 @@ const GeneralCatalog = (props) => {
                       } else {
                         setLoading(true);
                         postRequest(
-                          "transactions/customer/generalsession/insert",
+                          "transactions/customer/session/insert",
                           param,
                           userToken
                         ).then((resp) => {
                           if (resp.status == 200) {
                             if (resp.data[0].valid) {
-                              props.navigation.navigate("GeneralCatalogList");
+                              props.navigation.navigate("CustomerCatalogList");
                             }
                             setLoading(false);
                           }
@@ -641,4 +690,4 @@ const GeneralCatalog = (props) => {
   );
 };
 
-export { GeneralCatalog, GeneralCatalogList };
+export { StockTransfer };
