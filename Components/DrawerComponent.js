@@ -66,6 +66,7 @@ import RecentActivity from "../Screens/Dashboard/RecentActivity";
 import Catalogs from "../Screens/Catalogs";
 import MyStyles from "../Styles/MyStyles";
 import { StockTransfer } from "../Screens/Stock/StockTransfer";
+import StockList from "../Screens/Stock/StockAcceptance";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -363,6 +364,16 @@ const DrawerComponent = ({ userDetails }) => {
         }}
       />
 
+      <Drawer.Screen
+        component={StockList}
+        name="StockList"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Stock List" />,
+        }}
+      />
+
       {/* --------------------- Settings------------------- */}
       <Drawer.Screen
         component={SettingsMenu}
@@ -544,6 +555,13 @@ const DrawerContent = (props) => {
           label="StockTransfer"
           onPress={() => {
             props.navigation.navigate("StockTransfer");
+          }}
+        />
+
+        <Drawer.Item
+          label="StockList"
+          onPress={() => {
+            props.navigation.navigate("StockList");
           }}
         />
 
