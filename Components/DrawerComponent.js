@@ -66,7 +66,10 @@ import RecentActivity from "../Screens/Dashboard/RecentActivity";
 import Catalogs from "../Screens/Catalogs";
 import MyStyles from "../Styles/MyStyles";
 import { StockTransfer } from "../Screens/Stock/StockTransfer";
-import StockList from "../Screens/Stock/StockAcceptance";
+import StockList from "../Screens/Stock/StockTransferList";
+import StockAcceptanceList from "../Screens/Stock/StockAcceptance";
+import { StockSales } from "../Screens/Stock/StockSales";
+import StockSalesList from "../Screens/Stock/StockSalesList";
 
 const DrawerComponent = ({ userDetails }) => {
   const Drawer = createDrawerNavigator();
@@ -370,10 +373,37 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock List" />,
+          header: (props) => <TitleBar {...props} title="Stock Transfer List" />,
         }}
       />
 
+      <Drawer.Screen
+        component={StockAcceptanceList}
+        name="StockAcceptanceList"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Stock Acceptance List" />,
+        }}
+      />
+      <Drawer.Screen
+        component={StockSales}
+        name="StockSales"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Stock Sales" />,
+        }}
+      />
+       <Drawer.Screen
+        component={StockSalesList}
+        name="StockSalesList"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Stock Sales List" />,
+        }}
+      />
       {/* --------------------- Settings------------------- */}
       <Drawer.Screen
         component={SettingsMenu}
@@ -554,17 +584,38 @@ const DrawerContent = (props) => {
         <Drawer.Item
           label="StockTransfer"
           onPress={() => {
-            props.navigation.navigate("StockTransfer");
+            props.navigation.navigate("StockTransfer", {
+              tran_id: 0,
+            });
           }}
         />
 
         <Drawer.Item
-          label="StockList"
+          label="Stock Transfer List"
           onPress={() => {
             props.navigation.navigate("StockList");
           }}
         />
-
+        <Drawer.Item
+          label="Stock Acceptance"
+          onPress={() => {
+            props.navigation.navigate("StockAcceptanceList");
+          }}
+        />
+        <Drawer.Item
+          label="Stock Sales"
+          onPress={() => {
+            props.navigation.navigate("StockSales", {
+              tran_id: 0,
+            });
+          }}
+        />
+         <Drawer.Item
+          label="Stock Sales List"
+          onPress={() => {
+            props.navigation.navigate("StockSalesList");
+          }}
+        />
         <Drawer.Item
           label="Log Out"
           onPress={() => {

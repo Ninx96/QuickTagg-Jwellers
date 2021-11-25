@@ -19,15 +19,41 @@ import {
   ToggleButton,
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
+import { postRequest } from "../../Services/RequestServices";
 
-const StockList = () => {
+const StockAcceptanceList = (props) => {
+  const { userToken, search } = props.route.params;
+  const [loading, setLoading] = useState(true);
+  const [griddata, setgriddata] = useState([]);
+  const [visible, setVisible] = useState(false);
+  
+  React.useEffect(() => {
+    Refresh();
+    setLoading(false);
+  }, [search]);
+
+  const Refresh = () => {
+    postRequest("transactions/stockAcceptance/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+      if (resp.status == 200) {     
+        setgriddata(resp.data);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+  };
+
+  
+  
   return (
     <View>
       <FlatList
-        data={[{}, {}, {}]}
+        data={griddata}
         renderItem={({ item, index }) => (
           <Card
-            key={item.voucher_id}
+            key={item.st_tran_id}
             style={{
               marginHorizontal: 20,
               padding: 0,
@@ -55,13 +81,13 @@ const StockList = () => {
                   fontWeight: "bold",
                 }}
               >
-                asldjkhaklsjd
+                {item.status}
               </Text>
             </LinearGradient>
 
             <Card.Content>
               <View style={[MyStyles.row, { margin: 0 }]}>
-                <Text style={{ marginRight: "auto" }}>0090</Text>
+                <Text style={{ marginRight: "auto" }}>{item.entry_no}</Text>
                 <Text
                   style={{
                     fontSize: 16,
@@ -69,7 +95,7 @@ const StockList = () => {
                     marginRight: "auto",
                   }}
                 >
-                  24-08-2021
+                  {item.date}
                 </Text>
               </View>
               <Text
@@ -78,7 +104,7 @@ const StockList = () => {
                   fontWeight: "bold",
                 }}
               >
-                PC JWELLERS
+               {item.from_branch}
               </Text>
               <Text
                 style={{
@@ -86,26 +112,27 @@ const StockList = () => {
                   fontWeight: "bold",
                 }}
               >
-                Products 10 (100)
+                Products {item.accept_product} ({item.transfer_product})
               </Text>
               <View style={{ flexDirection: "row" }}>
                 <Button
                   mode="contained"
                   uppercase={false}
                   style={{ marginLeft: "auto" }}
+                  onPress={() => {setVisible(true);}}
                 >
                   Accept
                 </Button>
               </View>
               <Divider style={{ height: 1, marginVertical: 10 }} />
-              <Text>REMARK</Text>
+              <Text> {item.remarks}</Text>
             </Card.Content>
           </Card>
         )}
         keyExtractor={(_, idx) => "key" + idx}
       />
       <Portal>
-        <Modal visible={true}>
+        <Modal visible={visible}>
           <View
             style={{
               backgroundColor: "#FFF",
@@ -179,7 +206,7 @@ const StockList = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Button mode="contained" uppercase={false}>
+              <Button mode="contained" uppercase={false}  onPress={() => {setVisible(false);}}>
                 Close
               </Button>
               <Button mode="contained" uppercase={false}>
@@ -193,4 +220,4 @@ const StockList = () => {
   );
 };
 
-export default StockList;
+export default StockAcceptanceList;

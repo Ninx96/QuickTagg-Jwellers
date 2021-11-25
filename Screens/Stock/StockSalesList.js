@@ -20,7 +20,7 @@ import {
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
-const StockList = (props) => {
+const StockSalesList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
@@ -30,7 +30,7 @@ const StockList = (props) => {
   }, [search]);
 
   const Refresh = () => {
-    postRequest("transactions/stockTransfer/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
+    postRequest("transactions/stockSales/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
       if (resp.status == 200) {     
         setgriddata(resp.data);
       } else {
@@ -77,7 +77,7 @@ const StockList = (props) => {
                   fontWeight: "bold",
                 }}
               >
-                {item.status}
+                {item.title}
               </Text>
             </LinearGradient>
 
@@ -91,7 +91,7 @@ const StockList = (props) => {
                     marginRight: "auto",
                   }}
                 >
-                  {item.entry_date}
+                  {item.date}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
@@ -102,7 +102,7 @@ const StockList = (props) => {
                       fontWeight: "bold",
                     }}
                   >
-                    {item.to_branch}
+                    {item.customer_name}({item.mobile})
                   </Text>
                   <Text
                     style={{
@@ -110,7 +110,7 @@ const StockList = (props) => {
                       fontWeight: "bold",
                     }}
                   >
-                    Products {item.accept_product} ({item.transfer_product})
+                    No of Products {item.no_of_product}
                   </Text>
                 </View>
                 <View>
@@ -118,7 +118,7 @@ const StockList = (props) => {
                     icon="pencil"
                     color="#AAA"
                     onPress={() =>
-                      props.navigation.navigate("StockTransfer", {
+                      props.navigation.navigate("StockSales", {
                         tran_id: item.tran_id,
                       })
                     }
@@ -157,4 +157,4 @@ const StockList = (props) => {
   );
 };
 
-export default StockList;
+export default StockSalesList;

@@ -32,44 +32,110 @@ import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
 import { LinearGradient } from "expo-linear-gradient";
 
-const StockTransfer = (props) => {
+const StockSales = (props) => {
   const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
+    subcategory_id: "",
+    min_amount: "",
+    max_amount: "",
     tran_id: "0",
+    mobile: "",
+    customer_id: "",
+    customer_name: "",
     date: moment(),
     entry_no: "",
-    to_branch_id: "",
+    title: "",
     remarks: "",
-    stock_transfer_products: [],
+    customer_sale_products: [],
   });
   const [product, setProduct] = useState(false);
+  const [contact, setContact] = useState(false);
   const [remarks, setRemarks] = useState(false);
   const [productList, setProductList] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [subcategorylist, setsubcategorylist] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
 
-  const [branchlist, setbranchlist] = useState([]);
-
-  React.useEffect(() => {  
-       
-    ProductList();
-    postRequest("transactions/stockTransfer/preview", { tran_id: tran_id }, userToken).then((resp) => {
+  React.useEffect(() => {
+    postRequest(
+      "transactions/customer/session/getSubcategory",
+      { branch_id: branchId },
+      userToken
+    ).then((resp) => {
       if (resp.status == 200) {
-        BranchList();
+        var _subcategoryList = [];
+        resp.data.map((item, index) => {
+          _subcategoryList.push({
+            subcategory_id: item.subcategory_id,
+            subcategory_name:
+              item.subcategory_name + " (" + item.category_name + ")",
+          });
+        });
+        setsubcategorylist(_subcategoryList);
+      } else {
+        Alert.alert(
+          "Error !",
+          "Oops! \nSeems like we run into some Server Error"
+        );
+      }
+    });
+    if (tran_id == 0) {
+      postRequest(
+        "transactions/customer/customerListMob",
+        { branch_id: branchId },
+        userToken
+      ).then((resp) => {
+        if (resp.status == 200) {
+          setCustomerList(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
+      });
+    }
+    postRequest("transactions/stockSales/preview", { tran_id: tran_id }, userToken).then((resp) => {
+      if (resp.status == 200) {
+
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
           setparam({ ...param });
         } else {
-         
-          param.tran_id = resp.data[0].tran_id;
-          param.to_branch_id = resp.data[0].to_branch_id;
+
+          param.tran_id =tran_id;
           param.entry_no = resp.data[0].entry_no;
-          param.remarks = resp.data[0].remarks;        
-          param.stock_transfer_products = resp.data[1];
+          param.title = resp.data[0].title;
+          param.remarks = resp.data[0].remarks;
+          param.customer_sale_products = resp.data[0].products;
           setparam({ ...param });
 
+          postRequest(
+            "transactions/customer/customerListMob",
+            { branch_id: branchId },
+            userToken
+          ).then((items) => {
+            if (items.status == 200) {
+              let listData = [];
+              listData = items.data;
+              listData.map((item, index) => {
+                listData[index].selected =
+                  item.customer_id === resp.data[0].customer_id ? true : false;
+              });
+             
+              setCustomerList(listData);
+            
+            } else {
+              Alert.alert(
+                "Error !",
+                "Oops! \nSeems like we run into some Server Error"
+              );
+            }
+          });
+
           let tempData = Object.values(
-            param.stock_transfer_products.reduce((acc, item) => {
+            param.customer_sale_products.reduce((acc, item) => {
               if (!acc[item.subcategory_name])
                 acc[item.subcategory_name] = {
                   subcategory_name: item.subcategory_name,
@@ -80,34 +146,23 @@ const StockTransfer = (props) => {
             }, {})
           );
 
-          setSelectedProducts(tempData);        
+          setSelectedProducts(tempData);
         }
       }
     });
     setLoading(false);
   }, []);
 
-  const BranchList = () => {
-    postRequest(
-      "transactions/stockin/getbranchlist",
-      {},
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        setbranchlist(resp.data);
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
-      }
-    });
-  }
-  const ProductList = () => {
 
+  const ProductList = () => {
+    let data = {
+      subcategory_id: param.subcategory_id,
+      min_amount: param.min_amount == "" ? "0" : param.min_amount,
+      max_amount: param.max_amount == "" ? "0" : param.max_amount,
+    };
     postRequest(
-      "transactions/stockTransfer/getProducts",
-      { search: "" },
+      "transactions/customer/session/getProducts",
+      data,
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
@@ -130,7 +185,7 @@ const StockTransfer = (props) => {
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
-            {/* <DropDown
+            <DropDown
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
@@ -163,7 +218,7 @@ const StockTransfer = (props) => {
                 setparam({ ...param, max_amount: text });
                 ProductList();
               }}
-            /> */}
+            />
             <View
               style={[
                 MyStyles.row,
@@ -186,7 +241,7 @@ const StockTransfer = (props) => {
                   if (selectedProducts.length == "0") {
                     Alert.alert("add products!");
                   } else {
-                    setRemarks(true);
+                    setContact(true);
                   }
                 }}
               >
@@ -287,7 +342,7 @@ const StockTransfer = (props) => {
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
                         setSelectedProducts([...selectedProducts]);
-                        param.stock_transfer_products[index].data.splice(
+                        param.customer_sale_products[index].data.splice(
                           i,
                           1
                         );
@@ -308,22 +363,22 @@ const StockTransfer = (props) => {
         onDone={(items) => {
           items.map((item, i) => {
             let checkproduct =
-              param.stock_transfer_products.findIndex(
+              param.customer_sale_products.findIndex(
                 (e) => e.product_id == item.product_id
               ) > -1
                 ? false
                 : true;
             if (checkproduct) {
-              param.stock_transfer_products.push(item);
+              param.customer_sale_products.push(item);
             }
           });
           setparam({
             ...param,
-            stock_transfer_products: param.stock_transfer_products,
+            customer_sale_products: param.customer_sale_products,
           });
 
           let tempData = Object.values(
-            param.stock_transfer_products.reduce((acc, item) => {
+            param.customer_sale_products.reduce((acc, item) => {
               if (!acc[item.subcategory_name])
                 acc[item.subcategory_name] = {
                   subcategory_name: item.subcategory_name,
@@ -339,6 +394,28 @@ const StockTransfer = (props) => {
         onClose={() => setProduct(false)}
       />
 
+      <SelectCustomer
+        visible={contact}
+        data={customerList}
+        multiple={false}
+        onDone={(items) => {
+          setRemarks(true);
+          if (items.length == 0) {
+            param.customer_id = "";
+            param.customer_name = "";
+            param.mobile = "";
+            setparam({ ...param });
+          } else {
+            items.map((item, index) => {
+              param.customer_id = item.customer_id;
+              param.customer_name = item.full_name;
+              param.mobile = item.mobile;
+              setparam({ ...param });
+            });
+          }
+        }}
+        onClose={() => setContact(false)}
+      />
       <Portal>
         <Modal visible={remarks} contentContainerStyle={{ flex: 1 }}>
           <ImageBackground
@@ -354,6 +431,7 @@ const StockTransfer = (props) => {
                   size={30}
                   color="black"
                   onPress={() => {
+                    setContact(true);
                     setRemarks(false);
                   }}
                 />
@@ -369,6 +447,16 @@ const StockTransfer = (props) => {
                   disabled={true}
                   style={{ backgroundColor: "rgba(0,0,0,0)" }}
                 />
+                <TextInput
+                  mode="outlined"
+                  placeholder="Title"
+                  value={param.title}
+                  onChangeText={(text) => {
+                    param.title = text;
+                    setparam({ ...param });
+                  }}
+                  style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                />
                 <DatePicker
                   label=" Date"
                   inputStyles={{
@@ -380,17 +468,7 @@ const StockTransfer = (props) => {
                   }}
                 />
 
-                <DropDown
-                  data={branchlist}
-                  ext_val="branch_id"
-                  ext_lbl="company_name"
-                  value={param.to_branch_id}
-                  onChange={(val) => {
-                    param.to_branch_id = val;
-                    setparam({ ...param });
-                  }}
-                  placeholder="To Branch"
-                />
+
                 <TextInput
                   mode="outlined"
                   placeholder="Remarks"
@@ -412,19 +490,19 @@ const StockTransfer = (props) => {
                     mode="contained"
                     uppercase={false}
                     onPress={() => {
-                      if (param.to_branch_id == "") {
-                        Alert.alert("please select To Branch !");
+                      if (param.title == "") {
+                        Alert.alert("please fill title !");
                       } else {
-                        //console.log(param);
+                        console.log(param);
                         setLoading(true);
                         postRequest(
-                          "transactions/stockTransfer/insert",
+                          "transactions/stockSales/insert",
                           param,
                           userToken
                         ).then((resp) => {
                           if (resp.status == 200) {
                             if (resp.data[0].valid) {
-                              props.navigation.navigate("StockList");
+                              props.navigation.navigate("StockSalesList");
                             }
                             setLoading(false);
                           }
@@ -444,4 +522,4 @@ const StockTransfer = (props) => {
   );
 };
 
-export { StockTransfer };
+export { StockSales };
