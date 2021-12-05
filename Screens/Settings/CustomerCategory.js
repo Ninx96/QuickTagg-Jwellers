@@ -19,7 +19,7 @@ import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import Autocomplete from "react-native-autocomplete-input";
-
+import Loading from "../../Components/Loading";
 const CustomerCategoryList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -27,6 +27,7 @@ const CustomerCategoryList = (props) => {
 
   React.useEffect(() => {
     Browse();
+    setLoading(false);
   }, [search]);
 
   const Browse = () => {
@@ -44,7 +45,7 @@ const CustomerCategoryList = (props) => {
         );
       }
     });
-    setLoading(false);
+   
   };
 
   const Delete = (id) => {
@@ -63,6 +64,7 @@ const CustomerCategoryList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -142,7 +144,8 @@ const CustomerCategory = (props) => {
 
   React.useEffect(() => {
     postRequest("masters/customer/category/getCategory", { search: "" }, userToken).then((resp) => {
-      setSuggestionData(resp);      
+      setSuggestionData(resp);  
+      setLoading(false);    
     });
     if (category_id != 0) {
       let param = {
@@ -163,7 +166,7 @@ const CustomerCategory = (props) => {
         }
       );
     }
-    setLoading(false);
+   
   }, []);
 
   return (
@@ -171,6 +174,7 @@ const CustomerCategory = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         {/* <TextInput
           mode="outlined"

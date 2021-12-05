@@ -19,6 +19,7 @@ import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import Autocomplete from "react-native-autocomplete-input";
+import Loading from "../../Components/Loading";
 const BranchAreaList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -26,6 +27,7 @@ const BranchAreaList = (props) => {
 
   React.useEffect(() => {
     Browse();
+    setLoading(false);
   }, [search]);
 
   const Browse = () => {
@@ -42,8 +44,9 @@ const BranchAreaList = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+     
     });
-    setLoading(false);
+   
   };
 
   const Delete = (id) => {
@@ -61,6 +64,7 @@ const BranchAreaList = (props) => {
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -146,6 +150,7 @@ const BranchArea = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
 
     if (area_id != 0) {
@@ -165,7 +170,7 @@ const BranchArea = (props) => {
         }
       });
     }
-    setLoading(false);
+   
   }, []);
 
   return (
@@ -173,6 +178,7 @@ const BranchArea = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         {/* <TextInput
           mode="outlined"

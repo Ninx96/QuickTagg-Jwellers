@@ -24,7 +24,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import TitleBar from "../../Components/TitleBar";
 import RecentActivity from "./RecentActivity";
 import CustomHeader from "../../Components/CustomHeader";
-
+import Loading from "../../Components/Loading";
 const Home = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -527,6 +527,7 @@ const Home = (props) => {
   //------------------------End--------------------------------//
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <Portal>
         <Modal
           visible={dateModal}

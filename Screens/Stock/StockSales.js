@@ -148,9 +148,10 @@ const StockSales = (props) => {
 
           setSelectedProducts(tempData);
         }
+        setLoading(false);
       }
     });
-    setLoading(false);
+ 
   }, []);
 
 
@@ -181,7 +182,7 @@ const StockSales = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <Loading isloading={false} />
+      <Loading isloading={loading} />
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>

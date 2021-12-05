@@ -7,7 +7,7 @@ import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import * as Linking from "expo-linking";
 import moment from "moment";
-
+import Loading from "../../Components/Loading";
 const CustomerFeedback = (props) => {
   const { userToken, branchId, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -30,8 +30,9 @@ const CustomerFeedback = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+   
   };
 
   const ratingStar = (rating) => {
@@ -43,6 +44,7 @@ const CustomerFeedback = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         style={{ marginVertical: 10 }}

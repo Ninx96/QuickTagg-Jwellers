@@ -20,13 +20,15 @@ import {
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
+import Loading from "../../Components/Loading";
+
 const StockSalesList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
   React.useEffect(() => {
     Refresh();
-    setLoading(false);
+  
   }, [search]);
 
   const Refresh = () => {
@@ -39,11 +41,13 @@ const StockSalesList = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
   };
 
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         initialNumToRender={10}

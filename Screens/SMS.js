@@ -5,6 +5,7 @@ import { Button, Card, Checkbox, IconButton, Text, TextInput, } from "react-nati
 import CustomHeader from "../Components/CustomHeader";
 import MyStyles from "../Styles/MyStyles";
 import { postRequest } from "../Services/RequestServices";
+import Loading from "../Components/Loading";
 const SMS = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -110,6 +111,7 @@ const SMS = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+     
     });
     setLoading(false);
   };
@@ -119,6 +121,7 @@ const SMS = (props) => {
       style={MyStyles.container}
       source={require("../assets/login-bg.jpg")}
     >
+      <Loading isloading={loading} />
       <ScrollView>
         <Card
           style={{

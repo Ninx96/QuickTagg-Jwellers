@@ -15,6 +15,8 @@ import DropDown from "../Components/DropDown";
 import MyStyles from "../Styles/MyStyles";
 import { postRequest } from "../Services/RequestServices";
 import { FlatList } from "react-native-gesture-handler";
+import Loading from "../Components/Loading";
+
 const CustomerList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -34,12 +36,14 @@ const CustomerList = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+  
   }, [search]);
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         initialNumToRender={10}
@@ -152,6 +156,7 @@ const CustomerForm = (props) => {
             "Oops! \nSeems like we run into some Server Error"
           );
         }
+        setLoading(false);
       }
     );
     postRequest("masters/staff/browse", param, userToken).then((resp) => {
@@ -205,7 +210,7 @@ const CustomerForm = (props) => {
         }
       });
     }
-    setLoading(false);
+  
   }, []);
 
   return (
@@ -213,6 +218,7 @@ const CustomerForm = (props) => {
       style={MyStyles.container}
       source={require("../assets/login-bg.jpg")}
     >
+      <Loading isloading={loading} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput

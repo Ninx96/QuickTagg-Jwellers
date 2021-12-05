@@ -21,6 +21,7 @@ import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
+import Loading from "../../Components/Loading";
 
 const CustomerReviewList = (props) => {
   const { userToken } = props.route.params;
@@ -41,9 +42,10 @@ const CustomerReviewList = (props) => {
             "Oops! \nSeems like we run into some Server Error"
           );
         }
+        setLoading(false);
       }
     );
-    setLoading(false);
+   
   };
   const Delete = (id) => {
     setLoading(true);
@@ -62,6 +64,7 @@ const CustomerReviewList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (

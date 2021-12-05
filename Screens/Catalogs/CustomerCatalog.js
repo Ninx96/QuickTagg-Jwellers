@@ -30,6 +30,7 @@ import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 const CustomerCatalogList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,7 @@ const CustomerCatalogList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         style={{ marginVertical: 10 }}
@@ -335,7 +337,7 @@ const CustomerCatalog = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <Loading isloading={false} />
+     <Loading isloading={loading} />
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>

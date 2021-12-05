@@ -1,41 +1,86 @@
-import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  FlatList,
-  StyleSheet,
-  Text,
+  ImageBackground,
+  ScrollView,
   View,
+  Image,
+  FlatList,
+  Alert,
   TextInput as Input,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   Button,
-  Card,
-  Divider,
-  IconButton,
-  Modal,
-  Portal,
+  Text,
+  FAB,
   TextInput,
+  IconButton,
+  Card,
+  Portal,
+  Modal,
+  Subheading,
   ToggleButton,
+  Checkbox
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
+import DropDown from "../../Components/DropDown";
+import MultipleImages from "../../Components/MultipleImages";
+import CustomHeader from "../../Components/CustomHeader";
+import SelectMultiple from "../../Components/SelectMultiple";
+import SelectCustomer from "../../Components/SelectCustomer";
+import DatePicker from "../../Components/DatePicker";
+import moment from "moment";
+import Loading from "../../Components/Loading";
 import { postRequest } from "../../Services/RequestServices";
+import { LinearGradient } from "expo-linear-gradient";
+import { color } from "react-native-reanimated";
 
-const StockAcceptanceList = (props) => {
-  const { userToken, search } = props.route.params;
+const StockAcceptance = (props) => {
+  const { userToken, branchId, tran_id } = props.route.params;
   const [loading, setLoading] = useState(true);
-  const [griddata, setgriddata] = useState([]);
-  const [visible, setVisible] = useState(false);
-  
-  React.useEffect(() => {
-    Refresh();
-    setLoading(false);
-  }, [search]);
+  const [isSelected, setSelected] = useState(false);
+  const [param, setparam] = useState({
+    tran_id: "0",
+    st_id: "",
+    date: "",
+    entry_no: "",
+    to_branch_id: "",
+    remarks: "",
+    status: "",
+    stock_acceptance_products: [],
+  });
 
-  const Refresh = () => {
-    postRequest("transactions/stockAcceptance/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
-      if (resp.status == 200) {     
-        setgriddata(resp.data);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [acceptanceProducts, setAcceptanceProducts] = useState([]);
+  const [branchlist, setbranchlist] = useState([]);
+
+  React.useEffect(() => {
+    BranchList();
+
+    postRequest("transactions/stockAcceptance/preview", { tran_id: tran_id }, userToken).then((item) => {
+      let resp = item[0];
+      let resp1 = item[1];
+      param.st_id = resp[0].tran_id;
+      param.date = resp[0].date;
+      param.entry_no = resp[0].entry_no;
+      param.to_branch_id = resp[0].to_branch_id;
+      param.remarks = resp[0].remarks;
+      param.status = resp[0].status;
+      setparam({ ...param });
+
+      setSelectedProducts(resp1);
+      setLoading(false);
+    });
+    
+  }, []);
+
+  const BranchList = () => {
+    postRequest(
+      "transactions/stockin/getbranchlist",
+      {},
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
+        setbranchlist(resp.data);
       } else {
         Alert.alert(
           "Error !",
@@ -43,181 +88,164 @@ const StockAcceptanceList = (props) => {
         );
       }
     });
-  };
+  }
 
-  
-  
   return (
-    <View>
-      <FlatList
-        data={griddata}
-        renderItem={({ item, index }) => (
-          <Card
-            key={item.st_tran_id}
-            style={{
-              marginHorizontal: 20,
-              padding: 0,
-              borderRadius: 10,
-              marginVertical: 5,
-            }}
-          >
-            <LinearGradient
-              colors={["#F6356F", "#FF5F50"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                backgroundColor: "pink",
-                borderTopRightRadius: 10,
-                borderTopLeftRadius: 10,
-                margin: 0,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                {item.status}
-              </Text>
-            </LinearGradient>
+    <ImageBackground
+      style={MyStyles.container}
+      source={require("../../assets/login-bg.jpg")}
+    >
+      <Loading isloading={loading} />
+      <View style={MyStyles.cover}>
+        <ScrollView>
+          <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
 
-            <Card.Content>
-              <View style={[MyStyles.row, { margin: 0 }]}>
-                <Text style={{ marginRight: "auto" }}>{item.entry_no}</Text>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    marginRight: "auto",
-                  }}
-                >
-                  {item.date}
-                </Text>
-              </View>
-              <Text
+            <View style={MyStyles.cover}>
+              <TextInput
+                mode="outlined"
+                placeholder="Entry No"
+                value={param.entry_no}
+                disabled={true}
+                style={{ backgroundColor: "rgba(0,0,0,0)" }}
+              />
+              <DatePicker
+                label=" Date"
+                inputStyles={{
+                  backgroundColor: "rgba(0,0,0,0)",
+                }}
+                value={param.date}
+                onValueChange={(date) => {
+                  setparam({ ...param, date: date });
+                }}
+              />
+
+              <DropDown
+                data={branchlist}
+                ext_val="branch_id"
+                ext_lbl="company_name"
+                value={param.to_branch_id}
+                onChange={(val) => {
+                  param.to_branch_id = val;
+                  setparam({ ...param });
+                }}
+                placeholder="To Branch"
+              />
+              <TextInput
+                mode="outlined"
+                placeholder="Remarks"
+                multiline
+                numberOfLines={3}
+                style={{ backgroundColor: "rgba(0,0,0,0)" }}
+                value={param.remarks}
+                onChangeText={(text) => {
+                  setparam({ ...param, remarks: text });
+                }}
+              />
+
+            </View>
+          </View>
+          {selectedProducts.map((resp, index) => {
+            return (
+              <View
+                key={index}
                 style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
                 }}
               >
-               {item.from_branch}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                Products {item.accept_product} ({item.transfer_product})
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Button
-                  mode="contained"
-                  uppercase={false}
-                  style={{ marginLeft: "auto" }}
-                  onPress={() => {setVisible(true);}}
-                >
-                  Accept
-                </Button>
-              </View>
-              <Divider style={{ height: 1, marginVertical: 10 }} />
-              <Text> {item.remarks}</Text>
-            </Card.Content>
-          </Card>
-        )}
-        keyExtractor={(_, idx) => "key" + idx}
-      />
-      <Portal>
-        <Modal visible={visible}>
-          <View
-            style={{
-              backgroundColor: "#FFF",
-              marginHorizontal: 20,
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <View style={{ flexDirection: "row", marginBottom: 20 }}>
-              <View style={{ alignItems: "center", flex: 1 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>Accept</Text>
                 <View
                   style={{
                     flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 20,
+                    width: "100%",
+                    marginVertical: 5,
                   }}
                 >
-                  <ToggleButton
-                    icon="minus"
+                  <Image
+                    source={{ uri: resp.url_image + "" + resp.image_path }}
                     style={{
-                      borderWidth: 1,
-                      borderRightWidth: 0,
-                      borderColor: "#000",
+                      height: 100,
+                      width: 80,
+                      marginHorizontal: 5,
+                      borderRadius: 5,
                     }}
-                    onPress={() => {}}
                   />
+                  <View>
+                    <Text numberOfLines={1} style={{ paddingRight: 120 }}>
+                      {resp.product}
+                    </Text>
+                    <Text numberOfLines={1}>{resp.product_code}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginTop: 20,
+                      }}
+                    >
 
-                  <Input
-                    mode="outlined"
-                    style={{
-                      borderWidth: 1,
-                      height: 42,
-                      width: 60,
-                      marginHorizontal: -2,
-                      textAlign: "center",
-                    }}
-                    value="100"
-                  />
+                      <Text>QTY: {resp.qty}</Text>
 
-                  <ToggleButton
-                    icon="plus"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#000",
-                      borderLeftWidth: 0,
-                    }}
-                    onPress={() => {}}
-                  />
+                      <Checkbox
+                        status={resp.qty == resp.accept ? "checked" : "unchecked"}
+                        style={{ alignSelf: "center" }}
+                        onPress={() => {
+                          let sel = !isSelected;
+                          setSelected(sel);
+                                               
+                            if (isSelected) {
+                              resp.accept = resp.qty;
+                              setSelectedProducts([...selectedProducts]);
+                              acceptanceProducts.push({ product_id: resp.product_id, stp_id: resp.tran_id, qty: resp.qty });
+                              setAcceptanceProducts([...acceptanceProducts]);
+                              setparam({ ...param, stock_acceptance_products: acceptanceProducts });
+                               console.log(acceptanceProducts);
+                            }
+                            else {
+                              resp.accept = 0;
+                              setSelectedProducts([...selectedProducts]);                            
+                          }
+                        }}
+                      />
+                    </View>
+
+                  </View>
+
                 </View>
+
               </View>
+            );
+          })}
+        </ScrollView>
+        <View
+          style={[
+            MyStyles.row,
+            { justifyContent: "center", marginVertical: 40 },
+          ]}
+        >
+          <Button
+            mode="contained"
+            uppercase={false}
+            onPress={() => {
+              console.log(param);
+              setLoading(true);
+              postRequest(
+                "transactions/stockAcceptance/insert",
+                param,
+                userToken
+              ).then((resp) => {                          
+                  if (resp.valid) {
+                    props.navigation.navigate("StockAcceptanceList");
+                  }
+                  setLoading(false);
+                
+              });
+            }}
+          >
+            Submit
+          </Button>
+        </View>
+      </View>
 
-              <View style={{ alignItems: "center", flex: 1 }}>
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 16, marginBottom: 25 }}
-                >
-                  Pending
-                </Text>
-                <Text style={{ fontWeight: "bold", fontSize: 20 }}>8</Text>
-              </View>
-            </View>
-
-            <TextInput
-              mode="outlined"
-              placeholder="Reamrks"
-              multiline
-              numberOfLines={4}
-              style={{ backgroundColor: "rgba(0,0,0,0)", marginBottom: 40 }}
-            />
-
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Button mode="contained" uppercase={false}  onPress={() => {setVisible(false);}}>
-                Close
-              </Button>
-              <Button mode="contained" uppercase={false}>
-                Done
-              </Button>
-            </View>
-          </View>
-        </Modal>
-      </Portal>
-    </View>
+    </ImageBackground>
   );
 };
-
-export default StockAcceptanceList;
+export default StockAcceptance;

@@ -35,6 +35,8 @@ import DatePicker from "../Components/DatePicker";
 import { LinearGradient } from "expo-linear-gradient";
 import BadgeRibbon from "../Components/BadgeRibbon";
 import * as Linking from "expo-linking";
+import Loading from "../Components/Loading";
+
 const ProfileList = (props) => {
   return (
     <View style={MyStyles.container}>
@@ -123,12 +125,14 @@ const Profile = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+   
   }, []);
 
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <View
         style={[
           MyStyles.row,

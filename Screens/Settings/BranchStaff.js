@@ -19,6 +19,7 @@ import CustomHeader from "../../Components/CustomHeader";
 import MyStyles from "../../Styles/MyStyles";
 import { postRequest } from "../../Services/RequestServices";
 import Autocomplete from "react-native-autocomplete-input";
+import Loading from "../../Components/Loading";
 
 const BranchStaffList = (props) => {
   const { userToken, search } = props.route.params;
@@ -27,6 +28,7 @@ const BranchStaffList = (props) => {
 
   React.useEffect(() => {
     Browse();
+    setLoading(false);
   }, [search]);
 
   const Browse = (id) => {
@@ -45,7 +47,7 @@ const BranchStaffList = (props) => {
       }
     });
 
-    setLoading(false);
+    
   };
 
   const Delete = (id) => {
@@ -63,6 +65,7 @@ const BranchStaffList = (props) => {
 
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (

@@ -26,6 +26,7 @@ import { postRequest } from "../../Services/RequestServices";
 import { serviceUrl } from "../../Services/Constants";
 import moment from "moment";
 import Autocomplete from "react-native-autocomplete-input";
+import Loading from "../../Components/Loading";
 
 const CategoryList = (props) => {
   const { userToken, search } = props.route.params;
@@ -69,6 +70,7 @@ const CategoryList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -194,6 +196,7 @@ const CategoryForm = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
     if (category_id != 0) {
       postRequest("masters/product/category/preview", { category_id: category_id }, userToken).then((resp) => {
@@ -210,7 +213,7 @@ const CategoryForm = (props) => {
         }
       });
     }
-    setLoading(false);
+    
   }, []);
 
 
@@ -219,6 +222,7 @@ const CategoryForm = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <Autocomplete
           {...props}

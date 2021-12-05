@@ -8,7 +8,7 @@ import DatePicker from "../../Components/DatePicker";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
-
+import Loading from "../../Components/Loading";
 const Wishlist = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const Wishlist = (props) => {
   const [dateModal, setDateModal] = useState(false);
   React.useEffect(() => {
     Refresh();
-    setLoading(false);
+  
   }, []);
 
   const Refresh = () => {
@@ -34,11 +34,13 @@ const Wishlist = (props) => {
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
       }
+      setLoading(false);
     });
   };
 
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
        <Portal>
         <Modal
           visible={dateModal}

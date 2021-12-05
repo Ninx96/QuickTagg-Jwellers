@@ -75,6 +75,7 @@ const GeneralCatalogList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       <FlatList
         style={{ marginVertical: 10 }}
         data={griddata}
@@ -346,7 +347,7 @@ const GeneralCatalog = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <Loading isloading={false} />
+    <Loading isloading={loading} />
       <View style={[MyStyles.cover]}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>

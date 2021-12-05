@@ -26,6 +26,7 @@ import ImageUpload from "../../Components/ImageUpload";
 import DropDown from "../../Components/DropDown";
 import { postRequest } from "../../Services/RequestServices";
 import Autocomplete from "react-native-autocomplete-input";
+import Loading from "../../Components/Loading";
 
 const SubCategoryList = (props) => {
   const { userToken, search } = props.route.params;
@@ -34,6 +35,7 @@ const SubCategoryList = (props) => {
 
   React.useEffect(() => {
     Browse();
+    setLoading(false);
   }, [search]);
   const Browse = () => {
     postRequest(
@@ -50,7 +52,7 @@ const SubCategoryList = (props) => {
         );
       }
     });
-    setLoading(false);
+    
   };
   const Delete = (id) => {
     setLoading(true);
@@ -69,6 +71,7 @@ const SubCategoryList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -157,6 +160,7 @@ const SubCategoryForm = (props) => {
             "Oops! \nSeems like we run into some Server Error"
           );
         }
+        setLoading(false);
       }
     );
 
@@ -179,7 +183,7 @@ const SubCategoryForm = (props) => {
         }
       });
     }
-    setLoading(false);
+   
   }, []);
 
   const AutoSuggestion = () => {
@@ -200,6 +204,7 @@ const SubCategoryForm = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       <View style={[MyStyles.cover, { backgroundColor: "" }]}>
         <DropDown
           data={categorylist}

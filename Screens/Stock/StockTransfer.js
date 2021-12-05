@@ -83,8 +83,9 @@ const StockTransfer = (props) => {
           setSelectedProducts(tempData);        
         }
       }
+      setLoading(false);
     });
-    setLoading(false);
+   
   }, []);
 
   const BranchList = () => {
@@ -119,14 +120,14 @@ const StockTransfer = (props) => {
         );
       }
     });
-    setLoading(false);
+    
   };
   return (
     <ImageBackground
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-      <Loading isloading={false} />
+      <Loading isloading={loading} />
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>

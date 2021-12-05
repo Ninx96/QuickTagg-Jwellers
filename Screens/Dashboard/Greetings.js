@@ -6,6 +6,7 @@ import { postRequest } from "../../Services/RequestServices";
 import MyStyles from "../../Styles/MyStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
+import Loading from "../../Components/Loading";
 const Greetings = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,7 @@ const Greetings = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       {/* <View style={MyStyles.container}> */}
         <FlatList
           data={recentdobdoa}

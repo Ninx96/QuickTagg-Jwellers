@@ -67,7 +67,8 @@ import Catalogs from "../Screens/Catalogs";
 import MyStyles from "../Styles/MyStyles";
 import { StockTransfer } from "../Screens/Stock/StockTransfer";
 import StockList from "../Screens/Stock/StockTransferList";
-import StockAcceptanceList from "../Screens/Stock/StockAcceptance";
+import StockAcceptance from "../Screens/Stock/StockAcceptance";
+import StockAcceptanceList from "../Screens/Stock/StockAcceptanceList";
 import { StockSales } from "../Screens/Stock/StockSales";
 import StockSalesList from "../Screens/Stock/StockSalesList";
 
@@ -378,12 +379,21 @@ const DrawerComponent = ({ userDetails }) => {
       />
 
       <Drawer.Screen
+        component={StockAcceptance}
+        name="StockAcceptance"
+        initialParams={userDetails}
+        options={{
+          headerShown: true,
+          header: (props) => <TitleBar {...props} title="Stock Acceptance" disableSearch />,
+        }}
+      />
+       <Drawer.Screen
         component={StockAcceptanceList}
         name="StockAcceptanceList"
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Acceptance List" />,
+          header: (props) => <TitleBar {...props} title="Stock Acceptance List" disableSearch />,
         }}
       />
       <Drawer.Screen
@@ -392,7 +402,7 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Sales" />,
+          header: (props) => <TitleBar {...props} title="Stock Sales" disableSearch />,
         }}
       />
        <Drawer.Screen
@@ -596,8 +606,9 @@ const DrawerContent = (props) => {
             props.navigation.navigate("StockList");
           }}
         />
+       
         <Drawer.Item
-          label="Stock Acceptance"
+          label="Stock Acceptance List"
           onPress={() => {
             props.navigation.navigate("StockAcceptanceList");
           }}

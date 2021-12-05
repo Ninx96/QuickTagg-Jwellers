@@ -6,6 +6,7 @@ import { postRequest } from "../../Services/RequestServices";
 import MyStyles from "../../Styles/MyStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from "moment";
+import Loading from "../../Components/Loading";
 const RecentActivity = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const RecentActivity = (props) => {
 
   return (
     <View style={{ backgroundColor: "#FFF" }}>
+       <Loading isloading={loading} />
       <FlatList
         data={recentactivity}
         initialNumToRender={10}

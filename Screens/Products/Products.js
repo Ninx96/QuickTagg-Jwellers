@@ -26,6 +26,7 @@ import { postRequest } from "../../Services/RequestServices";
 import BadgeRibbon from "../../Components/BadgeRibbon";
 import { serviceUrl } from "../../Services/Constants";
 import * as Sharing from "expo-sharing";
+import Loading from "../../Components/Loading";
 const ProductsList = (props) => {
   const { userToken, search } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -181,6 +182,7 @@ const ProductsPreview = (props) => {
  
   return (
     <View style={MyStyles.container}>
+       <Loading isloading={loading} />
       <ScrollView>      
         <View style={[MyStyles.wrapper, { paddingHorizontal: 5 }]}>
           <Text style={{ fontWeight: "bold", fontSize: 22 }}>
@@ -356,10 +358,11 @@ const ProductsForm = (props) => {
             "Oops! \nSeems like we run into some Server Error"
           );
         }
+        setLoading(false);
       }
     );
 
-    setLoading(false);
+   
   }, []);
 
   const SubcategoryList = (category_id) => {
@@ -383,6 +386,7 @@ const ProductsForm = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
+       <Loading isloading={loading} />
       <ScrollView>
         <View style={MyStyles.cover}>
           <TextInput
