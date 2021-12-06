@@ -19,7 +19,7 @@ import {
   Modal,
   Subheading,
   ToggleButton,
-  Checkbox
+  Checkbox,
 } from "react-native-paper";
 import MyStyles from "../../Styles/MyStyles";
 import DropDown from "../../Components/DropDown";
@@ -56,7 +56,11 @@ const StockAcceptance = (props) => {
   React.useEffect(() => {
     BranchList();
 
-    postRequest("transactions/stockAcceptance/preview", { tran_id: tran_id }, userToken).then((item) => {
+    postRequest(
+      "transactions/stockAcceptance/preview",
+      { tran_id: tran_id },
+      userToken
+    ).then((item) => {
       let resp = item[0];
       let resp1 = item[1];
       param.st_id = resp[0].tran_id;
@@ -70,25 +74,22 @@ const StockAcceptance = (props) => {
       setSelectedProducts(resp1);
       setLoading(false);
     });
-    
   }, []);
 
   const BranchList = () => {
-    postRequest(
-      "transactions/stockin/getbranchlist",
-      {},
-      userToken
-    ).then((resp) => {
-      if (resp.status == 200) {
-        setbranchlist(resp.data);
-      } else {
-        Alert.alert(
-          "Error !",
-          "Oops! \nSeems like we run into some Server Error"
-        );
+    postRequest("transactions/stockin/getbranchlist", {}, userToken).then(
+      (resp) => {
+        if (resp.status == 200) {
+          setbranchlist(resp.data);
+        } else {
+          Alert.alert(
+            "Error !",
+            "Oops! \nSeems like we run into some Server Error"
+          );
+        }
       }
-    });
-  }
+    );
+  };
 
   return (
     <ImageBackground
@@ -99,7 +100,6 @@ const StockAcceptance = (props) => {
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
-
             <View style={MyStyles.cover}>
               <TextInput
                 mode="outlined"
@@ -141,7 +141,6 @@ const StockAcceptance = (props) => {
                   setparam({ ...param, remarks: text });
                 }}
               />
-
             </View>
           </View>
           {selectedProducts.map((resp, index) => {
@@ -181,36 +180,40 @@ const StockAcceptance = (props) => {
                         marginTop: 20,
                       }}
                     >
-
                       <Text>QTY: {resp.qty}</Text>
 
-                      <Checkbox
-                        status={resp.qty == resp.accept ? "checked" : "unchecked"}
+                      <Checkbox.Android
+                        status={
+                          resp.qty == resp.accept ? "checked" : "unchecked"
+                        }
                         style={{ alignSelf: "center" }}
                         onPress={() => {
                           let sel = !isSelected;
                           setSelected(sel);
-                                               
-                            if (isSelected) {
-                              resp.accept = resp.qty;
-                              setSelectedProducts([...selectedProducts]);
-                              acceptanceProducts.push({ product_id: resp.product_id, stp_id: resp.tran_id, qty: resp.qty });
-                              setAcceptanceProducts([...acceptanceProducts]);
-                              setparam({ ...param, stock_acceptance_products: acceptanceProducts });
-                               console.log(acceptanceProducts);
-                            }
-                            else {
-                              resp.accept = 0;
-                              setSelectedProducts([...selectedProducts]);                            
+
+                          if (isSelected) {
+                            resp.accept = resp.qty;
+                            setSelectedProducts([...selectedProducts]);
+                            acceptanceProducts.push({
+                              product_id: resp.product_id,
+                              stp_id: resp.tran_id,
+                              qty: resp.qty,
+                            });
+                            setAcceptanceProducts([...acceptanceProducts]);
+                            setparam({
+                              ...param,
+                              stock_acceptance_products: acceptanceProducts,
+                            });
+                            console.log(acceptanceProducts);
+                          } else {
+                            resp.accept = 0;
+                            setSelectedProducts([...selectedProducts]);
                           }
                         }}
                       />
                     </View>
-
                   </View>
-
                 </View>
-
               </View>
             );
           })}
@@ -231,12 +234,11 @@ const StockAcceptance = (props) => {
                 "transactions/stockAcceptance/insert",
                 param,
                 userToken
-              ).then((resp) => {                          
-                  if (resp.valid) {
-                    props.navigation.navigate("StockAcceptanceList");
-                  }
-                  setLoading(false);
-                
+              ).then((resp) => {
+                if (resp.valid) {
+                  props.navigation.navigate("StockAcceptanceList");
+                }
+                setLoading(false);
               });
             }}
           >
@@ -244,7 +246,6 @@ const StockAcceptance = (props) => {
           </Button>
         </View>
       </View>
-
     </ImageBackground>
   );
 };

@@ -347,7 +347,7 @@ const GeneralCatalog = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-    <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <View style={[MyStyles.cover]}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>

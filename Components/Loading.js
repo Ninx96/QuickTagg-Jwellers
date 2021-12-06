@@ -19,7 +19,7 @@ const Loading = ({ isloading }) => {
         <LottieView
           ref={ref}
           style={{ width: "50%" }}
-          source={require("../assets/Animations/9619-loading-dots-in-yellow.json")}
+          source={require("../assets/Animations/9619-loading-dots-in-gradient.json")}
           autoPlay
         />
       </Modal>
