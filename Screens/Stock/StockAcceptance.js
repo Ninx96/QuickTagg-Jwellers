@@ -188,27 +188,12 @@ const StockAcceptance = (props) => {
                         }
                         style={{ alignSelf: "center" }}
                         onPress={() => {
-                          let sel = !isSelected;
-                          setSelected(sel);
-
-                          if (isSelected) {
-                            resp.accept = resp.qty;
-                            setSelectedProducts([...selectedProducts]);
-                            acceptanceProducts.push({
-                              product_id: resp.product_id,
-                              stp_id: resp.tran_id,
-                              qty: resp.qty,
-                            });
-                            setAcceptanceProducts([...acceptanceProducts]);
-                            setparam({
-                              ...param,
-                              stock_acceptance_products: acceptanceProducts,
-                            });
-                            console.log(acceptanceProducts);
-                          } else {
+                          if (resp.qty == resp.accept) {
                             resp.accept = 0;
-                            setSelectedProducts([...selectedProducts]);
+                          } else {
+                            resp.accept = resp.qty;
                           }
+                          setSelectedProducts([...selectedProducts]);
                         }}
                       />
                     </View>
@@ -228,8 +213,11 @@ const StockAcceptance = (props) => {
             mode="contained"
             uppercase={false}
             onPress={() => {
-              console.log(param);
               setLoading(true);
+              const accepted = selectedProducts.filter(
+                (item) => item.accept == item.qty
+              );
+              param.stock_acceptance_products = accepted;
               postRequest(
                 "transactions/stockAcceptance/insert",
                 param,
