@@ -72,6 +72,7 @@ const StockAcceptance = (props) => {
       setparam({ ...param });
 
       setSelectedProducts(resp1);
+      console.log(resp1);
       setLoading(false);
     });
   }, []);
@@ -214,17 +215,24 @@ const StockAcceptance = (props) => {
             uppercase={false}
             onPress={() => {
               setLoading(true);
-              const accepted = selectedProducts.filter(
-                (item) => item.accept == item.qty
-              );
-              param.stock_acceptance_products = accepted;
+              var stock_acceptance_products = [];
+              selectedProducts.forEach((item) => {
+                if (item.accept == item.qty) {
+                  stock_acceptance_products.push({
+                    product_id: item.product_id,
+                    stp_id: item.tran_id,
+                    qty: item.qty,
+                  });
+                }
+              });
+              param.stock_acceptance_products = stock_acceptance_products;
               postRequest(
                 "transactions/stockAcceptance/insert",
                 param,
                 userToken
               ).then((resp) => {
                 if (resp.valid) {
-                  props.navigation.navigate("StockAcceptanceList");
+                  props.navigation.goBack();
                 }
                 setLoading(false);
               });

@@ -10,6 +10,7 @@ import {
 import AppLoading from "expo-app-loading";
 import * as SecureStore from "expo-secure-store";
 import * as Font from "expo-font";
+import { Buffer } from "buffer";
 
 import { AuthContext } from "./Components/Context";
 
@@ -88,7 +89,10 @@ export default function App() {
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState
+  );
 
   const authContext = React.useMemo(
     () => ({
@@ -140,6 +144,22 @@ export default function App() {
       } catch (e) {
         console.log(e);
       }
+
+      if (userToken) {
+        const { exp } = JSON.parse(
+          Buffer.from(userToken.split(".")[1], "base64").toString()
+        );
+        if (Date.now() >= exp * 1000) {
+          try {
+            await SecureStore.deleteItemAsync("userToken");
+          } catch (e) {
+            console.log(e);
+          }
+          dispatch({ type: "LOGOUT" });
+          return;
+        }
+      }
+
       dispatch({
         type: "RETRIEVE_TOKEN",
         token: userToken,

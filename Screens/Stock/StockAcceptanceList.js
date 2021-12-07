@@ -26,15 +26,19 @@ const StockAcceptanceList = (props) => {
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
   const [visible, setVisible] = useState(false);
-  
+
   React.useEffect(() => {
     Refresh();
     setLoading(false);
   }, [search]);
 
   const Refresh = () => {
-    postRequest("transactions/stockAcceptance/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
-      if (resp.status == 200) {     
+    postRequest(
+      "transactions/stockAcceptance/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -45,11 +49,9 @@ const StockAcceptanceList = (props) => {
     });
   };
 
-  
-  
   return (
     <View>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -105,7 +107,7 @@ const StockAcceptanceList = (props) => {
                   fontWeight: "bold",
                 }}
               >
-               {item.from_branch}
+                {item.from_branch}
               </Text>
               <Text
                 style={{
@@ -121,9 +123,9 @@ const StockAcceptanceList = (props) => {
                   uppercase={false}
                   style={{ marginLeft: "auto" }}
                   onPress={() => {
-                     props.navigation.navigate("StockAcceptance", {
-                        tran_id: item.st_tran_id,
-                      })
+                    props.navigation.navigate("StockAcceptance", {
+                      tran_id: item.st_tran_id,
+                    });
                   }}
                 >
                   Accept
@@ -136,7 +138,7 @@ const StockAcceptanceList = (props) => {
         )}
         keyExtractor={(_, idx) => "key" + idx}
       />
-      <Portal>
+      {/* <Portal>
         <Modal visible={visible}>
           <View
             style={{
@@ -220,7 +222,7 @@ const StockAcceptanceList = (props) => {
             </View>
           </View>
         </Modal>
-      </Portal>
+      </Portal> */}
     </View>
   );
 };

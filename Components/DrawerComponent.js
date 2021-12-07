@@ -374,7 +374,9 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Transfer List" />,
+          header: (props) => (
+            <TitleBar {...props} title="Stock Transfer List" />
+          ),
         }}
       />
 
@@ -384,16 +386,20 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Acceptance" disableSearch />,
+          header: (props) => (
+            <TitleBar {...props} title="Stock Acceptance" disableSearch />
+          ),
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         component={StockAcceptanceList}
         name="StockAcceptanceList"
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Acceptance List" disableSearch />,
+          header: (props) => (
+            <TitleBar {...props} title="Stock Acceptance List" disableSearch />
+          ),
         }}
       />
       <Drawer.Screen
@@ -402,10 +408,12 @@ const DrawerComponent = ({ userDetails }) => {
         initialParams={userDetails}
         options={{
           headerShown: true,
-          header: (props) => <TitleBar {...props} title="Stock Sales" disableSearch />,
+          header: (props) => (
+            <TitleBar {...props} title="Stock Sales" disableSearch />
+          ),
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         component={StockSalesList}
         name="StockSalesList"
         initialParams={userDetails}
@@ -592,37 +600,21 @@ const DrawerContent = (props) => {
         />
 
         <Drawer.Item
-          label="StockTransfer"
-          onPress={() => {
-            props.navigation.navigate("StockTransfer", {
-              tran_id: 0,
-            });
-          }}
-        />
-
-        <Drawer.Item
-          label="Stock Transfer List"
+          label="Stock Transfer"
           onPress={() => {
             props.navigation.navigate("StockList");
           }}
         />
-       
+
         <Drawer.Item
-          label="Stock Acceptance List"
+          label="Stock Acceptance"
           onPress={() => {
             props.navigation.navigate("StockAcceptanceList");
           }}
         />
+
         <Drawer.Item
           label="Stock Sales"
-          onPress={() => {
-            props.navigation.navigate("StockSales", {
-              tran_id: 0,
-            });
-          }}
-        />
-         <Drawer.Item
-          label="Stock Sales List"
           onPress={() => {
             props.navigation.navigate("StockSalesList");
           }}

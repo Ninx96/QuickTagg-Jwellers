@@ -133,6 +133,7 @@ const Login = () => {
                   setLoading(true);
                   if (otp) {
                     authRequest("branch/token", param).then((resp) => {
+                      console.log(resp);
                       if (resp.status == 200) {
                         signIn({
                           userToken: resp.data.access_token,
