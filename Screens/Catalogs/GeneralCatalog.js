@@ -151,7 +151,7 @@ const GeneralCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -294,12 +294,12 @@ const GeneralCatalog = (props) => {
 
           let tempData = Object.values(
             param.customer_session_products.reduce((acc, item) => {
-              if (!acc[item.text])
-                acc[item.text] = {
-                  subcategory_name: item.text,
+              if (!acc[item.subcategory_name])
+                acc[item.subcategory_name] = {
+                  subcategory_name: item.subcategory_name,
                   data: [],
                 };
-              acc[item.text].data.push(item);
+              acc[item.subcategory_name].data.push(item);
               return acc;
             }, {})
           );
@@ -515,7 +515,7 @@ const GeneralCatalog = (props) => {
             ...param,
             customer_session_products: param.customer_session_products,
           });
-
+         
           let tempData = Object.values(
             param.customer_session_products.reduce((acc, item) => {
               if (!acc[item.subcategory_name])
@@ -527,7 +527,7 @@ const GeneralCatalog = (props) => {
               return acc;
             }, {})
           );
-
+          console.log(tempData);
           setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
@@ -614,6 +614,7 @@ const GeneralCatalog = (props) => {
                       if (param.title == "") {
                         Alert.alert("please fill title !");
                       } else {
+                        console.log(param);
                         setLoading(true);
                         postRequest(
                           "transactions/customer/generalsession/insert",

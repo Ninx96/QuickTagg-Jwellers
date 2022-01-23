@@ -293,12 +293,12 @@ const CustomerCatalog = (props) => {
 
           let tempData = Object.values(
             param.customer_session_products.reduce((acc, item) => {
-              if (!acc[item.text])
-                acc[item.text] = {
-                  subcategory_name: item.text,
+              if (!acc[item.subcategory_name])
+                acc[item.subcategory_name] = {
+                  subcategory_name: item.subcategory_name,
                   data: [],
                 };
-              acc[item.text].data.push(item);
+              acc[item.subcategory_name].data.push(item);
               return acc;
             }, {})
           );

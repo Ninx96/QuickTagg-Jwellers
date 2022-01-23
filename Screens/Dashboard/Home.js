@@ -29,7 +29,7 @@ const Home = (props) => {
   const { userToken, branchId } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [param, setparam] = useState({
-    from_date: moment(),
+    from_date: moment().subtract(7, 'days').format('YYYY-MM-DD'),
     to_date: moment(),
   });
   const [visible, setVisible] = useState({
@@ -173,8 +173,7 @@ const Home = (props) => {
         figures.missedCall_done = resp.data[0].missedCall_done;
 
         figures.total_products_count = resp.data[0].total_products_count;
-        figures.total_products_qty_count =
-          resp.data[0].total_products_qty_count;
+        figures.total_products_qty_count = resp.data[0].total_products_qty_count;
 
         figures.total_customer_reviews = resp.data[0].total_customer_reviews;
         setfigures({ ...figures });
@@ -528,7 +527,7 @@ const Home = (props) => {
   //------------------------End--------------------------------//
   return (
     <View style={MyStyles.container}>
-      <Loading isloading={loading} />
+       <Loading isloading={loading} />
       <Portal>
         <Modal
           visible={dateModal}
@@ -1105,83 +1104,83 @@ const Home = (props) => {
           </View>
           {showProducts
             ? categoryscountlist.map((item, index) => (
-                <LinearGradient
-                  key={index}
-                  colors={["#FF5F50", "#FF7F70"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{
-                    //marginHorizontal: 15,
-                    borderRadius: 10,
-                    padding: 0,
-                    marginVertical: 5,
-                  }}
+              <LinearGradient
+                key={index}
+                colors={["#FF5F50", "#FF7F70"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  //marginHorizontal: 15,
+                  borderRadius: 10,
+                  padding: 0,
+                  marginVertical: 5,
+                }}
+              >
+                <View
+                  style={[
+                    MyStyles.row,
+                    {
+                      justifyContent: "space-between",
+                    },
+                  ]}
                 >
-                  <View
-                    style={[
-                      MyStyles.row,
-                      {
-                        justifyContent: "space-between",
-                      },
-                    ]}
+                  <Text
+                    style={{
+                      //textAlign: "center",
+                      color: "#FFF",
+                      fontSize: 20,
+                      marginVertical: 5,
+                      marginLeft: 30,
+                    }}
                   >
-                    <Text
-                      style={{
-                        //textAlign: "center",
-                        color: "#FFF",
-                        fontSize: 20,
-                        marginVertical: 5,
-                        marginLeft: 30,
-                      }}
-                    >
-                      {item.category_name + "   (" + item.product + ")"}
-                    </Text>
-                    <IconButton
-                      icon={item.show ? "chevron-down" : "chevron-right"}
-                      color="white"
-                      style={
-                        {
-                          //flex: 1,
-                        }
+                    {item.category_name + "   (" + item.product + ")"}
+                  </Text>
+                  <IconButton
+                    icon={item.show ? "chevron-down" : "chevron-right"}
+                    color="white"
+                    style={
+                      {
+                        //flex: 1,
                       }
-                      onPress={() => {
-                        item.show = !item.show;
-                        setcategoryscountlist([...categoryscountlist]);
-                      }}
-                    />
-                  </View>
-                  <View style={item.show ? null : { display: "none" }}>
-                    {item.innerTable.length > 0
-                      ? item.innerTable.map((item2, index) => (
-                          <View
-                            key={index}
-                            style={[
-                              MyStyles.row,
-                              {
-                                //justifyContent: "center",
-                              },
-                            ]}
-                          >
-                            <Text
-                              style={{
-                                color: "#FFF",
-                                fontSize: 18,
-                                marginVertical: 5,
-                                width: "80%",
-                                marginLeft: 40,
-                              }}
-                            >
-                              {item2.subcategory_name +
-                                "      (" +
-                                item.product +
-                                ")"}
-                            </Text>
-                          </View>
-                        ))
-                      : null}
-                  </View>
-                </LinearGradient>
-              ))
+                    }
+                    onPress={() => {
+                      item.show = !item.show;
+                      setcategoryscountlist([...categoryscountlist]);
+                    }}
+                  />
+                </View>
+                <View style={item.show ? null : { display: "none" }}>
+                  {item.innerTable.length > 0
+                    ? item.innerTable.map((item2, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          MyStyles.row,
+                          {
+                            //justifyContent: "center",
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={{
+                            color: "#FFF",
+                            fontSize: 18,
+                            marginVertical: 5,
+                            width: "80%",
+                            marginLeft: 40,
+                          }}
+                        >
+                          {item2.subcategory_name +
+                            "      (" +
+                            item.product +
+                            ")"}
+                        </Text>
+                      </View>
+                    ))
+                    : null}
+                </View>
+              </LinearGradient>
+            ))
             : null}
         </LinearGradient>
 
