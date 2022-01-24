@@ -171,7 +171,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -258,7 +258,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -301,7 +301,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -355,7 +355,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -425,7 +425,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -479,7 +479,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -549,7 +549,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -604,7 +604,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -675,7 +675,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -718,7 +718,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",
@@ -761,7 +761,7 @@ const SMS = (props) => {
               onPress={() => {
                 Alert.alert(
                   "Are you sure ?",
-                  "This message will not be sent to the users",
+                  "This message will be sent to the users",
                   [
                     {
                       text: "No",

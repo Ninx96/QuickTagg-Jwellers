@@ -667,7 +667,7 @@ const VideoCallRequest = (props) => {
                         uppercase={false}
                         style={{ marginHorizontal: 10 }}
                         onPress={() => {
-                          Alert.alert("Alert", "You want to delete?", [
+                          Alert.alert("Alert", "Are you sure you want to complete this query ?", [
                             {
                               text: "No",
                               onPress: () => {},
@@ -1007,7 +1007,7 @@ const CallRequest = (props) => {
                         style={{ marginHorizontal: 10 }}
                         uppercase={false}
                         onPress={() => {
-                          Alert.alert("Alert", "You want to Done Call?", [
+                          Alert.alert("Alert", "Are you sure you want to complete this query ?", [
                             {
                               text: "No",
                               onPress: () => {},

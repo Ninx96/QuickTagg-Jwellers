@@ -90,18 +90,26 @@ const VoucherList = (props) => {
           >
             {item.disable ?
               <BadgeRibbon
-                text="Active"
-                color="green"
+                text="Disable"
+                color="gray"
                 position="voucherRight"
                 textStyle={{ top: 20, left: -20 }}
               />
-              : 
-              <BadgeRibbon
-                text="Expire"
-                color="red"
-                position="voucherRight"
-                textStyle={{ top: 20, left: -20 }}
-              />}
+              :
+              (item.voucher_expire ?
+                <BadgeRibbon
+                  text="Active"
+                  color="green"
+                  position="voucherRight"
+                  textStyle={{ top: 20, left: -20 }}
+                />
+                :
+                <BadgeRibbon
+                  text="Expire"
+                  color="red"
+                  position="voucherRight"
+                  textStyle={{ top: 20, left: -20 }}
+                />)}
 
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}

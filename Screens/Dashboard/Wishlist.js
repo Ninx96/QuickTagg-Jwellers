@@ -14,7 +14,7 @@ const Wishlist = (props) => {
   const [loading, setLoading] = useState(true);
   const [griddata, setgriddata] = useState([]);
   const [param, setparam] = useState({
-    from_date: moment(),
+    from_date: moment().subtract(7, 'days').format('YYYY-MM-DD'),
     to_date: moment(),
   });
   const [dateModal, setDateModal] = useState(false);

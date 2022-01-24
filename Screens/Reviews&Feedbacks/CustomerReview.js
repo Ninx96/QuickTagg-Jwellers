@@ -22,7 +22,7 @@ import { postRequest } from "../../Services/RequestServices";
 import moment from "moment";
 import { LinearGradient } from "expo-linear-gradient";
 import Loading from "../../Components/Loading";
-
+import { serviceUrl } from "../../Services/Constants";
 const CustomerReviewList = (props) => {
   const { userToken } = props.route.params;
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const CustomerReviewList = (props) => {
   const Browse = (id) => {
     postRequest("masters/customer/customerreview/browse", {}, userToken).then(
       (resp) => {
-        if (resp.status == 200) {
+        if (resp.status == 200) {         
           setgriddata(resp.data);
         } else {
           Alert.alert(
@@ -45,7 +45,7 @@ const CustomerReviewList = (props) => {
         setLoading(false);
       }
     );
-   
+
   };
   const Delete = (id) => {
     setLoading(true);
@@ -64,7 +64,7 @@ const CustomerReviewList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         renderItem={({ item, index }) => (
@@ -85,7 +85,8 @@ const CustomerReviewList = (props) => {
               titleStyle={{ textAlign: "center", color: "#FFF" }}
               left={() => (
                 <Avatar.Image
-                  source={require("../../assets/upload.png")}
+                  //source={require("../../assets/upload.png")}
+                  source={{ uri: item.url + "" + item.image_path }}
                   size={85}
                 />
               )}
@@ -107,7 +108,7 @@ const CustomerReviewList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -154,6 +155,7 @@ const CustomerReview = (props) => {
     customer_name: "",
     image_path: "",
     review: "",
+    image_path2: "",
   });
   const [Image, setImage] = React.useState(require("../../assets/upload.png"));
   const [imageuploads, setimageuploads] = useState({
@@ -217,14 +219,16 @@ const CustomerReview = (props) => {
           <ImageUpload
             label="Upload Image :"
             source={Image}
-            onClearImage={() => {}}
+            onClearImage={() => { }}
             onUploadImage={(result) => {
               setImage({ uri: result.uri });
-              setimageuploads({ ...imageuploads, image_base64: result.base64 });
+              // setimageuploads({ ...imageuploads, image_base64: result.base64 });
               setparam({
                 ...param,
                 image_path:
-                  "image-" + moment().format("YYYYMMDD-hhmmss") + ".png",
+                  "image-" + moment().format("YYYYMMDD-hhmmss") + ".jpg",
+                image_path2:
+                  "image-" + moment().format("YYYYMMDD-hhmmss"),
               });
             }}
           />
@@ -249,21 +253,39 @@ const CustomerReview = (props) => {
               ).then((resp) => {
                 if (resp.status == 200) {
                   if (resp.data[0].valid) {
-                    if (param.image_path !== "") {
-                      postRequest(
-                        "masters/customer/UploadCustomerReviewImageMob64",
-                        {
-                          base64image: imageuploads.image_base64,
-                          imageName: param.image_path,
-                        },
-                        userToken
-                      ).then((resp) => {
+
+                    if (Image.uri) {
+                     
+                      const form_data = new FormData();
+                      form_data.append("files", {
+                        uri: Image.uri,
+                        type: "image/jpeg",
+                        name: param.image_path2,
+                      });
+                     
+                      var xhr = new XMLHttpRequest();
+                      xhr.open(
+                        "POST",
+                        serviceUrl + "masters/customer/UploadCustomerReviewImage",
+                        true
+                      );
+                      xhr.setRequestHeader("Accept", "application/json");
+                      xhr.setRequestHeader(
+                        "Content-Type",
+                        "multipart/form-data"
+                      );
+                      xhr.setRequestHeader("auth-token", userToken);
+
+                      xhr.onload = function (e) {
+                        const resp = xhr.response;
+                      
                         if (resp.status == 200) {
                           if (resp.data[0].valid) {
                             console.log("image : " + resp.data[0].valid);
                           }
                         }
-                      });
+                      };
+                      xhr.send(form_data);
                     }
                     props.navigation.navigate("ReviewFeedback");
                   }
