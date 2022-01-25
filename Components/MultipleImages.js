@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Image, View } from "react-native";
-import { ImageBrowser } from "expo-image-picker-multiple";
-import * as ImageManipulator from "expo-image-manipulator";
-import { Button, IconButton, Modal, Portal, Text } from "react-native-paper";
-import { FlatList } from "react-native-gesture-handler";
+import React, { useState, useEffect } from 'react';
+import { Image, View } from 'react-native';
+// import { ImageBrowser } from "expo-image-picker-multiple";
+import * as ImageManipulator from 'expo-image-manipulator';
+import { Button, IconButton, Modal, Portal, Text } from 'react-native-paper';
+import { FlatList } from 'react-native-gesture-handler';
 
 const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
   const [images, setImages] = useState([]);
   const [header, setHeader] = useState(
-    <Text style={{ flexGrow: 1, fontWeight: "bold", fontSize: 18 }}>
+    <Text style={{ flexGrow: 1, fontWeight: 'bold', fontSize: 18 }}>
       Selected 0 files
     </Text>
   );
@@ -17,12 +17,12 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
   const _renderDoneButton = (count, onSubmit) => {
     if (!count)
       return (
-        <Text style={{ flexGrow: 1, fontWeight: "bold", fontSize: 18 }}>
+        <Text style={{ flexGrow: 1, fontWeight: 'bold', fontSize: 18 }}>
           Selected {count} files
         </Text>
       );
     return [
-      <Text style={{ flexGrow: 1, fontWeight: "bold", fontSize: 18 }}>
+      <Text style={{ flexGrow: 1, fontWeight: 'bold', fontSize: 18 }}>
         Selected {count} files
       </Text>,
       <Button mode="text" color="blue" uppercase={false} onPress={onSubmit}>
@@ -35,7 +35,7 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
     const file = await ImageManipulator.manipulateAsync(uri, [], {
       compress: 0.8,
       format: ImageManipulator.SaveFormat.JPEG,
-      base64:true
+      base64: true,
     });
     return file;
   };
@@ -56,8 +56,8 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
 
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
           marginVertical: 10,
         }}
       >
@@ -86,14 +86,14 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
         <Modal
           visible={modal}
           dismissable={false}
-          contentContainerStyle={{ flex: 1, backgroundColor: "#FFF" }}
+          contentContainerStyle={{ flex: 1, backgroundColor: '#FFF' }}
         >
           <View style={{ flex: 1 }}>
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
               <IconButton
@@ -105,7 +105,7 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
               {header}
             </View>
 
-            <ImageBrowser
+            {/* <ImageBrowser
               onChange={(num, onSubmit) => {
                 setHeader(_renderDoneButton(num, onSubmit));
               }}
@@ -126,7 +126,7 @@ const MultipleImages = ({ onSelect, data = [], onClearImage }) => {
                   })
                   .catch((e) => console.log(e));
               }}
-            />
+            /> */}
           </View>
         </Modal>
       </Portal>
