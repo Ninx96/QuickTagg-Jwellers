@@ -527,7 +527,7 @@ const Home = (props) => {
   //------------------------End--------------------------------//
   return (
     <View style={MyStyles.container}>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <Portal>
         <Modal
           visible={dateModal}
@@ -1124,6 +1124,7 @@ const Home = (props) => {
                     },
                   ]}
                 >
+
                   <Text
                     style={{
                       //textAlign: "center",
@@ -1135,6 +1136,7 @@ const Home = (props) => {
                   >
                     {item.category_name + "   (" + item.product + ")"}
                   </Text>
+
                   <IconButton
                     icon={item.show ? "chevron-down" : "chevron-right"}
                     color="white"
@@ -1161,20 +1163,28 @@ const Home = (props) => {
                           },
                         ]}
                       >
-                        <Text
-                          style={{
-                            color: "#FFF",
-                            fontSize: 18,
-                            marginVertical: 5,
-                            width: "80%",
-                            marginLeft: 40,
-                          }}
+                        <TouchableRipple
+                          // onPress={() => {
+                          //   props.navigation.navigate("ProductsList", {
+                          //    search: item2.subcategory_name
+                          //   });
+                          // }}
                         >
-                          {item2.subcategory_name +
-                            "      (" +
-                            item.product +
-                            ")"}
-                        </Text>
+                          <Text
+                            style={{
+                              color: "#FFF",
+                              fontSize: 18,
+                              marginVertical: 5,
+                              width: "80%",
+                              marginLeft: 40,
+                            }}
+                          >
+                            {item2.subcategory_name +
+                              "      (" +
+                              item.product +
+                              ")"}
+                          </Text>
+                        </TouchableRipple>
                       </View>
                     ))
                     : null}

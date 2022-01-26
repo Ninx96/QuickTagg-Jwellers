@@ -126,7 +126,7 @@ const ExhibitionCatalogList = (props) => {
                       marginBottom: 10,
                     }}
                   >
-                    {item.no_of_product} {"Products"}
+                    {item.product_count} {"Products"}
                   </Text>
                   <Text>{item.remarks}</Text>
                 </View>

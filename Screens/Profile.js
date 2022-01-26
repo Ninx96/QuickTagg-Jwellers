@@ -98,6 +98,7 @@ const Profile = (props) => {
     let data = { customer_id: customer_id };
     postRequest("customers/customer/profile", data, userToken).then((resp) => {
       if (resp.status == 200) {
+        console.log(resp.data[0]);
         param.customer_id = resp.data[0].customer_id;
         param.full_name = resp.data[0].full_name;
         param.gender = resp.data[0].gender;
@@ -127,12 +128,12 @@ const Profile = (props) => {
       }
       setLoading(false);
     });
-   
+
   }, []);
 
   return (
     <View style={MyStyles.container}>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <View
         style={[
           MyStyles.row,
@@ -142,13 +143,15 @@ const Profile = (props) => {
           },
         ]}
       >
-        <LottieView
+
+        {param.gender !== null ? (<LottieView
           source={param.gender === "male" ? MaleAvatar : FemaleAvatar}
           autoPlay
           loop
           resizeMode="cover"
           style={{ width: 100, margin: -10, marginRight: -30 }}
         />
+        ) : null}
 
         <View style={[MyStyles.profile_row, { marginRight: 30 }]}>
           <View style={{ alignItems: "center", paddingHorizontal: 10 }}>
@@ -195,8 +198,8 @@ const Profile = (props) => {
             }}
           />
         </View>
-        <Text>DOB: {moment(param.dob).format("Do MMM YYYY")} </Text>
-        <Text>DOA: {moment(param.doa).format("Do MMM YYYY")}</Text>
+        <Text>DOB: {param.dob == null ? 'N/A' : moment(param.dob).format("Do MMM YYYY")} </Text>
+        <Text>DOA: {param.doa == null ? 'N/A' : moment(param.doa).format("Do MMM YYYY")}</Text>
         <Text>{param.area_name}</Text>
         <Text>{param.profession}</Text>
       </View>
@@ -292,7 +295,7 @@ const Profile = (props) => {
           options={{
             tabBarIcon: () => <Icon name="phone-call" size={20} />,
           }}
-          initialParams={{ userToken: userToken, customer_id: customer_id }}
+          initialParams={{ userToken: userToken, customer_id: customer_id,customer_mobile: customer_mobile }}
         />
       </Tab.Navigator>
     </View>
@@ -326,63 +329,63 @@ const Wishlist = (props) => {
     <View style={MyStyles.container}>
       {wishlist.length > 0
         ? wishlist.map((resp, index) => {
-            return (
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#AAA",
-                  marginHorizontal: 10,
-                }}
-              >
-                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-                <FlatList
-                  //key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Card
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#AAA",
+                marginHorizontal: 10,
+              }}
+            >
+              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+              <FlatList
+                //key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate("ProductsPreview", {
+                        product_id: item.product_id,
+                      })
+                    }
+                  >
+                    {item.exhibition ? (
+                      <BadgeRibbon text="E" position="left" color="red" />
+                    ) : null}
+                    {item.trial ? (
+                      <BadgeRibbon text="T" position="right" />
+                    ) : null}
+                    <Image
+                      source={{ uri: item.urlImage + "" + item.image_path }}
                       style={{
-                        margin: 5,
-                        borderRadius: 10,
                         width: 120,
-                        alignItems: "center",
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
                       }}
-                      onPress={() =>
-                        props.navigation.navigate("ProductsPreview", {
-                          product_id: item.product_id,
-                        })
-                      }
-                    >
-                      {item.exhibition ? (
-                        <BadgeRibbon text="E" position="left" color="red" />
-                      ) : null}
-                      {item.trial ? (
-                        <BadgeRibbon text="T" position="right" />
-                      ) : null}
-                      <Image
-                        source={{ uri: item.urlImage + "" + item.image_path }}
-                        style={{
-                          width: 120,
-                          height: 120,
-                          zIndex: -50,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                        }}
-                      />
+                    />
 
-                      <View style={{ padding: 5, paddingVertical: 10 }}>
-                        <Text numberOfLines={2} style={{ color: "#333" }}>
-                          {item.name}
-                        </Text>
-                        {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
-                      </View>
-                    </Card>
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            );
-          })
+                    <View style={{ padding: 5, paddingVertical: 10 }}>
+                      <Text numberOfLines={2} style={{ color: "#333" }}>
+                        {item.name}
+                      </Text>
+                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                    </View>
+                  </Card>
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          );
+        })
         : null}
     </View>
   );
@@ -415,57 +418,57 @@ const Uploaded = (props) => {
     <View style={MyStyles.container}>
       {uploadlist.length > 0
         ? uploadlist.map((resp, index) => {
-            return (
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#AAA",
-                  marginHorizontal: 10,
-                }}
-              >
-                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Card
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#AAA",
+                marginHorizontal: 10,
+              }}
+            >
+              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                  // onPress={() =>
+                  //   props.navigation.navigate("ProductsPreview", {
+                  //     product_id: item.product_id,
+                  //   })
+                  // }
+                  >
+                    <Image
+                      source={{ uri: item.urlImage + "" + item.image_path }}
                       style={{
-                        margin: 5,
-                        borderRadius: 10,
                         width: 120,
-                        alignItems: "center",
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
                       }}
-                      // onPress={() =>
-                      //   props.navigation.navigate("ProductsPreview", {
-                      //     product_id: item.product_id,
-                      //   })
-                      // }
-                    >
-                      <Image
-                        source={{ uri: item.urlImage + "" + item.image_path }}
-                        style={{
-                          width: 120,
-                          height: 120,
-                          zIndex: -50,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                        }}
-                      />
+                    />
 
-                      {/*<View style={{ padding: 5, paddingVertical: 10 }}>
+                    {/*<View style={{ padding: 5, paddingVertical: 10 }}>
                       <Text numberOfLines={2} style={{ color: "#333" }}>
                         {item.name}
                       </Text>
                       <Text style={{ color: "#333" }}>{item.product_code}</Text>
                     </View> */}
-                    </Card>
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            );
-          })
+                  </Card>
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          );
+        })
         : null}
     </View>
   );
@@ -497,63 +500,63 @@ const Exhibition = (props) => {
     <View style={MyStyles.container}>
       {exhibitionlist.length > 0
         ? exhibitionlist.map((resp, index) => {
-            return (
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#AAA",
-                  marginHorizontal: 10,
-                }}
-              >
-                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Card
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#AAA",
+                marginHorizontal: 10,
+              }}
+            >
+              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Card
+                    style={{
+                      margin: 5,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate("ProductsPreview", {
+                        product_id: item.product_id,
+                      })
+                    }
+                  >
+                    {item.exhibition ? (
+                      <BadgeRibbon text="E" position="left" color="red" />
+                    ) : null}
+                    {item.trial ? (
+                      <BadgeRibbon text="T" position="right" />
+                    ) : null}
+                    <Image
+                      source={{ uri: item.urlImage + "" + item.image_path }}
                       style={{
-                        margin: 5,
-                        borderRadius: 10,
                         width: 120,
-                        alignItems: "center",
+                        height: 120,
+                        zIndex: -50,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
                       }}
-                      onPress={() =>
-                        props.navigation.navigate("ProductsPreview", {
-                          product_id: item.product_id,
-                        })
-                      }
-                    >
-                      {item.exhibition ? (
-                        <BadgeRibbon text="E" position="left" color="red" />
-                      ) : null}
-                      {item.trial ? (
-                        <BadgeRibbon text="T" position="right" />
-                      ) : null}
-                      <Image
-                        source={{ uri: item.urlImage + "" + item.image_path }}
-                        style={{
-                          width: 120,
-                          height: 120,
-                          zIndex: -50,
-                          borderTopRightRadius: 10,
-                          borderTopLeftRadius: 10,
-                        }}
-                      />
+                    />
 
-                      <View style={{ padding: 5, paddingVertical: 10 }}>
-                        <Text numberOfLines={2} style={{ color: "#333" }}>
-                          {item.name}
-                        </Text>
-                        {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
-                      </View>
-                    </Card>
-                  )}
-                  numColumns={3}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            );
-          })
+                    <View style={{ padding: 5, paddingVertical: 10 }}>
+                      <Text numberOfLines={2} style={{ color: "#333" }}>
+                        {item.name}
+                      </Text>
+                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                    </View>
+                  </Card>
+                )}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          );
+        })
         : null}
     </View>
   );
@@ -670,7 +673,7 @@ const VideoCallRequest = (props) => {
                           Alert.alert("Alert", "Are you sure you want to complete this query ?", [
                             {
                               text: "No",
-                              onPress: () => {},
+                              onPress: () => { },
                               style: "cancel",
                             },
                             {
@@ -758,10 +761,10 @@ const VideoCallRequest = (props) => {
               <View>
                 {item.remarks.length > 0
                   ? item.remarks.map((item) => {
-                      return (
-                        <Text style={{ color: "#888" }}>{item.remarks}</Text>
-                      );
-                    })
+                    return (
+                      <Text style={{ color: "#888" }}>{item.remarks}</Text>
+                    );
+                  })
                   : null}
                 <Text style={{ color: "#888" }}>View All Remarks</Text>
               </View>
@@ -935,16 +938,24 @@ const VideoCallRequest = (props) => {
   );
 };
 const CallRequest = (props) => {
-  const { userToken, customer_id } = props.route.params;
+  const { userToken, customer_id, customer_mobile } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [misscallslist, setmisscallslist] = useState([]);
   const [visible, setVisible] = React.useState(false);
+  const [visible2, setVisible2] = React.useState(false);
   const [requestParam, setrequestParam] = useState({
     tran_id: "",
     status: "",
     accept_date: "",
     accept_time: "",
     remarks: "",
+  });
+  const [newrequestParam, setnewrequestParam] = useState({
+    tran_id: "0",
+    name: "request",
+    visit_type: "miss call",
+    mobile: customer_mobile,
+    customer_id: customer_id,
   });
   React.useEffect(() => {
     Refresh();
@@ -970,6 +981,32 @@ const CallRequest = (props) => {
   };
   return (
     <View style={MyStyles.container}>
+       <Card
+        style={{
+          borderBottomColor: "black",
+          borderBottomWidth: 1,
+          paddingHorizontal: 10,
+        }}
+      >
+        <Card.Title
+          title="Create Request"
+          titleStyle={{ marginLeft: -10 }}
+          right={() => (
+            <View>
+              <Button
+                mode="contained"
+                compact
+                uppercase={false}
+                onPress={() => {
+                  setVisible2(true);
+                }}
+              >
+                <Icon name="plus" color="black" size={20} />
+              </Button>
+            </View>
+          )}
+        />
+      </Card>
       <FlatList
         data={misscallslist}
         initialNumToRender={10}
@@ -1010,7 +1047,7 @@ const CallRequest = (props) => {
                           Alert.alert("Alert", "Are you sure you want to complete this query ?", [
                             {
                               text: "No",
-                              onPress: () => {},
+                              onPress: () => { },
                               style: "cancel",
                             },
                             {
@@ -1098,10 +1135,10 @@ const CallRequest = (props) => {
               <View>
                 {item.remarks.length > 0
                   ? item.remarks.map((item) => {
-                      return (
-                        <Text style={{ color: "#888" }}>{item.remark}</Text>
-                      );
-                    })
+                    return (
+                      <Text style={{ color: "#888" }}>{item.remark}</Text>
+                    );
+                  })
                   : null}
                 <Text style={{ color: "#888" }}>View All Remarks</Text>
               </View>
@@ -1211,6 +1248,64 @@ const CallRequest = (props) => {
             </View>
           </View>
         </Modal>
+     
+        <Modal
+          visible={visible2}
+          contentContainerStyle={{
+            backgroundColor: "white",
+            padding: 20,
+            margin: 10,
+          }}
+        >
+          <View>
+            <TextInput
+              mode="outlined"
+              placeholder="Mobile"
+              style={{ backgroundColor: "rgba(0,0,0,0)" }}
+              value={newrequestParam.mobile}
+              onChangeText={(text) => {
+                setnewrequestParam({ ...newrequestParam, mobile: text });
+              }}
+              disabled
+            />
+            <View style={[MyStyles.row, { marginTop: 20 }]}>
+              <Button
+                mode="contained"
+                compact
+                uppercase={false}
+                color="red"
+                style={{ width: "48%" }}
+                onPress={() => {
+                  setVisible2(false);
+                }}
+              >
+                Close
+              </Button>
+              <Button
+                mode="contained"
+                compact
+                uppercase={false}
+                style={{ width: "48%" }}
+                onPress={() => {
+                  setLoading(true);
+                  postRequest(
+                    "session/Insert_appointment_app",
+                    newrequestParam,
+                    userToken
+                  ).then((resp) => {
+                    if (resp.status == 200) {
+                      Refresh();
+                      setVisible2(false);
+                      setLoading(false);
+                    }
+                  });
+                }}
+              >
+                Submit
+              </Button>
+            </View>
+          </View>
+        </Modal>
       </Portal>
     </View>
   );
@@ -1265,7 +1360,7 @@ const CustomerVoucherList = (props) => {
                 position="voucherRight"
                 textStyle={{ top: 20, left: -20 }}
               />
-              : 
+              :
               <BadgeRibbon
                 text="Expire"
                 color="red"
