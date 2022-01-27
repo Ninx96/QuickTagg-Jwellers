@@ -12,6 +12,7 @@ import {
   Button,
   Card,
   Divider,
+  FAB,
   IconButton,
   Modal,
   Portal,
@@ -28,12 +29,15 @@ const StockSalesList = (props) => {
   const [griddata, setgriddata] = useState([]);
   React.useEffect(() => {
     Refresh();
-  
   }, [search]);
 
   const Refresh = () => {
-    postRequest("transactions/stockSales/browse_app", { search: search == undefined ? "" : search }, userToken).then((resp) => {
-      if (resp.status == 200) {     
+    postRequest(
+      "transactions/stockSales/browse_app",
+      { search: search == undefined ? "" : search },
+      userToken
+    ).then((resp) => {
+      if (resp.status == 200) {
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -47,7 +51,7 @@ const StockSalesList = (props) => {
 
   return (
     <View style={MyStyles.container}>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         initialNumToRender={10}
@@ -156,6 +160,16 @@ const StockSalesList = (props) => {
           </Card>
         )}
         keyExtractor={(_, idx) => "key" + idx}
+      />
+      <FAB
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 40,
+        }}
+        icon="plus"
+        color="#000"
+        onPress={() => props.navigation.navigate("StockSales", { tran_id: 0 })}
       />
     </View>
   );
