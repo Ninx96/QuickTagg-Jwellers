@@ -132,6 +132,38 @@ const StockAcceptanceList = (props) => {
                 </Button>
               </View>
               <Divider style={{ height: 1, marginVertical: 10 }} />
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <Text>Transfer</Text>
+                  <Text style={{ fontWeight: "bold" }}>5</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    borderLeftWidth: 1,
+                    borderColor: "#000",
+                  }}
+                >
+                  <Text>Pending</Text>
+                  <Text style={{ fontWeight: "bold" }}>5</Text>
+                </View>
+                <View>
+                  <Button
+                    mode="contained"
+                    uppercase={false}
+                    style={{ flex: 1 }}
+                    // onPress={() => {
+                    //   props.navigation.navigate("StockAcceptance", {
+                    //     tran_id: item.st_tran_id,
+                    //   });
+                    // }}
+                  >
+                    Done
+                  </Button>
+                </View>
+              </View>
+              <Divider style={{ height: 1, marginVertical: 10 }} />
               <Text> {item.remarks}</Text>
             </Card.Content>
           </Card>

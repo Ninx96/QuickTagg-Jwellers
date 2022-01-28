@@ -21,6 +21,8 @@ const TitleBar = (props) => {
         justifyContent: "space-between",
         paddingHorizontal: 5,
         backgroundColor: MyStyles.primaryColor.backgroundColor,
+        zIndex: 10,
+        elevation: 10,
       }}
     >
       <IconButton

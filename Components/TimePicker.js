@@ -39,6 +39,7 @@ const TimePicker = ({
           value={new Date()}
           mode={mode}
           onChange={(event, selectedDate) => {
+            console.log(selectedDate);
             setIos(false);
             setAndroid(false);
             onValueChange(selectedDate);
