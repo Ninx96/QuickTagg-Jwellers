@@ -19,6 +19,7 @@ import {
   Modal,
   Portal,
   TouchableRipple,
+  DataTable,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
@@ -1236,6 +1237,58 @@ const CallRequest = (props) => {
                 }}
               >
                 Submit
+              </Button>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          visible={true}
+          contentContainerStyle={{
+            backgroundColor: "white",
+            padding: 20,
+            margin: 10,
+            borderRadius: 10,
+          }}
+        >
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: "bold" }}>Date</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: "bold" }}>Remark</Text>
+              </View>
+            </View>
+            <FlatList
+              data={[
+                { remark: "Test Remark", date: "2022-01-28" },
+                {
+                  remark:
+                    "I searched lot but i did find that how to give z-index property in react native, if i use zIndex in react native it shows me error that this is not valid style prop type.",
+                  date: "2022-01-28",
+                },
+              ]}
+              renderItem={({ item, index }) => (
+                <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                  <View style={{ flex: 1 }}>
+                    <Text>{moment(item.date).format("DD/MM/YYYY")}</Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text>{item.remark}</Text>
+                  </View>
+                </View>
+              )}
+              style={{ marginTop: 10, marginBottom: 20 }}
+              keyExtractor={(_, idx) => idx.toString()}
+            />
+            <View style={{ flexDirection: "row" }}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={{ marginLeft: "auto" }}
+              >
+                Close
               </Button>
             </View>
           </View>
