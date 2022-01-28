@@ -19,6 +19,7 @@ import {
   Modal,
   Portal,
   TouchableRipple,
+  DataTable,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
@@ -36,6 +37,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import BadgeRibbon from "../Components/BadgeRibbon";
 import * as Linking from "expo-linking";
 import Loading from "../Components/Loading";
+import TimePicker from "../Components/TimePicker";
 
 const ProfileList = (props) => {
   return (
@@ -670,6 +672,7 @@ const VideoCallRequest = (props) => {
                         uppercase={false}
                         style={{ marginHorizontal: 10 }}
                         onPress={() => {
+
                           Alert.alert("Alert", "Are you sure you want to complete this query ?", [
                             {
                               text: "No",
@@ -697,9 +700,33 @@ const VideoCallRequest = (props) => {
                                     setLoading(false);
                                   }
                                 });
+
                               },
-                            },
-                          ]);
+                              {
+                                text: "Yes",
+                                onPress: () => {
+                                  setLoading(true);
+                                  let done_param = {
+                                    tran_id: item.tran_id,
+                                    status: "done",
+                                    accept_date: moment().format("YYYY-MM-DD"),
+                                    accept_time: moment().format("HH:mm"),
+                                    remarks: "",
+                                  };
+                                  postRequest(
+                                    "transactions/customer/vcall/update",
+                                    done_param,
+                                    userToken
+                                  ).then((resp) => {
+                                    if (resp.status == 200) {
+                                      Refresh();
+                                      setLoading(false);
+                                    }
+                                  });
+                                },
+                              },
+                            ]
+                          );
                         }}
                       >
                         Done
@@ -792,7 +819,18 @@ const VideoCallRequest = (props) => {
                   setrequestParam({ ...requestParam, accept_date: date });
                 }}
               />
-              <TextInput
+              <TimePicker
+                label="Accept Time"
+                style={{ backgroundColor: "rgba(0,0,0,0)", width: "100%" }}
+                value={`2022-01-27T${requestParam.accept_time}`}
+                onValueChange={(dateTime) => {
+                  setrequestParam({
+                    ...requestParam,
+                    accept_time: moment(dateTime).format("HH:MM:SS"),
+                  });
+                }}
+              />
+              {/* <TextInput
                 mode="outlined"
                 placeholder="Accept Time"
                 style={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
@@ -808,7 +846,7 @@ const VideoCallRequest = (props) => {
                   });
                 }}
                 maxLength={5}
-              />
+              /> */}
             </View>
             <TextInput
               mode="outlined"
@@ -1071,9 +1109,10 @@ const CallRequest = (props) => {
                                     setLoading(false);
                                   }
                                 });
+
                               },
-                            },
-                          ]);
+                            ]
+                          );
                         }}
                       >
                         Done
@@ -1166,7 +1205,17 @@ const CallRequest = (props) => {
                   setrequestParam({ ...requestParam, accept_date: date });
                 }}
               />
-              <TextInput
+              <TimePicker
+                label="Accept Time"
+                style={{ backgroundColor: "rgba(0,0,0,0)", width: "100%" }}
+                onValueChange={(dateTime) => {
+                  setrequestParam({
+                    ...requestParam,
+                    accept_time: moment(dateTime).format("HH:MM:SS"),
+                  });
+                }}
+              />
+              {/* <TextInput
                 mode="outlined"
                 placeholder="Accept Time"
                 style={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
@@ -1182,7 +1231,7 @@ const CallRequest = (props) => {
                   });
                 }}
                 maxLength={5}
-              />
+              /> */}
             </View>
             <TextInput
               mode="outlined"
@@ -1251,6 +1300,7 @@ const CallRequest = (props) => {
      
         <Modal
           visible={visible2}
+
           contentContainerStyle={{
             backgroundColor: "white",
             padding: 20,
@@ -1303,6 +1353,7 @@ const CallRequest = (props) => {
               >
                 Submit
               </Button>
+
             </View>
           </View>
         </Modal>
@@ -1353,7 +1404,7 @@ const CustomerVoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            {item.disable ?
+            {item.disable ? (
               <BadgeRibbon
                 text="Active"
                 color="green"
@@ -1361,12 +1412,14 @@ const CustomerVoucherList = (props) => {
                 textStyle={{ top: 20, left: -20 }}
               />
               :
+
               <BadgeRibbon
                 text="Expire"
                 color="red"
                 position="voucherRight"
                 textStyle={{ top: 20, left: -20 }}
-              />}
+              />
+            )}
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
               start={{ x: 0, y: 0 }}

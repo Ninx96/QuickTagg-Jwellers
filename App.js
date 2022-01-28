@@ -1,54 +1,54 @@
-import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import {
   Provider as PaperProvider,
   DefaultTheme as PaperDefaultTheme,
   configureFonts,
-} from 'react-native-paper';
-import AppLoading from 'expo-app-loading';
-import * as SecureStore from 'expo-secure-store';
-import * as Font from 'expo-font';
-import { Buffer } from 'buffer';
+} from "react-native-paper";
+import AppLoading from "expo-app-loading";
+import * as SecureStore from "expo-secure-store";
+import * as Font from "expo-font";
+import { Buffer } from "buffer";
 
-import { AuthContext } from './Components/Context';
+import { AuthContext } from "./Components/Context";
 
-import Login from './Screens/Auth/Login';
-import DrawerComponent from './Components/DrawerComponent';
+import Login from "./Screens/Auth/Login";
+import DrawerComponent from "./Components/DrawerComponent";
 
 export default function App() {
   const [fontsLoaded, setFontLoaded] = React.useState(false);
 
   const getFonts = () =>
     Font.loadAsync({
-      'helvetica-regular': require('./assets/fonts/regular.otf'),
-      'helvetica-medium': require('./assets/fonts/medium.otf'),
-      'helvetica-bold': require('./assets/fonts/bold.otf'),
+      "helvetica-regular": require("./assets/fonts/regular.otf"),
+      "helvetica-medium": require("./assets/fonts/medium.otf"),
+      "helvetica-bold": require("./assets/fonts/bold.otf"),
     });
 
   const fontConfig = {
     default: {
       regular: {
-        fontFamily: 'helvetica-regular',
+        fontFamily: "helvetica-regular",
       },
       medium: {
-        fontFamily: 'helvetica-medium',
+        fontFamily: "helvetica-medium",
       },
       bold: {
-        fontFamily: 'helvetica-bold',
+        fontFamily: "helvetica-bold",
       },
     },
   };
 
   const PaperTheme = {
     ...PaperDefaultTheme,
-    mode: 'adaptive',
+    mode: "adaptive",
 
     colors: {
       ...PaperDefaultTheme.colors,
-      primary: '#ffba3c',
-      accent: '#ffba3c',
+      primary: "#ffba3c",
+      accent: "#ffba3c",
     },
     fonts: configureFonts(fontConfig),
   };
@@ -62,7 +62,7 @@ export default function App() {
 
   const loginReducer = (prevState, action) => {
     switch (action.type) {
-      case 'RETRIEVE_TOKEN':
+      case "RETRIEVE_TOKEN":
         return {
           ...prevState,
           userToken: action.token,
@@ -70,7 +70,7 @@ export default function App() {
           userName: action.user_name,
           isLoading: false,
         };
-      case 'LOGIN':
+      case "LOGIN":
         return {
           ...prevState,
           userToken: action.token,
@@ -78,7 +78,7 @@ export default function App() {
           userName: action.user_name,
           isLoading: false,
         };
-      case 'LOGOUT':
+      case "LOGOUT":
         return {
           ...prevState,
           userName: null,
@@ -98,14 +98,14 @@ export default function App() {
     () => ({
       signIn: async ({ userToken, userName, branchId }) => {
         try {
-          await SecureStore.setItemAsync('userToken', userToken);
-          await SecureStore.setItemAsync('userName', userName);
-          await SecureStore.setItemAsync('branchId', String(branchId));
+          await SecureStore.setItemAsync("userToken", userToken);
+          await SecureStore.setItemAsync("userName", userName);
+          await SecureStore.setItemAsync("branchId", String(branchId));
         } catch (e) {
           console.log(e);
         }
         dispatch({
-          type: 'LOGIN',
+          type: "LOGIN",
           user_name: userName,
           token: userToken,
           branch_id: branchId,
@@ -113,15 +113,15 @@ export default function App() {
       },
       signOut: async () => {
         try {
-          await SecureStore.deleteItemAsync('userToken');
+          await SecureStore.deleteItemAsync("userToken");
         } catch (e) {
           console.log(e);
         }
-        dispatch({ type: 'LOGOUT' });
+        dispatch({ type: "LOGOUT" });
       },
       userToken: async () => {
         try {
-          const userToken = await SecureStore.getItemAsync('userToken');
+          const userToken = await SecureStore.getItemAsync("userToken");
           return userToken;
         } catch (e) {
           console.log(e);
@@ -138,29 +138,30 @@ export default function App() {
       let branchId = null;
 
       try {
-        userToken = await SecureStore.getItemAsync('userToken');
-        userName = await SecureStore.getItemAsync('userName');
-        branchId = await SecureStore.getItemAsync('branchId');
+        userToken = await SecureStore.getItemAsync("userToken");
+        userName = await SecureStore.getItemAsync("userName");
+        branchId = await SecureStore.getItemAsync("branchId");
       } catch (e) {
         console.log(e);
       }
 
       if (userToken) {
-        const { exp } = JSON.parse;
-        Buffer.from(userToken.split('.')[1], 'base64').toString()();
+        const { exp } = JSON.parse(
+          Buffer.from(userToken.split(".")[1], "base64").toString()
+        );
         if (Date.now() >= exp * 1000) {
           try {
-            await SecureStore.deleteItemAsync('userToken');
+            await SecureStore.deleteItemAsync("userToken");
           } catch (e) {
             console.log(e);
           }
-          dispatch({ type: 'LOGOUT' });
+          dispatch({ type: "LOGOUT" });
           return;
         }
       }
 
       dispatch({
-        type: 'RETRIEVE_TOKEN',
+        type: "RETRIEVE_TOKEN",
         token: userToken,
         user_name: userName,
         branch_id: branchId,
@@ -172,7 +173,7 @@ export default function App() {
     return (
       <PaperProvider theme={PaperTheme}>
         <AuthContext.Provider value={authContext}>
-          <StatusBar hidden={false} style="light" barStyle={'default'} />
+          <StatusBar hidden={false} style="light" barStyle={"default"} />
           <NavigationContainer>
             {loginState.userToken !== null ? (
               <DrawerComponent userDetails={loginState} />

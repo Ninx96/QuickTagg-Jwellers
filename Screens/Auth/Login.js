@@ -7,7 +7,9 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { Button, Card, TextInput } from "react-native-paper";
+import * as Linking from "expo-linking";
+
+import { Button, Card, FAB, TextInput } from "react-native-paper";
 import { AuthContext } from "../../Components/Context";
 import { authRequest } from "../../Services/RequestServices";
 import MyStyles from "../../Styles/MyStyles";
@@ -172,6 +174,19 @@ const Login = () => {
             </View>
           </KeyboardAvoidingView>
         </View>
+        <FAB
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: 20,
+            backgroundColor: "green",
+          }}
+          icon="whatsapp"
+          color="#fff"
+          onPress={() =>
+            Linking.openURL("whatsapp://send?text=&phone=91" + "9874561230")
+          }
+        />
       </SafeAreaView>
     </ImageBackground>
   );
