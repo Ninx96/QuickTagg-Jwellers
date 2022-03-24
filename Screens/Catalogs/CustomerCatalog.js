@@ -74,7 +74,7 @@ const CustomerCatalogList = (props) => {
   };
   return (
     <View style={MyStyles.container}>
-       <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         style={{ marginVertical: 10 }}
@@ -149,7 +149,7 @@ const CustomerCatalogList = (props) => {
                       Alert.alert("Alert", "You want to delete?", [
                         {
                           text: "No",
-                          onPress: () => {},
+                          onPress: () => { },
                           style: "cancel",
                         },
                         {
@@ -337,7 +337,7 @@ const CustomerCatalog = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-     <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
@@ -345,7 +345,7 @@ const CustomerCatalog = (props) => {
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
-              value={param.subCategory}
+              value={param.subcategory_id}
               onChange={(val) => {
                 param.subcategory_id = val;
                 setparam({ ...param });
@@ -387,11 +387,13 @@ const CustomerCatalog = (props) => {
                 onPress={() => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
-                  } else if (param.min_amount == "") {
-                    Alert.alert("select min. amount!");
-                  } else if (param.max_amount == "") {
-                    Alert.alert("select max. amount!");
-                  } else {
+                  }
+                  // else if (param.min_amount == "") {
+                  //   Alert.alert("select min. amount!");
+                  // } else if (param.max_amount == "") {
+                  //   Alert.alert("select max. amount!");
+                  // }
+                  else {
                     setProduct(true);
                   }
                 }}
@@ -438,14 +440,15 @@ const CustomerCatalog = (props) => {
                         zIndex: 10,
                       }}
                       size={10}
-                      onPress={() => {
+                      onPress={() => {                      
                         selectedProducts[index].data.splice(i, 1);
+                        if (selectedProducts[index].data.length == "0") {
+                          selectedProducts[index].subcategory_name = '';
+                        }
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(
-                          i,
-                          1
-                        );
-                        setparam([...param]);
+                        const newObj = param.customer_session_products.filter(task => task.product_id !== item.product_id);
+                        param.customer_session_products = newObj;
+                        console.log(param);
                       }}
                     />
                     <View

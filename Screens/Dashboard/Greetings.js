@@ -42,7 +42,19 @@ const Greetings = (props) => {
           renderItem={({ item, index }) => (
             <List.Item
               style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
-              title={item.full_name}
+              // title={item.full_name}
+              title={
+                <Text
+                  onPress={() => {
+                    props.navigation.navigate("Profile", {
+                      customer_id: item.customer_id,
+                      customer_mobile: item.mobile,
+                    });
+                  }}
+                >
+                  {item.full_name}
+                </Text>
+              }
               titleStyle={{ fontWeight: "bold" }}
               description={item.mobile + "          " + item.category_name}
               left={() => (

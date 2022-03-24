@@ -250,6 +250,7 @@ const ExhibitionCatalog = (props) => {
       { tran_id: tran_id },
       userToken
     ).then((resp) => {
+
       if (resp.status == 200) {
         if (tran_id == 0) {
           param.entry_no = resp.data[0].entry_no;
@@ -342,7 +343,7 @@ const ExhibitionCatalog = (props) => {
       style={MyStyles.container}
       source={require("../../assets/login-bg.jpg")}
     >
-     <Loading isloading={loading} />
+      <Loading isloading={loading} />
       <View style={MyStyles.cover}>
         <ScrollView>
           <View style={{ borderBottomColor: "black", borderBottomWidth: 1 }}>
@@ -350,7 +351,7 @@ const ExhibitionCatalog = (props) => {
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
-              value={param.subCategory}
+              value={param.subcategory_id}
               onChange={(val) => {
                 param.subcategory_id = val;
                 setparam({ ...param });
@@ -393,12 +394,12 @@ const ExhibitionCatalog = (props) => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
                   }
-                  else if (param.min_amount == "") {
-                    Alert.alert("select min. amount!");
-                  }
-                  else if (param.max_amount == "") {
-                    Alert.alert("select max. amount!");
-                  }
+                  // else if (param.min_amount == "") {
+                  //   Alert.alert("select min. amount!");
+                  // }
+                  // else if (param.max_amount == "") {
+                  //   Alert.alert("select max. amount!");
+                  // }
                   else {
                     setProduct(true);
                   }
@@ -447,11 +448,19 @@ const ExhibitionCatalog = (props) => {
                         zIndex: 10,
                       }}
                       size={10}
-                      onPress={() => {
+                      onPress={() => {          
+                         // selectedProducts[index].data.splice(i, 1);
+                        // setSelectedProducts([...selectedProducts]);
+                        // param.product_ids[index].data.splice(i, 1);
+                        // setparam([...param]);           
                         selectedProducts[index].data.splice(i, 1);
+                        if (selectedProducts[index].data.length == "0") {
+                          selectedProducts[index].subcategory_name = '';
+                        }
                         setSelectedProducts([...selectedProducts]);
-                        param.product_ids[index].data.splice(i, 1);
-                        setparam([...param]);
+                        const newObj = param.product_ids.filter(task => task.product_id !== item.product_id);
+                        param.product_ids = newObj;
+                        console.log(param);
                       }}
                     />
                     <View
@@ -608,8 +617,7 @@ const ExhibitionCatalog = (props) => {
                           "transactions/customer/exhibition/insert",
                           param,
                           userToken
-                        ).then((resp) => {
-                          console.log(resp);
+                        ).then((resp) => {                        
                           if (resp.status == 200) {
                             props.navigation.navigate("ExhibitionCatalogList");
                             setLoading(false);

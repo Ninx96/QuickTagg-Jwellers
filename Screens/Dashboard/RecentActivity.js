@@ -15,7 +15,7 @@ const RecentActivity = (props) => {
     postRequest("masters/dashboard/recentActivity", { branch_id: branchId, from_date: moment().subtract(3, 'days').format('YYYY-MM-DD'), to_date: moment().format('YYYY-MM-DD') },
       userToken
     ).then((resp) => {
-      if (resp.status == 200) {
+      if (resp.status == 200) {       
         setrecentactivity(resp.data);
       } else {
         Alert.alert(
@@ -38,14 +38,26 @@ const RecentActivity = (props) => {
             <View style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}>
               <List.Item
                 // style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
-                title={item.full_name}
+                //title={item.full_name}
+                title={
+                  <Text
+                    onPress={() => {
+                      props.navigation.navigate("Profile", {
+                        customer_id: item.customer_id,
+                        customer_mobile: item.mobile,
+                      });
+                    }}
+                  >
+                    {item.full_name}
+                  </Text>
+                }
                 titleStyle={{ fontWeight: "bold" }}
                 //description={item.mobile}
-                
+
                 description={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text
-                      style={{ fontSize: 14, color: "#777", marginRight: 50 }}
+                      style={{ fontSize: 14, color: "#777", marginRight: 20 }}
                     >
                       {item.mobile}
                     </Text>
@@ -99,7 +111,7 @@ const RecentActivity = (props) => {
                         }}
                       />
                     ) : (
-                      <Text> </Text>
+                      <Text>{"     "}</Text>
                     )}
 
                     <TouchableRipple
@@ -131,13 +143,13 @@ const RecentActivity = (props) => {
                     >
                       {moment(item.datetime).format("DD/MM/YYYY") ===
                         moment().format("DD/MM/YYYY")
-                        ? moment(item.datetime).format("hh:mm")
-                        : moment(item.datetime).format("DD/MM/YYYY")}
+                        ? item.time
+                        : moment(item.datetime).format("DD/MM/YYYY") + "\n" + item.time}
                     </Text>
                   </View>
                 )}
               />
-              <Text style={{ marginLeft: 15, marginBottom: 10, fontSize: 15 }}>
+              <Text style={{ marginTop: -15, marginLeft: 63, marginBottom: 0, fontSize: 15 }}>
                 <Text style={{ fontWeight: "bold" }}>{(item.type == 'Get Voucher' ? "Get " + item.details : item.type)}</Text>
               </Text>
             </View>

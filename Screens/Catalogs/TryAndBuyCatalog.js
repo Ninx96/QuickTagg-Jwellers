@@ -345,7 +345,7 @@ const TryAndBuyCatalog = (props) => {
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
-              value={param.subCategory}
+              value={param.subcategory_id}
               onChange={(val) => {
                 param.subcategory_id = val;
                 setparam({ ...param });
@@ -387,11 +387,13 @@ const TryAndBuyCatalog = (props) => {
                 onPress={() => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
-                  } else if (param.min_amount == "") {
-                    Alert.alert("select min. amount!");
-                  } else if (param.max_amount == "") {
-                    Alert.alert("select max. amount!");
-                  } else {
+                  }
+                  // else if (param.min_amount == "") {
+                  //   Alert.alert("select min. amount!");
+                  // } else if (param.max_amount == "") {
+                  //   Alert.alert("select max. amount!");
+                  // } 
+                  else {
                     setProduct(true);
                   }
                 }}
@@ -438,11 +440,16 @@ const TryAndBuyCatalog = (props) => {
                         zIndex: 10,
                       }}
                       size={10}
-                      onPress={() => {
+                      onPress={() => {  
+                                        
                         selectedProducts[index].data.splice(i, 1);
+                        if (selectedProducts[index].data.length == "0") {
+                          selectedProducts[index].subcategory_name = '';
+                        }
                         setSelectedProducts([...selectedProducts]);
-                        param.product_ids[index].data.splice(i, 1);
-                        setparam([...param]);
+                        const newObj = param.product_ids.filter(task => task.product_id !== item.product_id);
+                        param.product_ids = newObj;
+                        console.log(param);
                       }}
                     />
                     <View
@@ -603,7 +610,7 @@ const TryAndBuyCatalog = (props) => {
                           param,
                           userToken
                         ).then((resp) => {
-                          console.log(resp);
+                        
                           if (resp.status == 200) {
                             props.navigation.navigate("TryAndBuyCatalogList");
                             setLoading(false);
