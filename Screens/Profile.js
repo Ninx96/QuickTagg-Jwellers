@@ -48,18 +48,18 @@ const ProfileList = (props) => {
           <List.Item
             key={index}
             style={{ borderBottomWidth: 0.5, borderBottomColor: "black" }}
-            title="Rahul"
+            title='Rahul'
             titleStyle={{ fontWeight: "bold" }}
-            description="971612244"
+            description='971612244'
             left={(props) => (
               <List.Icon
                 {...props}
-                icon="account"
+                icon='account'
                 onPress={() => props.navigation.navigate("CustomerForm")}
               />
             )}
             right={() => {
-              return <List.Icon {...props} icon="chevron-right" />;
+              return <List.Icon {...props} icon='chevron-right' />;
             }}
           />
         )}
@@ -130,7 +130,6 @@ const Profile = (props) => {
       }
       setLoading(false);
     });
-
   }, []);
 
   return (
@@ -153,6 +152,7 @@ const Profile = (props) => {
           resizeMode="cover"
           style={{ width: 100, margin: -10, marginRight: -30 }}
         />
+
         ) : null}
 
         <View style={[MyStyles.profile_row, { marginRight: 30 }]}>
@@ -192,7 +192,7 @@ const Profile = (props) => {
             <Text>{param.mobile}</Text>
           </TouchableRipple>
           <Icon2
-            name="whatsapp"
+            name='whatsapp'
             size={25}
             style={{ color: "green", marginHorizontal: 5, marginLeft: "auto" }}
             onPress={() => {
@@ -200,8 +200,14 @@ const Profile = (props) => {
             }}
           />
         </View>
-        <Text>DOB: {param.dob == null ? 'N/A' : moment(param.dob).format("Do MMM YYYY")} </Text>
-        <Text>DOA: {param.doa == null ? 'N/A' : moment(param.doa).format("Do MMM YYYY")}</Text>
+        <Text>
+          DOB:{" "}
+          {param.dob == null ? "N/A" : moment(param.dob).format("Do MMM YYYY")}{" "}
+        </Text>
+        <Text>
+          DOA:{" "}
+          {param.doa == null ? "N/A" : moment(param.doa).format("Do MMM YYYY")}
+        </Text>
         <Text>{param.area_name}</Text>
         <Text>{param.profession}</Text>
       </View>
@@ -213,38 +219,35 @@ const Profile = (props) => {
       </View>
       <View style={[MyStyles.row, { justifyContent: "space-evenly" }]}>
         <Button
-          mode="outlined"
+          mode='outlined'
           compact
           uppercase={false}
-          color="black"
+          color='black'
           onPress={() =>
             props.navigation.navigate("CustomerForm", {
               customer_id: param.customer_id,
             })
-          }
-        >
+          }>
           Edit Profile
         </Button>
         <Button
-          mode="outlined"
+          mode='outlined'
           compact
           uppercase={false}
-          color="black"
-          onPress={() => props.navigation.navigate("Catalogs")}
-        >
+          color='black'
+          onPress={() => props.navigation.navigate("Catalogs")}>
           Create Catalog
         </Button>
         <Button
-          mode="outlined"
+          mode='outlined'
           compact
           uppercase={false}
-          color="black"
+          color='black'
           onPress={() =>
             props.navigation.navigate("CustomerVoucherList", {
               customer_id: param.customer_id,
             })
-          }
-        >
+          }>
           Vouchers
         </Button>
       </View>
@@ -253,37 +256,37 @@ const Profile = (props) => {
           showIcon: true,
           showLabel: false,
           style: { backgroundColor: "rgba(0,0,0,0)" },
-        }}
-      >
+        }}>
         <Tab.Screen
-          name="Wishlist"
+          name='Wishlist'
           component={Wishlist}
           options={{
-            tabBarIcon: () => <Icon name="heart" size={20} />,
+            tabBarIcon: () => <Icon name='heart' size={20} />,
           }}
           initialParams={{ userToken: userToken, customer_id: customer_id }}
         />
         <Tab.Screen
-          name="Uploaded"
+          name='Uploaded'
           component={Uploaded}
           options={{
-            tabBarIcon: () => <Icon name="upload" size={20} />,
+            tabBarIcon: () => <Icon name='upload' size={20} />,
           }}
           initialParams={{ userToken: userToken, customer_id: customer_id }}
         />
         <Tab.Screen
-          name="Exhibition"
+          name='Exhibition'
           component={Exhibition}
           options={{
             tabBarIcon: () => <Icon2 name="transit-transfer" size={20} />,
+
           }}
           initialParams={{ userToken: userToken, customer_id: customer_id }}
         />
         <Tab.Screen
-          name="VideoCallRequest"
+          name='VideoCallRequest'
           component={VideoCallRequest}
           options={{
-            tabBarIcon: () => <Icon name="video" size={20} />,
+            tabBarIcon: () => <Icon name='video' size={20} />,
           }}
           initialParams={{
             userToken: userToken,
@@ -292,12 +295,18 @@ const Profile = (props) => {
           }}
         />
         <Tab.Screen
-          name="CallRequest"
+          name='CallRequest'
           component={CallRequest}
           options={{
-            tabBarIcon: () => <Icon name="phone-call" size={20} />,
+            tabBarIcon: () => <Icon name='phone-call' size={20} />,
+          }}
+          initialParams={{
+            userToken: userToken,
+            customer_id: customer_id,
+            customer_mobile: customer_mobile,
           }}
           initialParams={{ userToken: userToken, customer_id: customer_id, customer_mobile: customer_mobile }}
+
         />
       </Tab.Navigator>
     </View>
@@ -367,29 +376,49 @@ const Wishlist = (props) => {
                     ) : null}
                     <Image
                       source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{
-                        width: 120,
-                        height: 120,
-                        zIndex: -50,
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                      }}
-                    />
 
-                    <View style={{ padding: 5, paddingVertical: 10 }}>
-                      <Text numberOfLines={2} style={{ color: "#333" }}>
-                        {item.name}
-                      </Text>
-                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
-                    </View>
-                  </Card>
-                )}
-                numColumns={3}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          );
-        })
+                      style={{
+                        margin: 5,
+                        borderRadius: 10,
+                        width: 120,
+                        alignItems: "center",
+                      }}
+                      onPress={() =>
+                        props.navigation.navigate("ProductsPreview", {
+                          product_id: item.product_id,
+                        })
+                      }>
+                      {item.exhibition ? (
+                        <BadgeRibbon text='E' position='left' color='red' />
+                      ) : null}
+                      {item.trial ? (
+                        <BadgeRibbon text='T' position='right' />
+                      ) : null}
+                      <Image
+                        source={{ uri: item.urlImage + "" + item.image_path }}
+                        style={{
+                          width: 120,
+                          height: 120,
+                          zIndex: -50,
+                          borderTopRightRadius: 10,
+                          borderTopLeftRadius: 10,
+                        }}
+                      />
+
+                      <View style={{ padding: 5, paddingVertical: 10 }}>
+                        <Text numberOfLines={2} style={{ color: "#333" }}>
+                          {item.name}
+                        </Text>
+                        {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                      </View>
+                    </Card>
+                  )}
+                  numColumns={3}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
+            );
+          })
         : null}
     </View>
   );
@@ -455,29 +484,44 @@ const Uploaded = (props) => {
                   >
                     <Image
                       source={{ uri: item.urlImage + "" + item.image_path }}
-                      style={{
-                        width: 120,
-                        height: 120,
-                        zIndex: -50,
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                      }}
-                    />
 
-                    {/*<View style={{ padding: 5, paddingVertical: 10 }}>
+                      style={{
+                        margin: 5,
+                        borderRadius: 10,
+                        width: 120,
+                        alignItems: "center",
+                      }}
+                      // onPress={() =>
+                      //   props.navigation.navigate("ProductsPreview", {
+                      //     product_id: item.product_id,
+                      //   })
+                      // }
+                    >
+                      <Image
+                        source={{ uri: item.urlImage + "" + item.image_path }}
+                        style={{
+                          width: 120,
+                          height: 120,
+                          zIndex: -50,
+                          borderTopRightRadius: 10,
+                          borderTopLeftRadius: 10,
+                        }}
+                      />
+
+                      {/*<View style={{ padding: 5, paddingVertical: 10 }}>
                       <Text numberOfLines={2} style={{ color: "#333" }}>
                         {item.name}
                       </Text>
                       <Text style={{ color: "#333" }}>{item.product_code}</Text>
                     </View> */}
-                  </Card>
-                )}
-                numColumns={3}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          );
-        })
+                    </Card>
+                  )}
+                  numColumns={3}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
+            );
+          })
         : null}
       <Portal>
         <Modal visible={param.visible} contentContainerStyle={{ flex: 1 }}>
@@ -562,63 +606,61 @@ const Exhibition = (props) => {
       <Loading isloading={loading} />
       {exhibitionlist.length > 0
         ? exhibitionlist.map((resp, index) => {
-          return (
-            <View
-              style={{
-                borderBottomWidth: 0.5,
-                borderBottomColor: "#AAA",
-                marginHorizontal: 10,
-              }}
-            >
-              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-              <FlatList
-                key={index}
-                data={resp.products}
-                renderItem={({ item }) => (
-                  <Card
-                    style={{
-                      margin: 5,
-                      borderRadius: 10,
-                      width: 120,
-                      alignItems: "center",
-                    }}
-                    onPress={() =>
-                      props.navigation.navigate("ProductsPreview", {
-                        product_id: item.product_id,
-                      })
-                    }
-                  >
-                    {item.exhibition ? (
-                      <BadgeRibbon text="E" position="left" color="red" />
-                    ) : null}
-                    {item.trial ? (
-                      <BadgeRibbon text="T" position="right" />
-                    ) : null}
-                    <Image
-                      source={{ uri: item.urlImage + "" + item.image_path }}
+            return (
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "#AAA",
+                  marginHorizontal: 10,
+                }}>
+                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+                <FlatList
+                  key={index}
+                  data={resp.products}
+                  renderItem={({ item }) => (
+                    <Card
                       style={{
+                        margin: 5,
+                        borderRadius: 10,
                         width: 120,
-                        height: 120,
-                        zIndex: -50,
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
+                        alignItems: "center",
                       }}
-                    />
+                      onPress={() =>
+                        props.navigation.navigate("ProductsPreview", {
+                          product_id: item.product_id,
+                        })
+                      }>
+                      {item.exhibition ? (
+                        <BadgeRibbon text='E' position='left' color='red' />
+                      ) : null}
+                      {item.trial ? (
+                        <BadgeRibbon text='T' position='right' />
+                      ) : null}
+                      <Image
+                        source={{ uri: item.urlImage + "" + item.image_path }}
+                        style={{
+                          width: 120,
+                          height: 120,
+                          zIndex: -50,
+                          borderTopRightRadius: 10,
+                          borderTopLeftRadius: 10,
+                        }}
+                      />
 
-                    <View style={{ padding: 5, paddingVertical: 10 }}>
-                      <Text numberOfLines={2} style={{ color: "#333" }}>
-                        {item.name}
-                      </Text>
-                      {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
-                    </View>
-                  </Card>
-                )}
-                numColumns={3}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          );
-        })
+                      <View style={{ padding: 5, paddingVertical: 10 }}>
+                        <Text numberOfLines={2} style={{ color: "#333" }}>
+                          {item.name}
+                        </Text>
+                        {/* <Text style={{ color: "#333" }}>{item.product_code}</Text> */}
+                      </View>
+                    </Card>
+                  )}
+                  numColumns={3}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
+            );
+          })
         : null}
     </View>
   );
@@ -677,22 +719,20 @@ const VideoCallRequest = (props) => {
           borderBottomColor: "black",
           borderBottomWidth: 1,
           paddingHorizontal: 10,
-        }}
-      >
+        }}>
         <Card.Title
-          title="Create Request"
+          title='Create Request'
           titleStyle={{ marginLeft: -10 }}
           right={() => (
             <View>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 onPress={() => {
                   setVisible2(true);
-                }}
-              >
-                <Icon name="plus" color="black" size={20} />
+                }}>
+                <Icon name='plus' color='black' size={20} />
               </Button>
             </View>
           )}
@@ -712,7 +752,7 @@ const VideoCallRequest = (props) => {
                   </Text>
                   {item.status == "request" ? (
                     <Button
-                      mode="contained"
+                      mode='contained'
                       compact
                       style={{ marginTop: 5 }}
                       uppercase={false}
@@ -723,15 +763,14 @@ const VideoCallRequest = (props) => {
                           status: "accept",
                         });
                         setVisible(true);
-                      }}
-                    >
+                      }}>
                       Accept
                     </Button>
                   ) : null}
                   {item.status == "accept" ? (
                     <View style={{ flexDirection: "row", marginTop: 5 }}>
                       <Button
-                        mode="contained"
+                        mode='contained'
                         uppercase={false}
                         style={{ marginHorizontal: 10 }}
                         onPress={() => {
@@ -786,16 +825,16 @@ const VideoCallRequest = (props) => {
                                     setLoading(false);
                                   }
                                 });
+
                               },
                             },
                           ]
                           );
-                        }}
-                      >
+                        }}>
                         Done
                       </Button>
                       <Button
-                        mode="contained"
+                        mode='contained'
                         uppercase={false}
                         onPress={() => {
                           requestParam.tran_id = item.tran_id;
@@ -805,8 +844,7 @@ const VideoCallRequest = (props) => {
                           setrequestParam({ ...requestParam });
                           setVisible(true);
                           console.log(requestParam);
-                        }}
-                      >
+                        }}>
                         Edit
                       </Button>
                     </View>
@@ -821,29 +859,26 @@ const VideoCallRequest = (props) => {
                 borderBottomColor: "black",
                 borderBottomWidth: 1,
                 marginHorizontal: 10,
-              }}
-            >
+              }}>
               <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
                 {item.accept_date !== null ? (
                   <Button
-                    mode="outlined"
-                    color="black"
+                    mode='outlined'
+                    color='black'
                     compact
                     uppercase={false}
-                    style={{ marginHorizontal: 5 }}
-                  >
+                    style={{ marginHorizontal: 5 }}>
                     {moment(item.accept_date).format("DD-MM-YYYY")}
                   </Button>
                 ) : null}
 
                 {item.accept_time !== null ? (
                   <Button
-                    mode="outlined"
-                    color="black"
+                    mode='outlined'
+                    color='black'
                     compact
                     uppercase={false}
-                    style={{ marginHorizontal: 5 }}
-                  >
+                    style={{ marginHorizontal: 5 }}>
                     {item.accept_time}
                   </Button>
                 ) : null}
@@ -857,6 +892,7 @@ const VideoCallRequest = (props) => {
                       );
                     }
                   })
+
                   : null}
 
                 { activeIndex == index && active && item.remarks.length > 0
@@ -897,12 +933,11 @@ const VideoCallRequest = (props) => {
             backgroundColor: "white",
             padding: 20,
             margin: 10,
-          }}
-        >
+          }}>
           <View>
             <View style={MyStyles.row}>
               <DatePicker
-                label="Accept Date"
+                label='Accept Date'
                 inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
                 value={requestParam.accept_date}
                 onValueChange={(date) => {
@@ -910,7 +945,7 @@ const VideoCallRequest = (props) => {
                 }}
               />
               <TimePicker
-                label="Accept Time"
+                label='Accept Time'
                 style={{ backgroundColor: "rgba(0,0,0,0)", width: "100%" }}
                 value={`2022-01-27T${requestParam.accept_time}`}
                 onValueChange={(dateTime) => {
@@ -939,8 +974,8 @@ const VideoCallRequest = (props) => {
               /> */}
             </View>
             <TextInput
-              mode="outlined"
-              placeholder="Remarks"
+              mode='outlined'
+              placeholder='Remarks'
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={requestParam.remarks}
               onChangeText={(text) => {
@@ -951,10 +986,10 @@ const VideoCallRequest = (props) => {
             />
             <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
-                color="red"
+                color='red'
                 style={{ width: "48%" }}
                 onPress={() => {
                   setrequestParam({
@@ -966,12 +1001,11 @@ const VideoCallRequest = (props) => {
                     remarks: "",
                   });
                   setVisible(false);
-                }}
-              >
+                }}>
                 Close
               </Button>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 style={{ width: "48%" }}
@@ -997,8 +1031,7 @@ const VideoCallRequest = (props) => {
                       setLoading(false);
                     }
                   });
-                }}
-              >
+                }}>
                 Submit
               </Button>
             </View>
@@ -1011,12 +1044,11 @@ const VideoCallRequest = (props) => {
             backgroundColor: "white",
             padding: 20,
             margin: 10,
-          }}
-        >
+          }}>
           <View>
             <TextInput
-              mode="outlined"
-              placeholder="Mobile"
+              mode='outlined'
+              placeholder='Mobile'
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={newrequestParam.mobile}
               onChangeText={(text) => {
@@ -1026,19 +1058,18 @@ const VideoCallRequest = (props) => {
             />
             <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
-                color="red"
+                color='red'
                 style={{ width: "48%" }}
                 onPress={() => {
                   setVisible2(false);
-                }}
-              >
+                }}>
                 Close
               </Button>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 style={{ width: "48%" }}
@@ -1055,8 +1086,7 @@ const VideoCallRequest = (props) => {
                       setLoading(false);
                     }
                   });
-                }}
-              >
+                }}>
                 Submit
               </Button>
             </View>
@@ -1113,26 +1143,25 @@ const CallRequest = (props) => {
     <View style={MyStyles.container}>
       <Loading isloading={loading} />
       {/* <Card
+
         style={{
           borderBottomColor: "black",
           borderBottomWidth: 1,
           paddingHorizontal: 10,
-        }}
-      >
+        }}>
         <Card.Title
-          title="Create Request"
+          title='Create Request'
           titleStyle={{ marginLeft: -10 }}
           right={() => (
             <View>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 onPress={() => {
                   setVisible2(true);
-                }}
-              >
-                <Icon name="plus" color="black" size={20} />
+                }}>
+                <Icon name='plus' color='black' size={20} />
               </Button>
             </View>
           )}
@@ -1152,7 +1181,7 @@ const CallRequest = (props) => {
                   </Text>
                   {item.status == "request" ? (
                     <Button
-                      mode="contained"
+                      mode='contained'
                       compact
                       style={{ marginTop: 5 }}
                       uppercase={false}
@@ -1163,56 +1192,59 @@ const CallRequest = (props) => {
                           status: "accept",
                         });
                         setVisible(true);
-                      }}
-                    >
+                      }}>
                       Accept
                     </Button>
                   ) : null}
                   {item.status == "accept" ? (
                     <View style={{ flexDirection: "row", marginTop: 5 }}>
                       <Button
-                        mode="contained"
+                        mode='contained'
                         style={{ marginHorizontal: 10 }}
                         uppercase={false}
                         onPress={() => {
-                          Alert.alert("Alert", "Are you sure you want to complete this query ?", [
-                            {
-                              text: "No",
-                              onPress: () => { },
-                              style: "cancel",
-                            },
-                            {
-                              text: "Yes",
-                              onPress: () => {
-                                setLoading(true);
-                                let done_param = {
-                                  tran_id: item.tran_id,
-                                  status: "done",
-                                  accept_date: moment().format("YYYY-MM-DD"),
-                                  accept_time: moment().format("HH:mm"),
-                                  remarks: "",
-                                };
-                                postRequest(
-                                  "transactions/customer/missCall/update",
-                                  done_param,
-                                  userToken
-                                ).then((resp) => {
-                                  if (resp.status == 200) {
-                                    Refresh();
-                                    setLoading(false);
-                                  }
-                                });
-
+                          Alert.alert(
+                            "Alert",
+                            "Are you sure you want to complete this query ?",
+                            [
+                              {
+                                text: "No",
+                                onPress: () => {},
+                                style: "cancel",
+                              },
+                              {
+                                text: "Yes",
+                                onPress: () => {
+                                  setLoading(true);
+                                  let done_param = {
+                                    tran_id: item.tran_id,
+                                    status: "done",
+                                    accept_date: moment().format("YYYY-MM-DD"),
+                                    accept_time: moment().format("HH:mm"),
+                                    remarks: "",
+                                  };
+                                  postRequest(
+                                    "transactions/customer/missCall/update",
+                                    done_param,
+                                    userToken
+                                  ).then((resp) => {
+                                    if (resp.status == 200) {
+                                      Refresh();
+                                      setLoading(false);
+                                    }
+                                  });
+                                },
                               },
                             }
                           ]);
                         }
                         }
                       >
+
                         Done
                       </Button>
                       <Button
-                        mode="contained"
+                        mode='contained'
                         uppercase={false}
                         onPress={() => {
                           requestParam.tran_id = item.tran_id;
@@ -1222,8 +1254,7 @@ const CallRequest = (props) => {
                           setrequestParam({ ...requestParam });
                           setVisible(true);
                           console.log(requestParam);
-                        }}
-                      >
+                        }}>
                         Edit
                       </Button>
                     </View>
@@ -1238,29 +1269,26 @@ const CallRequest = (props) => {
                 borderBottomColor: "black",
                 borderBottomWidth: 1,
                 marginHorizontal: 10,
-              }}
-            >
+              }}>
               <View style={[MyStyles.row, { justifyContent: "flex-start" }]}>
                 {item.accept_date !== null ? (
                   <Button
-                    mode="outlined"
-                    color="black"
+                    mode='outlined'
+                    color='black'
                     compact
                     uppercase={false}
-                    style={{ marginHorizontal: 5 }}
-                  >
+                    style={{ marginHorizontal: 5 }}>
                     {moment(item.accept_date).format("DD-MM-YYYY")}
                   </Button>
                 ) : null}
 
                 {item.accept_time !== null ? (
                   <Button
-                    mode="outlined"
-                    color="black"
+                    mode='outlined'
+                    color='black'
                     compact
                     uppercase={false}
-                    style={{ marginHorizontal: 5 }}
-                  >
+                    style={{ marginHorizontal: 5 }}>
                     {item.accept_time}
                   </Button>
                 ) : null}
@@ -1268,10 +1296,10 @@ const CallRequest = (props) => {
               <View>
                 {item.remarks.length > 0
                   ? item.remarks.map((item) => {
-                    return (
-                      <Text style={{ color: "#888" }}>{item.remark}</Text>
-                    );
-                  })
+                      return (
+                        <Text style={{ color: "#888" }}>{item.remark}</Text>
+                      );
+                    })
                   : null}
                 <Text style={{ color: "#888" }}>View All Remarks</Text>
               </View>
@@ -1288,12 +1316,11 @@ const CallRequest = (props) => {
             backgroundColor: "white",
             padding: 20,
             margin: 10,
-          }}
-        >
+          }}>
           <View>
             <View style={MyStyles.row}>
               <DatePicker
-                label="Accept Date"
+                label='Accept Date'
                 inputStyles={{ backgroundColor: "rgba(0,0,0,0)", width: "48%" }}
                 value={requestParam.accept_date}
                 onValueChange={(date) => {
@@ -1301,7 +1328,7 @@ const CallRequest = (props) => {
                 }}
               />
               <TimePicker
-                label="Accept Time"
+                label='Accept Time'
                 style={{ backgroundColor: "rgba(0,0,0,0)", width: "100%" }}
                 onValueChange={(dateTime) => {
                   setrequestParam({
@@ -1329,8 +1356,8 @@ const CallRequest = (props) => {
               /> */}
             </View>
             <TextInput
-              mode="outlined"
-              placeholder="Remarks"
+              mode='outlined'
+              placeholder='Remarks'
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={requestParam.remarks}
               onChangeText={(text) => {
@@ -1341,7 +1368,7 @@ const CallRequest = (props) => {
             />
             <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 style={{ backgroundColor: "red", width: "48%" }}
@@ -1355,12 +1382,11 @@ const CallRequest = (props) => {
                     remarks: "",
                   });
                   setVisible(false);
-                }}
-              >
+                }}>
                 Close
               </Button>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 style={{ width: "48%" }}
@@ -1384,8 +1410,7 @@ const CallRequest = (props) => {
                       setLoading(false);
                     }
                   });
-                }}
-              >
+                }}>
                 Submit
               </Button>
             </View>
@@ -1394,17 +1419,15 @@ const CallRequest = (props) => {
 
         <Modal
           visible={visible2}
-
           contentContainerStyle={{
             backgroundColor: "white",
             padding: 20,
             margin: 10,
-          }}
-        >
+          }}>
           <View>
             <TextInput
-              mode="outlined"
-              placeholder="Mobile"
+              mode='outlined'
+              placeholder='Mobile'
               style={{ backgroundColor: "rgba(0,0,0,0)" }}
               value={newrequestParam.mobile}
               onChangeText={(text) => {
@@ -1414,19 +1437,18 @@ const CallRequest = (props) => {
             />
             <View style={[MyStyles.row, { marginTop: 20 }]}>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
-                color="red"
+                color='red'
                 style={{ width: "48%" }}
                 onPress={() => {
                   setVisible2(false);
-                }}
-              >
+                }}>
                 Close
               </Button>
               <Button
-                mode="contained"
+                mode='contained'
                 compact
                 uppercase={false}
                 style={{ width: "48%" }}
@@ -1443,11 +1465,9 @@ const CallRequest = (props) => {
                       setLoading(false);
                     }
                   });
-                }}
-              >
+                }}>
                 Submit
               </Button>
-
             </View>
           </View>
         </Modal>
@@ -1502,18 +1522,18 @@ const CustomerVoucherList = (props) => {
             }}
           >
             {item.disable ?
-              <BadgeRibbon
-                text="Active"
-                color="green"
-                position="voucherRight"
-                textStyle={{ top: 20, left: -20 }}
-              />
-              :
 
               <BadgeRibbon
-                text="Expire"
-                color="red"
-                position="voucherRight"
+                text='Active'
+                color='green'
+                position='voucherRight'
+                textStyle={{ top: 20, left: -20 }}
+              />
+            ) : (
+              <BadgeRibbon
+                text='Expire'
+                color='red'
+                position='voucherRight'
                 textStyle={{ top: 20, left: -20 }}
               />
             }
@@ -1528,15 +1548,13 @@ const CustomerVoucherList = (props) => {
                 borderTopRightRadius: 10,
                 borderTopLeftRadius: 10,
                 margin: 0,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   textAlign: "center",
                   fontSize: 20,
                   fontWeight: "bold",
-                }}
-              >
+                }}>
                 {item.voucher_name}
               </Text>
             </LinearGradient>
