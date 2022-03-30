@@ -30,6 +30,7 @@ const TrialList = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
+       
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -138,16 +139,17 @@ const TrialList = (props) => {
                     }}
                   >
                     <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {item.type == null ? "" : item.type.charAt(0)}
+                      {item.added_from == null ? "" : item.added_from.charAt(0)}
                     </Text>
                   </TouchableRipple>
                 );
               }}
               right={() => (
                 <Text style={{ color: "#999", alignSelf: "center" }}>
-                  {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
-                    ? moment(item.datetime).format("hh:mm")
-                    : moment(item.datetime).format("DD/MM/YYYY")}
+                 {moment(item.datetime).format("DD/MM/YYYY") ===
+                        moment().format("DD/MM/YYYY")
+                        ? item.time
+                        : moment(item.datetime).format("DD/MM/YYYY") + "\n" + item.time}
                 </Text>
               )}
             />

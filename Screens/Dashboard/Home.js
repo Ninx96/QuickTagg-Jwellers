@@ -358,13 +358,14 @@ const Home = (props) => {
         color: (opacity = 1) => `rgba(10, 65, 244, ${opacity})`, // optional
         strokeWidth: 1, // optional
       },
-      {
-        data: chartData3.chartDataExpired,
-        color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
-        strokeWidth: 1, // optional
-      },
+      // {
+      //   data: chartData3.chartDataExpired,
+      //   color: (opacity = 1) => `rgba(255,0,0, ${opacity})`, // optional
+      //   strokeWidth: 1, // optional
+      // },
     ],
-    legend: ["Active", "Redeem", "Expired"], // optional
+   // legend: ["Active", "Redeem", "Expired"], // optional
+    legend: ["Active", "Redeem"], // optional
   };
   //-------------------------End--------------------------------//
 
@@ -876,12 +877,12 @@ const Home = (props) => {
                 </Text>
               </View>
 
-              <View style={{ alignItems: "center" }}>
+              {/* <View style={{ alignItems: "center" }}>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>Expired</Text>
                 <Text style={{ color: "#FFF", fontSize: 20 }}>
                   {figures.total_voucher_expired}
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </LinearGradient>
@@ -1380,9 +1381,10 @@ const CustomerGraphView = ({ visible = false, data }) => {
     backgroundGradientToOpacity: 0,
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
+    barPercentage: 1,
     useShadowColorFromDataset: true, // optional
-    //decimalPlaces: 0
+    //decimalPlaces: 0    
+   
   };
 
   if (visible) {
@@ -1400,10 +1402,10 @@ const CustomerGraphView = ({ visible = false, data }) => {
           data={data}
           width={screenWidth}
           height={220}
-          verticalLabelRotation={30}
-          segments={4}
+          verticalLabelRotation={40}     
           chartConfig={chartConfig}
           bezier
+          
         />
       </View>
     );
@@ -1504,8 +1506,9 @@ const CartGraphView = ({ visible = false, data }) => {
     backgroundGradientToOpacity: 0,
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
+    barPercentage: 1,
     useShadowColorFromDataset: true, // optional
+    
   };
 
   if (visible) {

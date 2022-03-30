@@ -30,7 +30,7 @@ const Calls = (props) => {
       { branch_id: branchId, from_date: param.from_date, to_date: param.to_date, search: "" },
       userToken
     ).then((resp) => {
-      if (resp.status == 200) {
+      if (resp.status == 200) {       
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -139,7 +139,7 @@ const Calls = (props) => {
                     }}
                   >
                     <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {item.type == null ? "" : item.type.charAt(0)}
+                      {item.platform == null ? "" : item.platform.charAt(0)}
                     </Text>
                   </TouchableRipple>
                 );
@@ -148,7 +148,7 @@ const Calls = (props) => {
                 <>
                   {item.type == "miss call" && (
                     <Icon
-                      name="inbox"
+                      name="phone-missed"
                       size={20}
                       style={{ alignSelf: "center", right: 20 }}
                     />
@@ -161,9 +161,10 @@ const Calls = (props) => {
                     />
                   )}
                   <Text style={{ color: "#999", alignSelf: "center" }}>
-                    {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
-                      ? moment(item.datetime).format("hh:mm")
-                      : moment(item.datetime).format("DD/MM/YYYY")}
+                  {moment(item.datetime).format("DD/MM/YYYY") ===
+                        moment().format("DD/MM/YYYY")
+                        ? item.time
+                        : moment(item.datetime).format("DD/MM/YYYY") + "\n" + item.time}
                   </Text>
                 </>
               )}

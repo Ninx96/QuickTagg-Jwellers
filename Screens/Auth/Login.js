@@ -187,6 +187,19 @@ const Login = () => {
             Linking.openURL("whatsapp://send?text=&phone=91" + "9874561230")
           }
         />
+        <FAB
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: 80,
+            backgroundColor: "blue",
+          }}
+          icon="phone"
+          color="#fff"
+          onPress={() =>
+            Linking.openURL("tel:9874561230")
+          }
+        />
       </SafeAreaView>
     </ImageBackground>
   );

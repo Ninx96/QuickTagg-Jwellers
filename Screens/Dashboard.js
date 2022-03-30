@@ -52,7 +52,7 @@ const Dashboard = (props) => {
           name="Trial"
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name="podcast" color={focused ? "red" : "white"} size={25} />
+              <Icon name="transit-transfer" color={focused ? "red" : "white"} size={25} />
             ),
           }}
           // component={TrialList}
@@ -68,7 +68,7 @@ const Dashboard = (props) => {
           name="Stock"
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name="transit-connection-variant" color={focused ? "red" : "white"} size={25} />
+              <Icon name="truck-delivery" color={focused ? "red" : "white"} size={25} />
             ),
           }}
           //component={Stock}
@@ -84,7 +84,7 @@ const Dashboard = (props) => {
           name="Calls"
           options={{
             tabBarIcon: ({ focused }) => (
-              <Icon name="call-made" color={focused ? "red" : "white"} size={25} />
+              <Icon name="phone" color={focused ? "red" : "white"} size={25} />
             ),
           }}
           // component={Calls}

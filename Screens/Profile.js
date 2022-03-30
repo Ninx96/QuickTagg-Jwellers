@@ -5,8 +5,8 @@ import {
   ImageBackground,
   ScrollView,
   View,
-  TouchableHighlight,
-  Alert,
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import {
   Button,
@@ -19,7 +19,7 @@ import {
   Modal,
   Portal,
   TouchableRipple,
-  DataTable,
+  IconButton,
 } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Icon from "react-native-vector-icons/Feather";
@@ -142,15 +142,17 @@ const Profile = (props) => {
             justifyContent: "center",
             marginTop: 10,
           },
-        ]}>
-        {param.gender !== null ? (
-          <LottieView
-            source={param.gender === "male" ? MaleAvatar : FemaleAvatar}
-            autoPlay
-            loop
-            resizeMode='cover'
-            style={{ width: 100, margin: -10, marginRight: -30 }}
-          />
+        ]}
+      >
+
+        {param.gender !== null ? (<LottieView
+          source={param.gender === "Male" ? MaleAvatar : FemaleAvatar}
+          autoPlay
+          loop
+          resizeMode="cover"
+          style={{ width: 100, margin: -10, marginRight: -30 }}
+        />
+
         ) : null}
 
         <View style={[MyStyles.profile_row, { marginRight: 30 }]}>
@@ -182,7 +184,7 @@ const Profile = (props) => {
       </View>
       <View style={{ margin: 10 }}>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          {param.full_name} {(param.gender === "male" ? "♂️" : "♀️") + "      "}
+          {param.full_name} {(param.gender == null ? "" : (param.gender == "Male" ? "♂️" : "♀️")) + "      "}
           <Text style={{ color: "green" }}>{param.category_name}</Text>
         </Text>
         <View style={{ flexDirection: "row" }}>
@@ -275,7 +277,8 @@ const Profile = (props) => {
           name='Exhibition'
           component={Exhibition}
           options={{
-            tabBarIcon: () => <Icon name='star' size={20} />,
+            tabBarIcon: () => <Icon2 name="transit-transfer" size={20} />,
+
           }}
           initialParams={{ userToken: userToken, customer_id: customer_id }}
         />
@@ -302,6 +305,8 @@ const Profile = (props) => {
             customer_id: customer_id,
             customer_mobile: customer_mobile,
           }}
+          initialParams={{ userToken: userToken, customer_id: customer_id, customer_mobile: customer_mobile }}
+
         />
       </Tab.Navigator>
     </View>
@@ -327,27 +332,51 @@ const Wishlist = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+
   }, []);
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       {wishlist.length > 0
         ? wishlist.map((resp, index) => {
-            return (
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#AAA",
-                  marginHorizontal: 10,
-                }}>
-                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-                <FlatList
-                  //key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Card
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#AAA",
+                marginHorizontal: 10,
+              }}
+            >
+              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+              <FlatList
+                //key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Card
+                    style={{
+                      margin: 3,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate("ProductsPreview", {
+                        product_id: item.product_id,
+                      })
+                    }
+                  >
+                    {item.exhibition ? (
+                      <BadgeRibbon text="E" position="left" color="red" />
+                    ) : null}
+                    {item.trial ? (
+                      <BadgeRibbon text="T" position="right" />
+                    ) : null}
+                    <Image
+                      source={{ uri: item.urlImage + "" + item.image_path }}
+
                       style={{
                         margin: 5,
                         borderRadius: 10,
@@ -399,7 +428,12 @@ const Uploaded = (props) => {
   const { userToken, customer_id } = props.route.params;
   const [loading, setLoading] = useState(true);
   const [uploadlist, setuploadlist] = useState([]);
-
+  const [param, setParam] = useState({
+    visible: false,
+    url: '',
+    date: '',
+    remarks: ''
+  });
   React.useEffect(() => {
     let data = { customer_id: customer_id };
     postRequest("customers/customer/profile", data, userToken).then((resp) => {
@@ -414,27 +448,43 @@ const Uploaded = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+
   }, []);
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       {uploadlist.length > 0
         ? uploadlist.map((resp, index) => {
-            return (
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: "#AAA",
-                  marginHorizontal: 10,
-                }}>
-                <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
-                <FlatList
-                  key={index}
-                  data={resp.products}
-                  renderItem={({ item }) => (
-                    <Card
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#AAA",
+                marginHorizontal: 10,
+              }}
+            >
+              <Text style={{ marginVertical: 5 }}>{resp.date}</Text>
+              <FlatList
+                key={index}
+                data={resp.products}
+                renderItem={({ item }) => (
+                  <Card
+                    style={{
+                      margin: 3,
+                      borderRadius: 10,
+                      width: 120,
+                      alignItems: "center",
+                    }}
+                    onPress={() =>
+                      setParam({ ...param, url: item.urlImage + "" + item.image_path, remarks: item.date, date: item.date, visible: true })
+                    }
+                  >
+                    <Image
+                      source={{ uri: item.urlImage + "" + item.image_path }}
+
                       style={{
                         margin: 5,
                         borderRadius: 10,
@@ -473,6 +523,57 @@ const Uploaded = (props) => {
             );
           })
         : null}
+      <Portal>
+        <Modal visible={param.visible} contentContainerStyle={{ flex: 1 }}>
+          <ImageBackground
+            style={MyStyles.container}
+            source={require("../assets/login-bg.jpg")}
+          >
+            <View style={{ flex: 1 }}>
+              <View
+                style={[
+                  MyStyles.row,
+                  { backgroundColor: "#ffba3c", marginTop: 0 },
+                ]}
+              >
+                <IconButton
+                  icon="chevron-left"
+                  size={30}
+                  color="black"
+                  onPress={() => {
+                    setParam({ ...param, visible: false });
+                  }}
+                />
+                {/* <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                  Enter Remarks
+                </Text> */}
+              </View>
+              <View style={[MyStyles.cover, { backgroundColor: "" }]}>
+                <View
+                  style={[
+                    MyStyles.row,
+                    { justifyContent: "center", marginVertical: 40 },
+                  ]}
+                >
+                  <Image
+                    source={{ uri: param.url }}
+                    style={{
+                      width: 120,
+                      height: 120,
+                      zIndex: -50,
+                      borderTopRightRadius: 10,
+                      borderTopLeftRadius: 10,
+                    }}
+                  />
+                  <Text style={{ fontWeight: "bold", fontSize: 18, flexGrow: 1 }}>
+                    {param.date}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </ImageBackground>
+        </Modal>
+      </Portal>
     </View>
   );
 };
@@ -495,12 +596,14 @@ const Exhibition = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+
   }, []);
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       {exhibitionlist.length > 0
         ? exhibitionlist.map((resp, index) => {
             return (
@@ -583,9 +686,10 @@ const VideoCallRequest = (props) => {
     mobile: customer_mobile,
     customer_id: customer_id,
   });
+  const [active, setActive] = useState(false);
+  const [activeIndex, setActiveIndex] = useState("");
   React.useEffect(() => {
     Refresh();
-    setLoading(false);
   }, []);
 
   const Refresh = () => {
@@ -604,10 +708,12 @@ const VideoCallRequest = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
   };
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       <Card
         style={{
           borderBottomColor: "black",
@@ -668,39 +774,61 @@ const VideoCallRequest = (props) => {
                         uppercase={false}
                         style={{ marginHorizontal: 10 }}
                         onPress={() => {
-                          Alert.alert(
-                            "Alert",
-                            "Are you sure you want to complete this query ?",
-                            [
-                              {
-                                text: "No",
-                                onPress: () => {},
-                                style: "cancel",
+
+                          Alert.alert("Alert", "Are you sure you want to complete this query ?", [
+                            {
+                              text: "No",
+                              onPress: () => { },
+                              style: "cancel",
+                            },
+                            // {
+                            //   text: "Yes",
+                            //   onPress: () => {
+                            //     setLoading(true);
+                            //     let done_param = {
+                            //       tran_id: item.tran_id,
+                            //       status: "done",
+                            //       accept_date: moment().format("YYYY-MM-DD"),
+                            //       accept_time: moment().format("HH:mm"),
+                            //       remarks: "",
+                            //     };
+                            //     postRequest(
+                            //       "transactions/customer/vcall/update",
+                            //       done_param,
+                            //       userToken
+                            //     ).then((resp) => {
+                            //       if (resp.status == 200) {
+                            //         Refresh();
+                            //         setLoading(false);
+                            //       }
+                            //     });
+
+                            //   },
+                            {
+                              text: "Yes",
+                              onPress: () => {
+                                setLoading(true);
+                                let done_param = {
+                                  tran_id: item.tran_id,
+                                  status: "done",
+                                  accept_date: moment().format("YYYY-MM-DD"),
+                                  accept_time: moment().format("HH:mm"),
+                                  remarks: "",
+                                };
+                                postRequest(
+                                  "transactions/customer/vcall/update",
+                                  done_param,
+                                  userToken
+                                ).then((resp) => {
+                                  if (resp.status == 200) {
+                                    Refresh();
+                                    setLoading(false);
+                                  }
+                                });
+
                               },
-                              {
-                                text: "Yes",
-                                onPress: () => {
-                                  setLoading(true);
-                                  let done_param = {
-                                    tran_id: item.tran_id,
-                                    status: "done",
-                                    accept_date: moment().format("YYYY-MM-DD"),
-                                    accept_time: moment().format("HH:mm"),
-                                    remarks: "",
-                                  };
-                                  postRequest(
-                                    "transactions/customer/vcall/update",
-                                    done_param,
-                                    userToken
-                                  ).then((resp) => {
-                                    if (resp.status == 200) {
-                                      Refresh();
-                                      setLoading(false);
-                                    }
-                                  });
-                                },
-                              },
-                            ]
+                            },
+                          ]
                           );
                         }}>
                         Done
@@ -757,13 +885,41 @@ const VideoCallRequest = (props) => {
               </View>
               <View>
                 {item.remarks.length > 0
-                  ? item.remarks.map((item) => {
+                  ? item.remarks.map((item, i) => {
+                    if (i == 0) {
                       return (
                         <Text style={{ color: "#888" }}>{item.remarks}</Text>
                       );
-                    })
+                    }
+                  })
+
                   : null}
-                <Text style={{ color: "#888" }}>View All Remarks</Text>
+
+                { activeIndex == index && active && item.remarks.length > 0
+                  ? item.remarks.map((item, i) => {
+                    if (i != 0) {
+                      return (
+                        <Text style={{ color: "#888" }}>{item.remarks}</Text>
+                      );
+                    }
+                  })
+                  : null}
+
+                {activeIndex == index && active ?
+                  <TouchableOpacity onPress={() => {
+                    setActiveIndex(index);
+                    setActive(false);
+                  }}><Text style={{ color: "#333" }} >Less All Remarks</Text>
+                  </TouchableOpacity>
+                  :
+                  <TouchableOpacity onPress={() => {
+                    setActiveIndex(index);
+                    setActive(true);
+                  }}>
+                    <Text style={{ color: "#333" }} >Show All Remarks</Text>
+                  </TouchableOpacity>
+                }
+
               </View>
             </View>
           </Card>
@@ -854,6 +1010,7 @@ const VideoCallRequest = (props) => {
                 uppercase={false}
                 style={{ width: "48%" }}
                 onPress={() => {
+                  setVisible(false);
                   setLoading(true);
                   postRequest(
                     "transactions/customer/vcall/update",
@@ -862,7 +1019,7 @@ const VideoCallRequest = (props) => {
                   ).then((resp) => {
                     if (resp.status == 200) {
                       Refresh();
-                      setVisible(false);
+
                       setrequestParam({
                         ...requestParam,
                         tran_id: "",
@@ -917,6 +1074,7 @@ const VideoCallRequest = (props) => {
                 uppercase={false}
                 style={{ width: "48%" }}
                 onPress={() => {
+                  setVisible2(false);
                   setLoading(true);
                   postRequest(
                     "session/Insert_appointment_app",
@@ -925,7 +1083,6 @@ const VideoCallRequest = (props) => {
                   ).then((resp) => {
                     if (resp.status == 200) {
                       Refresh();
-                      setVisible2(false);
                       setLoading(false);
                     }
                   });
@@ -961,7 +1118,7 @@ const CallRequest = (props) => {
   });
   React.useEffect(() => {
     Refresh();
-    setLoading(false);
+
   }, []);
   const Refresh = () => {
     postRequest(
@@ -979,11 +1136,14 @@ const CallRequest = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
   };
   return (
     <View style={MyStyles.container}>
-      <Card
+      <Loading isloading={loading} />
+      {/* <Card
+
         style={{
           borderBottomColor: "black",
           borderBottomWidth: 1,
@@ -1006,7 +1166,7 @@ const CallRequest = (props) => {
             </View>
           )}
         />
-      </Card>
+      </Card> */}
       <FlatList
         data={misscallslist}
         initialNumToRender={10}
@@ -1075,9 +1235,12 @@ const CallRequest = (props) => {
                                   });
                                 },
                               },
-                            ]
-                          );
-                        }}>
+                            }
+                          ]);
+                        }
+                        }
+                      >
+
                         Done
                       </Button>
                       <Button
@@ -1142,10 +1305,11 @@ const CallRequest = (props) => {
               </View>
             </View>
           </Card>
-        )}
+        )
+        }
         keyExtractor={(item, index) => index.toString()}
       />
-      <Portal>
+      < Portal >
         <Modal
           visible={visible}
           contentContainerStyle={{
@@ -1235,7 +1399,6 @@ const CallRequest = (props) => {
                   ).then((resp) => {
                     if (resp.status == 200) {
                       Refresh();
-                      setVisible(false);
                       setrequestParam({
                         ...requestParam,
                         tran_id: "",
@@ -1308,8 +1471,8 @@ const CallRequest = (props) => {
             </View>
           </View>
         </Modal>
-      </Portal>
-    </View>
+      </Portal >
+    </View >
   );
 };
 
@@ -1329,6 +1492,7 @@ const CustomerVoucherList = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
+        console.log(resp);
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -1336,12 +1500,14 @@ const CustomerVoucherList = (props) => {
           "Oops! \nSeems like we run into some Server Error"
         );
       }
+      setLoading(false);
     });
-    setLoading(false);
+
   };
 
   return (
     <View style={MyStyles.container}>
+      <Loading isloading={loading} />
       <FlatList
         data={griddata}
         style={{ marginVertical: 10 }}
@@ -1353,8 +1519,10 @@ const CustomerVoucherList = (props) => {
               padding: 0,
               borderRadius: 10,
               marginVertical: 5,
-            }}>
-            {item.disable ? (
+            }}
+          >
+            {item.disable ?
+
               <BadgeRibbon
                 text='Active'
                 color='green'
@@ -1368,7 +1536,7 @@ const CustomerVoucherList = (props) => {
                 position='voucherRight'
                 textStyle={{ top: 20, left: -20 }}
               />
-            )}
+            }
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
               start={{ x: 0, y: 0 }}

@@ -29,7 +29,8 @@ const Wishlist = (props) => {
       { branch_id: branchId, from_date: param.from_date, to_date: param.to_date, search:"" },
       userToken
     ).then((resp) => {
-      if (resp.status == 200) {       
+      if (resp.status == 200) {  
+         
         setgriddata(resp.data);
       } else {
         Alert.alert("Error !", "Oops! \nSeems like we run into some Server Error");
@@ -135,7 +136,7 @@ const Wishlist = (props) => {
                     }}
                   >
                     <Text style={{ color: "red", textTransform: "uppercase" }}>
-                      {item.type == null ? "" : item.type.charAt(0)}
+                      {item.added_from == null ? "" : item.added_from.charAt(0)}
                     </Text>
                   </TouchableRipple>
                 );
@@ -144,9 +145,10 @@ const Wishlist = (props) => {
                 <Text style={{ color: "#999", alignSelf: "center" }}>
                   {/* {moment().format("DD/MM/YYY")} */}
                   {/* {moment().fromNow(true)} */}
-                  {moment(item.datetime).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY")
-                    ? moment(item.datetime).format("hh:mm")
-                    : moment(item.datetime).format("DD/MM/YYYY")}
+                  {moment(item.datetime).format("DD/MM/YYYY") ===
+                        moment().format("DD/MM/YYYY")
+                        ? item.time
+                        : moment(item.datetime).format("DD/MM/YYYY") + "\n" + item.time}
                 </Text>
               )}
             />

@@ -305,8 +305,7 @@ const GeneralCatalog = (props) => {
           );
 
           setSelectedProducts(tempData);
-
-          console.log(tempData);
+         
         }
       } else {
         Alert.alert(
@@ -355,7 +354,7 @@ const GeneralCatalog = (props) => {
               data={subcategorylist}
               ext_val="subcategory_id"
               ext_lbl="subcategory_name"
-              value={param.subCategory}
+              value={param.subcategory_id}
               onChange={(val) => {
                 param.subcategory_id = val;
                 setparam({ ...param });
@@ -397,11 +396,13 @@ const GeneralCatalog = (props) => {
                 onPress={() => {
                   if (param.subcategory_id == "") {
                     Alert.alert("select subcategory!");
-                  } else if (param.min_amount == "") {
-                    Alert.alert("select min. amount!");
-                  } else if (param.max_amount == "") {
-                    Alert.alert("select max. amount!");
-                  } else {
+                  }
+                  // else if (param.min_amount == "") {
+                  //   Alert.alert("select min. amount!");
+                  // } else if (param.max_amount == "") {
+                  //   Alert.alert("select max. amount!");
+                  // } 
+                  else {
                     setProduct(true);
                   }
                 }}
@@ -431,7 +432,7 @@ const GeneralCatalog = (props) => {
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                  borderBottomWidth: 0.8,
+                  //borderBottomWidth: 0.8,
                   borderBottomColor: "#AAA",
                 }}
               >
@@ -453,12 +454,13 @@ const GeneralCatalog = (props) => {
                       size={10}
                       onPress={() => {
                         selectedProducts[index].data.splice(i, 1);
+                        if (selectedProducts[index].data.length == "0") {
+                          selectedProducts[index].subcategory_name = '';
+                        }
                         setSelectedProducts([...selectedProducts]);
-                        param.customer_session_products[index].data.splice(
-                          i,
-                          1
-                        );
-                        setparam([...param]);
+                        const newObj = param.customer_session_products.filter(task => task.product_id !== item.product_id);
+                        param.customer_session_products = newObj;
+                        console.log(param);
                       }}
                       color="#aaa"
                     />
@@ -515,7 +517,7 @@ const GeneralCatalog = (props) => {
             ...param,
             customer_session_products: param.customer_session_products,
           });
-         
+
           let tempData = Object.values(
             param.customer_session_products.reduce((acc, item) => {
               if (!acc[item.subcategory_name])
@@ -527,7 +529,7 @@ const GeneralCatalog = (props) => {
               return acc;
             }, {})
           );
-          console.log(tempData);
+         
           setSelectedProducts(tempData);
         }}
         onClose={() => setProduct(false)}
@@ -613,8 +615,7 @@ const GeneralCatalog = (props) => {
                     onPress={() => {
                       if (param.title == "") {
                         Alert.alert("please fill title !");
-                      } else {
-                        console.log(param);
+                      } else {                       
                         setLoading(true);
                         postRequest(
                           "transactions/customer/generalsession/insert",

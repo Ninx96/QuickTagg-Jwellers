@@ -48,6 +48,7 @@ const VoucherList = (props) => {
       userToken
     ).then((resp) => {
       if (resp.status == 200) {
+     
         setgriddata(resp.data);
       } else {
         Alert.alert(
@@ -88,7 +89,8 @@ const VoucherList = (props) => {
               marginVertical: 5,
             }}
           >
-            {item.disable ?
+
+            {item.disable == true && item.voucher_expire == "true" ?
               <BadgeRibbon
                 text="Disable"
                 color="gray"
@@ -96,20 +98,21 @@ const VoucherList = (props) => {
                 textStyle={{ top: 20, left: -20 }}
               />
               :
-              (item.voucher_expire ?
-                <BadgeRibbon
-                  text="Active"
-                  color="green"
-                  position="voucherRight"
-                  textStyle={{ top: 20, left: -20 }}
-                />
-                :
+              (item.disable == false && item.voucher_expire == "true" ?
                 <BadgeRibbon
                   text="Expire"
                   color="red"
                   position="voucherRight"
                   textStyle={{ top: 20, left: -20 }}
+                />
+                :
+                <BadgeRibbon
+                  text="Active"
+                  color="green"
+                  position="voucherRight"
+                  textStyle={{ top: 20, left: -20 }}
                 />)}
+         
 
             <LinearGradient
               colors={["#F6356F", "#FF5F50"]}
@@ -144,6 +147,10 @@ const VoucherList = (props) => {
                   <Text style={{ marginBottom: 20 }}>
                     {"Value => "}
                     {item.voucher_value}
+                  </Text>
+                  <Text>
+                  {"Red. Start Date => "}
+                    {moment(item.start_date).format("DD MMM YYYY")}
                   </Text>
                   <Text>
                     {"Red. End Date => "}
